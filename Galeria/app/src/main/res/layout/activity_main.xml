@@ -8,33 +8,48 @@
     tools:context="com.example.ivan.galeria.MainActivity">
 
 
-    <ImageSwitcher
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="25dp">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/image"
-            android:background="@drawable/Homer"
-            />
-    </ImageSwitcher>
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:id="@+id/image"
+        android:src="@drawable/a1"
+        />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="-100dp"
+        android:visibility="invisible"
+        android:id="@+id/image2"
+        />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="-100dp"
+        android:visibility="invisible"
+        android:id="@+id/image3"
+        />
+
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="170dp"
+        android:layout_gravity="center">
     <ImageButton
-        android:id="@+id/next"
+        android:id="@+id/previous"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:background="@android:drawable/ic_media_previous"
         android:onClick="previousImage"
         />
     <ImageButton
-        android:id="@+id/previous"
+        android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:drawable/ic_media_next"

@@ -8,9 +8,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import static com.example.ivan.galeria.R.drawable.a1;
+
 public class MainActivity extends AppCompatActivity {
 
-    ImageView image;
+    ImageView imgTemp;
+    ImageView img1;
     ImageButton btnNext;
     ImageButton btnPrev;
 
@@ -18,20 +21,51 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        image=(ImageView) findViewById(R.id.image);
+        img1=(ImageView) findViewById(R.id.image);
+        imgTemp=(ImageView) findViewById(R.id.image);
         btnNext=(ImageButton) findViewById(R.id.next);
         btnPrev=(ImageButton) findViewById(R.id.previous);
     }
 
 
     public void nextImage(View view){
+        switch (imgTemp.getId()){
 
-        image.setImageDrawable(Dr);
+            case R.id.image:
+                    img1.setImageResource(R.drawable.a2);
+                    imgTemp.setId(R.id.image2);
+                break;
+
+            case R.id.image2:
+                    img1.setImageResource(R.drawable.a3);
+                    imgTemp.setId(R.id.image3);
+                break;
+
+            case R.id.image3:
+                    img1.setImageResource(R.drawable.a1);
+                    imgTemp.setId(R.id.image);
+                break;
+        }
     }
 
     public void previousImage(View view){
+        switch (imgTemp.getId()){
 
+            case R.id.image:
+                img1.setImageResource(R.drawable.a3);
+                imgTemp.setId(R.id.image3);
+                break;
 
+            case R.id.image2:
+                img1.setImageResource(R.drawable.a1);
+                imgTemp.setId(R.id.image);
+                break;
+
+            case R.id.image3:
+                img1.setImageResource(R.drawable.a2);
+                imgTemp.setId(R.id.image2);
+                break;
+        }
     }
 
 
