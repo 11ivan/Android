@@ -12,61 +12,61 @@ import static com.example.ivan.galeria.R.drawable.a1;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView imgTemp;
     ImageView img1;
     ImageButton btnNext;
     ImageButton btnPrev;
+    int posImage=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         img1=(ImageView) findViewById(R.id.image);
-        imgTemp=(ImageView) findViewById(R.id.image);
         btnNext=(ImageButton) findViewById(R.id.next);
         btnPrev=(ImageButton) findViewById(R.id.previous);
     }
 
 
     public void nextImage(View view){
-        switch (imgTemp.getId()){
+        switch (posImage){
 
-            case R.id.image:
-                    img1.setImageResource(R.drawable.a2);
-                    imgTemp.setId(R.id.image2);
+            case 1:
+                img1.setImageResource(R.drawable.a2);
+                posImage=2;
                 break;
 
-            case R.id.image2:
-                    img1.setImageResource(R.drawable.a3);
-                    imgTemp.setId(R.id.image3);
+            case 2:
+                img1.setImageResource(R.drawable.a3);
+                posImage=3;
                 break;
 
-            case R.id.image3:
-                    img1.setImageResource(R.drawable.a1);
-                    imgTemp.setId(R.id.image);
+            case 3:
+                img1.setImageResource(R.drawable.a1);
+                posImage=1;
                 break;
         }
     }
 
     public void previousImage(View view){
-        switch (imgTemp.getId()){
+        switch (posImage){
 
-            case R.id.image:
+            case 1:
                 img1.setImageResource(R.drawable.a3);
-                imgTemp.setId(R.id.image3);
+                posImage=3;
                 break;
 
-            case R.id.image2:
+            case 2:
                 img1.setImageResource(R.drawable.a1);
-                imgTemp.setId(R.id.image);
+                posImage=1;
                 break;
 
-            case R.id.image3:
+            case 3:
                 img1.setImageResource(R.drawable.a2);
-                imgTemp.setId(R.id.image2);
+                posImage=2;
                 break;
         }
     }
+
 
 
 }
