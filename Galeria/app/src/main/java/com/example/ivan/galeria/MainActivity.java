@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void nextImage(View view){
         switch (posImage){
-
             case 1:
                 img1.setImageResource(R.drawable.a2);
                 posImage=2;
@@ -49,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void previousImage(View view){
         switch (posImage){
-
             case 1:
                 img1.setImageResource(R.drawable.a3);
                 posImage=3;
