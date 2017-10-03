@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CheckBox</string>
+    <string name="Negrita">Negrita</string>
+    <string name="moreFontSize">+Tamaño</string>
+    <string name="lessFontSize">-Tamaño</string>
+    <string name="red">Color rojo</string>
+</resources>
