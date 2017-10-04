@@ -48,18 +48,21 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         SpannableString spanString;
         String tempString="";
 
-        switch (buttonView.getId()){
+        switch (buttonView.getId()) {
 
             case R.id.bold:
-                    if(isChecked) {
-                        tempString=txtEdit.getText().toString();
-                        spanString = new SpannableString(tempString);
-                        spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
-                        txtEdit.setText(spanString);
-                    }else{
-                        tempString=txtEdit.getText().toString();
-                        txtEdit.setText(tempString);
-                    }
+                if (isChecked) {
+
+                    tempString = txtEdit.getText().toString();
+                    spanString = new SpannableString(tempString);
+                    spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, spanString.length(), 0);
+                    txtEdit.setText(spanString);
+                    //txtEdit.setTypeface(null, Typeface.BOLD);
+                } else {
+                    tempString = txtEdit.getText().toString();
+                    txtEdit.setText(tempString);
+                    //txtEdit.setTypeface(null, Typeface.BOLD);
+                }
                     /*if(isChecked) {
                         txtEdit.setText(Html.fromHtml("<b>"+txtEdit.getText().toString()+"</b>"));
                     }else{
@@ -68,7 +71,15 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 break;
 
             case R.id.moreSize:
-                    if(isChecked && menosTamano.isChecked()){
+                if (isChecked && !menosTamano.isChecked()) {
+                    txtEdit.setTextSize(70);
+                } else if (isChecked && menosTamano.isChecked()) {
+                    menosTamano.setChecked(false);
+                    txtEdit.setTextSize(70);
+                } else {
+                    txtEdit.setTextSize(tamanoLetra);
+                }
+                    /*if(isChecked && menosTamano.isChecked()){
                         txtEdit.setTextSize(30);
                     }else if(isChecked){
                         txtEdit.setTextSize(70);
@@ -76,11 +87,19 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         txtEdit.setTextSize(3);
                     }else{
                         txtEdit.setTextSize(tamanoLetra);
-                     }
+                     }*/
                 break;
 
             case R.id.lessSize:
-                    if(isChecked && masTamano.isChecked()){
+                if (isChecked && !masTamano.isChecked()) {
+                    txtEdit.setTextSize(3);
+                } else if (isChecked && masTamano.isChecked()) {
+                    masTamano.setChecked(false);
+                    txtEdit.setTextSize(3);
+                } else {
+                    txtEdit.setTextSize(tamanoLetra);
+                }
+                    /*if(isChecked && masTamano.isChecked()){
                         txtEdit.setTextSize(30);
                     }else if(isChecked){
                         txtEdit.setTextSize(3);
@@ -88,54 +107,21 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         txtEdit.setTextSize(70);
                     }else{
                         txtEdit.setTextSize(tamanoLetra);
-                    }
+                    }*/
                 break;
 
             case R.id.red:
 
                 //((isChecked==true) ? (txtEdit.setTextColor(Color.RED)):(txtEdit.setTextColor(Color.BLACK)));
-               // txtEdit.setTextColor((isChecked)?(txtEdit.setTextColor(Color.RED)):(txtEdit.setTextColor(Color.BLACK)));
-                   if(isChecked) {
-                        txtEdit.setTextColor(Color.RED);
-                    }else{
-                        txtEdit.setTextColor(Color.BLACK);
-                    }
+                // txtEdit.setTextColor((isChecked)?(txtEdit.setTextColor(Color.RED)):(txtEdit.setTextColor(Color.BLACK)));
+                if (isChecked) {
+                    txtEdit.setTextColor(Color.RED);
+                } else {
+                    txtEdit.setTextColor(Color.BLACK);
+                }
                 break;
-
         }
     }
 
 
-
-
-
-
-
-
-
 }
-
-
-
-
-/*
-String tuString = "Hola <b>mundo</b>, me llamo <b>Pepe</b">;
-tuTextView.setText(Html.fromHtml(tuString));
-* */
-
-
-/*
-
-    cb=(CheckBox)findViewById(R.id.check);
-    cb.setOnCheckedChangeListener(this);
-
-
-  public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-    if (isChecked) {
-      cb.setText("This checkbox is: checked");
-    }
-    else {
-      cb.setText("This checkbox is: unchecked");
-    }
-  }
-*/
