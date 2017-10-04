@@ -13,6 +13,7 @@
         android:id="@+id/n1"
         android:hint="Número 1"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         />
     <EditText
         android:layout_width="wrap_content"
@@ -26,42 +27,48 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/resultado"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:id="@+id/resultado"
+        android:layout_marginBottom="20dp"/>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:id="@+id/mas"
-            android:src="@drawable/plus"/>
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:id="@+id/menos"
-            android:layout_toEndOf="@id/mas"
-            android:layout_marginLeft="15dp"
-            android:src="@drawable/minus"/>
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:id="@+id/mult"
-            android:layout_above="@id/mas"
-            android:src="@drawable/multiplication"/>
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="15dp"
-            android:layout_toEndOf="@id/mult"
-            android:src="@drawable/division"/>
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/radioGr">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/suma"
+                android:text="Suma"
+                android:checked="true"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/resta"
+                android:text="Resta"
+                android:layout_toEndOf="@id/suma"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/divide"
+                android:text="Divide"
+                android:layout_below="@id/suma"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/multiplica"
+                android:text="Multiplica"
+                android:layout_toEndOf="@id/divide"
+                android:layout_below="@id/resta"/>
+            </RelativeLayout>
+        </RadioGroup>
 
-    </RelativeLayout>
+
 </LinearLayout>
