@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     //RadioButton rdBtn1, rdBtn2,rdBtn3,rdBtn4;
     TextView txtView;
     EditText txtEdit1, txtEdit2;
+    Util util=new Util();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,45 +35,42 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         //txtEdit2.addTextChangedListener();
     }
 
+
+    /*
+    * Proposito: Segun el radioButton pulsado
+    * Prototipo:
+    * Precondiciones:
+    * Entradas:
+    * Salidas:
+    * Postcondiciones:
+    * */
     @Override
     public void onCheckedChanged(RadioGroup rd, int idBtnRadio){
 
         double n1=Double.parseDouble(txtEdit1.getText().toString());
         double n2=Double.parseDouble(txtEdit2.getText().toString());
-        Double resultado;
 
-        Toast.makeText(MainActivity.this, "Ha entrado", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "Ha entrado", Toast.LENGTH_SHORT).show();
 
         switch (idBtnRadio){
             case R.id.suma:
-                    resultado=n1+n2;
-                    txtView.setText(resultado.toString());
-                //if(findViewById(R.id.suma).isActivated()) {
-                    //txtView.setText(String.valueOf((Double.parseDouble(txtEdit1.getText().toString())) + (Double.parseDouble(txtEdit2.getText().toString()))));
-                //}else{
-                 //   findViewById(R.id.suma).setActivated(false);
-               // }
+                    txtView.setText(util.suma(n1, n2).toString());
                 break;
 
             case R.id.resta:
-                resultado=n1-n2;
-                txtView.setText(resultado.toString());
-                    //txtView.setText(String.valueOf( (Double.parseDouble(txtEdit1.getText().toString())) - (Double.parseDouble(txtEdit2.getText().toString())) ));
+                txtView.setText(util.resta(n1, n2).toString());
                 break;
 
             case R.id.divide:
-
-                if(Integer.parseInt(txtEdit2.getText().toString())>0){
-                    resultado=n1/n2;
-                    txtView.setText(resultado.toString());
-                    //txtView.setText(String.valueOf((Double.parseDouble(txtEdit1.getText().toString()))/(Double.parseDouble(txtEdit2.getText().toString()))));
+                if(util.divide(n1, n2)>0){
+                    txtView.setText(util.divide(n1, n2).toString());
+                }else{
+                    txtView.setText("Error división entre 0");
                 }
                 break;
 
             case R.id.multiplica:
-                resultado=n1*2;
-                txtView.setText(resultado.toString());
-                    //txtView.setText(String.valueOf((Double.parseDouble(txtEdit1.getText().toString()))*(Double.parseDouble(txtEdit2.getText().toString()))));
+                txtView.setText(util.multiplica(n1, n2).toString());
                 break;
         }
     }
