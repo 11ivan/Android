@@ -38,36 +38,33 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:id="@+id/radioGr">
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
+
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/suma"
                 android:text="Suma"
-                android:checked="true"/>
+               />
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/resta"
                 android:text="Resta"
-                android:layout_toEndOf="@id/suma"/>
+               />
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/divide"
                 android:text="Divide"
-                android:layout_below="@id/suma"/>
+                />
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/multiplica"
                 android:text="Multiplica"
-                android:layout_toEndOf="@id/divide"
-                android:layout_below="@id/resta"/>
-            </RelativeLayout>
+
+                />
+
         </RadioGroup>
 
 
