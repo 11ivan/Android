@@ -1,9 +1,11 @@
 package com.example.icastillo.recvoice;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.speech.RecognizerIntent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +24,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         grabar = (TextView) findViewById(R.id.txtGrabarVoz);
     }
 
@@ -48,6 +50,19 @@ public class MainActivity extends Activity {
         }
     }
 
+    /*public void onClickImgBtnHablar(View v) {
+
+        Intent intentActionRecognizeSpeech = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+        // Configura el Lenguaje (Español-España)
+        intentActionRecognizeSpeech.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "es");
+        try {
+            startActivityForResult(intentActionRecognizeSpeech, RECOGNIZE_SPEECH_ACTIVITY);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),"Tú dispositivo no soporta el reconocimiento por voz",Toast.LENGTH_SHORT).show();
+        }
+
+    }*/
     public void onClickImgBtnHablar(View v) {
 
         Intent intentActionRecognizeSpeech = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -61,6 +76,7 @@ public class MainActivity extends Activity {
         }
 
     }
+
 
 }
 
