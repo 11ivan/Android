@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     class IconicAdapter<T> extends ArrayAdapter<T> {
+
         IconicAdapter(Context c, int resourceId, int textId, T[] objects) {
             super(c, resourceId, textId, objects);
         }
@@ -44,19 +45,6 @@ public class MainActivity extends AppCompatActivity {
             ImageView imagen = (ImageView) row.findViewById(R.id.imagen);
 
             imagen.setImageResource(Integer.parseInt(arrayDiscos[position].getImagen()));
-
-            /*if (items[position].equals("calendario")) {
-                icon.setImageResource(R.drawable.calendar48x48);
-            }
-            else if (items[position].equals("GPS")){
-                icon.setImageResource(R.drawable.compass48x48);
-            }
-            else if (items[position].equals("alarma")){
-                icon.setImageResource(R.drawable.alarm48x48);
-            }
-            else{
-                icon.setImageResource(R.drawable.delete);
-            }*/
 
             return (row);
         }

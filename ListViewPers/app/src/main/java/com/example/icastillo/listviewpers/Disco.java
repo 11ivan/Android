@@ -21,7 +21,7 @@ import java.util.StringTokenizer;
 
 
    Propiedades Agregadas:
-        Date
+        GregorianCalendar
 
 
  */
@@ -31,6 +31,7 @@ public class Disco {
     private String artista;
     private GregorianCalendar fecha;
     private String imagen;
+    //private Arr
 
     //Constructores
     public Disco() {
