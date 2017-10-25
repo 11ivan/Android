@@ -18,7 +18,7 @@ import android.media.MediaPlayer;
 public class Pista {
 
     private String titulo;
-    MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
 
     //Constructores
 

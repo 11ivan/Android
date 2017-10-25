@@ -1,8 +1,10 @@
 package com.example.icastillo.reproductor;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -10,29 +12,28 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ListActivity {
 
-    ListView listView;
-    TextView textView;
+    //ListView listView;
+    //TextView textView;
     IconicAdapter<Disco> adapterDiscos;
-    Disco[] arrayDiscos={new Disco("Blakanguai", "Varios artistas", new GregorianCalendar(2016, 10, 5),String.valueOf(R.drawable.bw)),
-            new Disco("Hay", "O no hay", new GregorianCalendar(2015, 1, 15),String.valueOf(R.drawable.bw)),
-            new Disco("Pffff", "Quien tu quieras", new GregorianCalendar(2017, 5, 25), String.valueOf(R.drawable.bw))};
+    Disco cd1=new Disco("Esencia", "El Barrio", new GregorianCalendar(2016, 11, 6), R.drawable.bw);
+    Disco cd2=new Disco("Blakanguai", "Varios artistas", new GregorianCalendar(2016, 10, 5), R.drawable.bw);
+
+
+    Disco[] arrayDiscos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listView=(ListView) findViewById(R.id.list);
-        textView
-        adapterDiscos=new IconicAdapter<Disco>(this, R.layout.stylelist, R.id.txtView, arrayDiscos);
-        listView.setAdapter(adapterDiscos);
+        //listView=(ListView) findViewById(R.id.list);
+        adapterDiscos=new IconicAdapter<Disco>(this, R.layout.stylelist, R.id.txtNombre, arrayDiscos);
+        setListAdapter(adapterDiscos);
     }
-
-
-
 
 
 
@@ -44,14 +45,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            //View row = super.getView(position, convertView, parent);
+            View row = convertView;
+            ViewHolder viewHolder;
             //ImageView imagen = (ImageView) row.findViewById(R.id.imagen);
 
-            //imagen.setImageResource(Integer.parseInt(arrayDiscos[position].getImagen()));
+            if(row==null){
+                LayoutInflater inflater=getLayoutInflater();
+                row=inflater.inflate(R.layout.stylelist, parent, false);
+                viewHolder=new ViewHolder(row, R.id.imageView, R.id.txtNombre, R.id.txtArtista, R.id.txtFecha);
+                row.setTag(viewHolder);
+            }else{
+                viewHolder=(ViewHolder) row.getTag();
+            }
 
-            //return (row);
+            viewHolder.getImage().setImageResource(arrayDiscos[position].getImagen());
+            viewHolder.getTextNombre().setText(arrayDiscos[position].getNombre());
+            viewHolder.getTextArtista().setText(arrayDiscos[position].getArtista());
+            viewHolder.getTextFecha().setText(arrayDiscos[position].getFecha().get(Calendar.DAY_OF_MONTH)+"/"+arrayDiscos[position].getFecha().get(Calendar.MONTH)+"/"+arrayDiscos[position].getFecha().get(Calendar.YEAR));
+
+            return (row);
         }
-
     }//fin clase iconicAdapter
 
 

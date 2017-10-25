@@ -30,7 +30,7 @@ public class Disco {
     private String nombre;
     private String artista;
     private GregorianCalendar fecha;
-    private String imagen;
+    private int imagen;
     private ArrayList<Pista> pistas;
 
     //Constructores
@@ -38,10 +38,10 @@ public class Disco {
         nombre = " ";
         artista = " ";
         fecha = new GregorianCalendar();
-        imagen = " ";
+        imagen = 0;
     }
 
-    public Disco(String nombre, String artista, GregorianCalendar fecha, String imagen) {
+    public Disco(String nombre, String artista, GregorianCalendar fecha, int imagen) {
         this.nombre = nombre;
         this.artista = artista;
         this.fecha = (GregorianCalendar) fecha.clone();
@@ -64,7 +64,7 @@ public class Disco {
         return this.fecha;
     }
 
-    public String getImagen() {
+    public int getImagen() {
         return this.imagen;
     }
 
@@ -91,10 +91,10 @@ public class Disco {
         //}
     }
 
-    public void setImagen(String imagen) {
-        if (imagen != null && imagen.replaceAll(" ", "").length() > 0) {
+    public void setImagen(int imagen) {
+        //if (imagen != null && imagen.replaceAll(" ", "").length() > 0) {
             this.imagen = imagen;
-        }
+        //}
     }
 
 
