@@ -12,14 +12,32 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Main2Activity extends ListActivity implements View.OnClickListener  {
 
+    //IconicAdapter<Pista> adapter;
     ImageButton buttonBack;
-    Disco cd;
+    //Disco cd1=(Disco) getIntent().getExtras().getParcelable("disco");//Me servirá para inicializar el Array de Pistas
+    Disco cdElegido;
 
-    Pistas[] pistasElBarrio={new Pista("No volveré", MediaPlayer.create(this, R.raw.novolvere)), };
+    Pista[] pistasElBarrio={new Pista("No volveré", MediaPlayer.create(this, R.raw.novolvere)),
+                            new Pista("He vuelto", MediaPlayer.create(this, R.raw.hevuelto)),
+                            new Pista("Toreando el destino", MediaPlayer.create(this, R.raw.toreandoeldestino))
+                            };
+
+
+
+    Pista[] pistasOtras={new Pista("No volveré", MediaPlayer.create(this, R.raw.novolvere)),
+                        new Pista("He vuelto", MediaPlayer.create(this, R.raw.hevuelto)),
+                        new Pista("Toreando el destino", MediaPlayer.create(this, R.raw.toreandoeldestino))
+                         };
+    /*{new Pista("No volveré", MediaPlayer.create(this, R.raw.novolvere)),
+                            new Pista("He vuelto", MediaPlayer.create(this, R.raw.hevuelto)),
+                            new Pista("Toreando el destino", MediaPlayer.create(this, R.raw.toreandoeldestino))
+                            }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +45,11 @@ public class Main2Activity extends ListActivity implements View.OnClickListener 
         setContentView(R.layout.activity_main2);
         buttonBack=(ImageButton) findViewById(R.id.buttonReturn);
         buttonBack.setOnClickListener(this);
-        cd=(Disco) getIntent().getExtras().getParcelable("disco");
+        //cdElegido=(Disco) getIntent().getExtras().getParcelable("disco");//Obtengo el objeto Disco que llega desde MainActivity
+        //loadTracks(cd1);
+        //adapter=loadTracks(cdElegido);// __<<<__Metodo para asignar el Array que convenga al iconic adapter
+        //adapter=new IconicAdapter<Pista>(this, R.layout.stylelistpistas1, R.id.txtNombrePista, pistas);
+        //setListAdapter(adapter);
     }
 
     @Override
@@ -37,37 +59,69 @@ public class Main2Activity extends ListActivity implements View.OnClickListener 
     }
 
 
-    //Carga Pistas
-    public void loadTracks(){
-        cd.addPista(new Pista("No volveré", MediaPlayer.create(this, R.raw.novolvere)));
-    }
+
+    //Carga Pistas segun el disco elegido
+   /* public IconicAdapter<Pista> loadTracks(Disco cd){
+        IconicAdapter<Pista> adapter2=null;
+        switch (cd.getNombre()) {
+
+            case "Esencia":
+                adapter2=new IconicAdapter<Pista>(this, R.layout.stylelistpistas1, R.id.txtNombrePista, pistasElBarrio);
+                break;
+
+            case "Blackanwai":
+                adapter2=new IconicAdapter<Pista>(this, R.layout.stylelistpistas1, R.id.txtNombrePista, pistasOtras);
+                break;
+
+        }
+        return adapter2;
+    }*/
 
 
 
     //MiClase IconicAdapter
-    class IconicAdapter<T> extends ArrayAdapter<T> {
+    /*class IconicAdapter<T> extends ArrayAdapter<T> {
 
         IconicAdapter(Context c, int resourceId, int textId, T[] objects) {
             super(c, resourceId, textId, objects);
         }
 
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position % 2;
+        }
+
         public View getView(int position, View convertView, ViewGroup parent) {
             View row = convertView;
-            ViewHolder viewHolder;
+            ViewHolder2 viewHolder;
             //ImageView imagen = (ImageView) row.findViewById(R.id.imagen);
 
-            /*if(row==null){
+            if(row==null){
                 LayoutInflater inflater=getLayoutInflater();
-                row=inflater.inflate(R.layout.stylelist, parent, false);
-                viewHolder=new ViewHolder(row, R.id.imageView, R.id.txtNombre, R.id.txtArtista, R.id.txtFecha);
+
+                //Comprobar pares e impares para inflar un layout u otro
+                if(getViewTypeCount()%2==0){
+                    row=inflater.inflate(R.layout.stylelistpistas1, parent, false);
+                }else{
+                    row=inflater.inflate(R.layout.stylelistpistas2, parent, false);
+                }
+
+                viewHolder=new ViewHolder2(row, R.id.txtNombrePista, R.id.txtDuracion);
                 row.setTag(viewHolder);
             }else{
-                viewHolder=(ViewHolder) row.getTag();
-            }*/
+                viewHolder=(ViewHolder2) row.getTag();
+            }
 
-
+            //Los cambios a convenir
+            viewHolder.getNombrePista().setText(pistasElBarrio[position].getTitulo());
+            viewHolder.getDuracionPista().setText(pistasElBarrio[position].getMediaPlayer().getDuration());
             return (row);
         }
-    }//fin clase iconicAdapter
+    }*///fin clase iconicAdapter
 
 }

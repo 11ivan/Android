@@ -123,6 +123,8 @@ public class Disco implements Parcelable {
         return cadena;
     }
 
+
+
     @Override
     public int describeContents() {
         return 0;

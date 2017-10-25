@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -26,7 +27,6 @@ public class MainActivity extends ListActivity {
     Disco cd1=new Disco("Esencia", "El Barrio", new GregorianCalendar(2016, 11, 6), R.drawable.elbarrio);
     Disco cd2=new Disco("Blakanguai", "Varios artistas", new GregorianCalendar(2016, 10, 5), R.drawable.bw);
 
-
     Disco[] arrayDiscos={cd1, cd2};
 
     @Override
@@ -36,16 +36,36 @@ public class MainActivity extends ListActivity {
         //listView=(ListView) findViewById(R.id.list);
         adapterDiscos=new IconicAdapter<Disco>(this, R.layout.stylelist, R.id.txtNombre, arrayDiscos);
         setListAdapter(adapterDiscos);
+
     }
 
 
     public void onListItemClick(ListView l, View v, int position, long id){
         Intent intent=new Intent(this, Main2Activity.class);
-        intent.putExtra("disco", arrayDiscos[position]);
+        //loadTracks(position);
+        //intent.putExtra("disco", arrayDiscos[position]);
         startActivity(intent);
     }
 
 
+    //Carga Pistas segun el disco elegido
+    /*public void loadTracks(int position){
+
+        switch (arrayDiscos[position].getNombre()) {
+
+            case "Esencia":
+                cd1.addPista(new Pista("No volveré", MediaPlayer.create(this, R.raw.novolvere)));
+                cd1.addPista(new Pista("He vuelto", MediaPlayer.create(this, R.raw.hevuelto)));
+                cd1.addPista(new Pista("Toreando el destino", MediaPlayer.create(this, R.raw.toreandoeldestino)));
+                break;
+
+            case "Blackanwai":
+
+
+                break;
+
+        }
+    }*/
 
 
 
