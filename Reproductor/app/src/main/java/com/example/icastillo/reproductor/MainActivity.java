@@ -2,11 +2,14 @@ package com.example.icastillo.reproductor;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -20,11 +23,11 @@ public class MainActivity extends ListActivity {
     //ListView listView;
     //TextView textView;
     IconicAdapter<Disco> adapterDiscos;
-    Disco cd1=new Disco("Esencia", "El Barrio", new GregorianCalendar(2016, 11, 6), R.drawable.bw);
+    Disco cd1=new Disco("Esencia", "El Barrio", new GregorianCalendar(2016, 11, 6), R.drawable.elbarrio);
     Disco cd2=new Disco("Blakanguai", "Varios artistas", new GregorianCalendar(2016, 10, 5), R.drawable.bw);
 
 
-    Disco[] arrayDiscos;
+    Disco[] arrayDiscos={cd1, cd2};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,15 @@ public class MainActivity extends ListActivity {
         adapterDiscos=new IconicAdapter<Disco>(this, R.layout.stylelist, R.id.txtNombre, arrayDiscos);
         setListAdapter(adapterDiscos);
     }
+
+
+    public void onListItemClick(ListView l, View v, int position, long id){
+        Intent intent=new Intent(this, Main2Activity.class);
+        intent.putExtra("disco", arrayDiscos[position]);
+        startActivity(intent);
+    }
+
+
 
 
 

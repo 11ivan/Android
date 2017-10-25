@@ -1,6 +1,8 @@
 package com.example.icastillo.reproductor;
 
 import android.media.MediaPlayer;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,7 +28,7 @@ import java.util.GregorianCalendar;
 
  */
 
-public class Disco {
+public class Disco implements Parcelable {
     private String nombre;
     private String artista;
     private GregorianCalendar fecha;
@@ -121,4 +123,38 @@ public class Disco {
         return cadena;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.nombre);
+        dest.writeString(this.artista);
+        dest.writeSerializable(this.fecha);
+        dest.writeInt(this.imagen);
+        dest.writeList(this.pistas);
+    }
+
+    protected Disco(Parcel in) {
+        this.nombre = in.readString();
+        this.artista = in.readString();
+        this.fecha = (GregorianCalendar) in.readSerializable();
+        this.imagen = in.readInt();
+        this.pistas = new ArrayList<Pista>();
+        in.readList(this.pistas, Pista.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Disco> CREATOR = new Parcelable.Creator<Disco>() {
+        @Override
+        public Disco createFromParcel(Parcel source) {
+            return new Disco(source);
+        }
+
+        @Override
+        public Disco[] newArray(int size) {
+            return new Disco[size];
+        }
+    };
 }
