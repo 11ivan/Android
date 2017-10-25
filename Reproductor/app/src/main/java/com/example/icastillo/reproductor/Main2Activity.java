@@ -20,24 +20,17 @@ public class Main2Activity extends ListActivity implements View.OnClickListener 
 
     //IconicAdapter<Pista> adapter;
     ImageButton buttonBack;
-    //Disco cd1=(Disco) getIntent().getExtras().getParcelable("disco");//Me servirá para inicializar el Array de Pistas
-    Disco cdElegido;
 
-    Pista[] pistasElBarrio={new Pista("No volveré", MediaPlayer.create(this, R.raw.novolvere)),
+    Pista[] pistasElBarrio={new Pista("No volvere", MediaPlayer.create(this,  R.raw.novolvere)),
                             new Pista("He vuelto", MediaPlayer.create(this, R.raw.hevuelto)),
                             new Pista("Toreando el destino", MediaPlayer.create(this, R.raw.toreandoeldestino))
                             };
-
-
 
     Pista[] pistasOtras={new Pista("No volveré", MediaPlayer.create(this, R.raw.novolvere)),
                         new Pista("He vuelto", MediaPlayer.create(this, R.raw.hevuelto)),
                         new Pista("Toreando el destino", MediaPlayer.create(this, R.raw.toreandoeldestino))
                          };
-    /*{new Pista("No volveré", MediaPlayer.create(this, R.raw.novolvere)),
-                            new Pista("He vuelto", MediaPlayer.create(this, R.raw.hevuelto)),
-                            new Pista("Toreando el destino", MediaPlayer.create(this, R.raw.toreandoeldestino))
-                            }*/
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +39,7 @@ public class Main2Activity extends ListActivity implements View.OnClickListener 
         buttonBack=(ImageButton) findViewById(R.id.buttonReturn);
         buttonBack.setOnClickListener(this);
         //cdElegido=(Disco) getIntent().getExtras().getParcelable("disco");//Obtengo el objeto Disco que llega desde MainActivity
-        //loadTracks(cd1);
+
         //adapter=loadTracks(cdElegido);// __<<<__Metodo para asignar el Array que convenga al iconic adapter
         //adapter=new IconicAdapter<Pista>(this, R.layout.stylelistpistas1, R.id.txtNombrePista, pistas);
         //setListAdapter(adapter);
