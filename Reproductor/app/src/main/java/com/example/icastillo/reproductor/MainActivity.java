@@ -43,7 +43,7 @@ public class MainActivity extends ListActivity {
     public void onListItemClick(ListView l, View v, int position, long id){
         Intent intent=new Intent(this, Main2Activity.class);
         //loadTracks(position);
-        //intent.putExtra("disco", arrayDiscos[position]);
+        intent.putExtra("disco", arrayDiscos[position]);
         startActivity(intent);
     }
 
