@@ -28,6 +28,12 @@ public class Persona {
         this.idFoto=idFoto;
     }
 
+    public Persona(Persona persona){
+        this.nombre=persona.getNombre();
+        this.apellido=persona.getApellido();
+        this.fechaNac=persona.getFechaNac();
+        this.idFoto=persona.getIdFoto();
+    }
 
     //Consultores
     public String getNombre() {

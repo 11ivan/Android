@@ -5,27 +5,33 @@ package com.example.icastillo.listahetereogenea;
  */
 
 public class Animal {
-    private String especie;
+    private String nombreCient;
     private String nombre;
     private int idFoto;
 
 
     public Animal(){
-        especie=" ";
+        nombreCient=" ";
         nombre=" ";
         idFoto=0;
     }
 
-    public Animal(String especie, String nombre, int idFoto){
-        this.especie=especie;
+    public Animal(String nombreCient, String nombre, int idFoto){
+        this.nombreCient=nombreCient;
         this.nombre=nombre;
         this.idFoto=idFoto;
     }
 
+    public Animal(Animal animal){
+        this.nombreCient=animal.getNombreCient();
+        this.nombre=animal.getNombre();
+        this.idFoto=animal.getIdFoto();
+    }
+
 
     //Consultores
-    public String getEspecie() {
-        return especie;
+    public String getNombreCient() {
+        return nombreCient;
     }
 
     public String getNombre() {
@@ -37,8 +43,8 @@ public class Animal {
     }
 
     //Modificadores
-    public void setEspecie(String especie) {
-        this.especie = especie;
+    public void setNombreCient(String nombreCient) {
+        this.nombreCient = nombreCient;
     }
 
     public void setNombre(String nombre) {
