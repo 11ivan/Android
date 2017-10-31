@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Objects;
 import java.util.zip.Inflater;
@@ -47,12 +48,27 @@ public class MainActivity extends ListActivity {
             super(c, resourceId, textId, objects);
         }
 
+        @Override
+        public int getViewTypeCount() {
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            int tipoVista=0;
+            if(arrayObject[position] instanceof Persona){
+                tipoVista=1;
+            }
+            return tipoVista;
+        }
+
         public View getView(int position, View convertView, ViewGroup parent){
             View row=convertView;
             ViewHolder holderPersona=null;
             ViewHolderAnimal holderAnimal=null;
             Persona persona;
             Animal animal;
+            int tipoVista=getItemViewType(position);
 
             /*if(row==null ){
                 LayoutInflater inflater=getLayoutInflater();
@@ -74,10 +90,10 @@ public class MainActivity extends ListActivity {
                     holderAnimal=(ViewHolderAnimal) row.getTag();
                 }
             }*/
-            if(row==null ){
-                LayoutInflater inflater=getLayoutInflater();
+            if(row==null ) {
+                LayoutInflater inflater = getLayoutInflater();
 
-                if(arrayObject[position] instanceof Persona){
+                if(tipoVista == 1){
                     row=inflater.inflate(R.layout.stylepersona, parent, false);
                     holderPersona=new ViewHolder(row, R.id.imagePersona, R.id.nombrePersona, R.id.apellidoPersona, R.id.fechaNacPersona);
                     row.setTag(holderPersona);
@@ -88,18 +104,18 @@ public class MainActivity extends ListActivity {
                 }
 
             }else{
-                if(arrayObject[position] instanceof Persona){
+                if(tipoVista == 1){
                     holderPersona=(ViewHolder)row.getTag();//el tag anterior puede ser de ViewHolderAnimal
                 }else{
                     holderAnimal=(ViewHolderAnimal) row.getTag();//el tag anterior puede ser de ViewHolder  de persona
                 }
             }
 
-            if(arrayObject[position] instanceof Persona){
+            if(tipoVista == 1){
                 persona=new Persona((Persona) arrayObject[position]);
                 holderPersona.getNombre().setText(persona.getNombre());
                 holderPersona.getApellido().setText(persona.getApellido());
-                holderPersona.getFechaNac().setText(persona.getFechaNac().toString());
+                holderPersona.getFechaNac().setText(persona.getFechaNac().get(Calendar.DAY_OF_MONTH)+"/"+persona.getFechaNac().get(Calendar.MONTH)+"/"+persona.getFechaNac().get(Calendar.YEAR));
                 holderPersona.getImagen().setImageResource(persona.getIdFoto());
             }else{
                 animal=new Animal((Animal) arrayObject[position]);
