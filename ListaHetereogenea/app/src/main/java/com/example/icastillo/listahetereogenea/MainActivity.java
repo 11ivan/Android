@@ -70,26 +70,6 @@ public class MainActivity extends ListActivity {
             Animal animal;
             int tipoVista=getItemViewType(position);
 
-            /*if(row==null ){
-                LayoutInflater inflater=getLayoutInflater();
-
-                if(arrayObject[position] instanceof Persona){
-                    row=inflater.inflate(R.layout.stylepersona, parent, false);
-                    holderPersona=new ViewHolder(row, R.id.imagePersona, R.id.nombrePersona, R.id.apellidoPersona, R.id.fechaNacPersona);
-                    row.setTag(holderPersona);
-                }else{
-                    row=inflater.inflate(R.layout.styleanimal, parent, false);
-                    holderAnimal=new ViewHolderAnimal(row, R.id.imageAnimal, R.id.nombreAnimal, R.id.txtEspecie);
-                    row.setTag(holderAnimal);
-                }
-
-            }else{
-                if(arrayObject[position] instanceof Persona){
-                    holderPersona=(ViewHolder)row.getTag();
-                }else{
-                    holderAnimal=(ViewHolderAnimal) row.getTag();
-                }
-            }*/
             if(row==null ) {
                 LayoutInflater inflater = getLayoutInflater();
 
@@ -102,7 +82,6 @@ public class MainActivity extends ListActivity {
                     holderAnimal=new ViewHolderAnimal(row, R.id.imageAnimal, R.id.nombreAnimal, R.id.txtEspecie);
                     row.setTag(holderAnimal);
                 }
-
             }else{
                 if(tipoVista == 1){
                     holderPersona=(ViewHolder)row.getTag();//el tag anterior puede ser de ViewHolderAnimal

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+   android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -10,13 +11,15 @@
         android:layout_centerHorizontal="true"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/nombreAnimal"/>
+        android:id="@+id/nombreAnimal"
+        android:layout_toRightOf="@id/imageAnimal"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txtEspecie"/>
+        android:id="@+id/txtEspecie"
+        android:layout_below="@id/nombreAnimal"/>
 
 </RelativeLayout>
