@@ -4,12 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.icastillo.listahetereogenea.MainActivity">
+    android:orientation="vertical"
+    tools:context="com.example.icastillo.spinner.MainActivity">
+
+   <GridView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/spinner"
+       android:drawSelectorOnTop="true">
+
+   </GridView>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@android:id/list">
+
     </ListView>
 
 </android.support.constraint.ConstraintLayout>
