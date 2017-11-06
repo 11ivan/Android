@@ -1,6 +1,7 @@
 package com.example.icastillo.gridview;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,7 +32,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     CustomGridAdapter gridAdapter;
     Boolean[] arrayLevantadas={false, false, false, false, false, false};
     int cartasLevantadas=0;
-    int[] posicionLevantada=new int[2];
+    int[] idLevantadas=new int[2];
+    int[] posicionLevantadas=new int[2];
+    ImageView[] arrayImagesViews=new ImageView[2];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,28 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         levantaCarta(view, position);
     }
 
+    //sleep
+    /*Proposito: Para la ejecución del programa durante 1500 milisegundos
+    * Prototipo: public void sleep()
+    * Precondiciones: No hay
+    * Entradas: No hay
+    * Salidas: No hay
+    * Postcondiciones: El programa se para durante 1500 milisegundos
+    * */
+   /* public void sleep(){
+        Thread timer = new Thread() {
+            public void run(){
+                try {
+                    sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        timer.start();
+        timer.run();
+    }*/
 
     //levantaCarta
     /*Proposito: Levanta una carta si no está levantada ya
@@ -73,13 +98,27 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             marcaCartaLevantada(position);
             image = (ImageView) view;
             image.setImageResource(arrayIdImages[position]);
-            posicionLevantada[cartasLevantadas]=position;
-            if(cartasLevantadas==2) {
-                Toast.makeText(this, compruebaAcierto2(posicionLevantada), Toast.LENGTH_LONG).show();
+            //sleep();
+            idLevantadas[cartasLevantadas-1]=arrayIdImages[position];
+            posicionLevantadas[cartasLevantadas-1]=position;
+            arrayImagesViews[cartasLevantadas-1]=(ImageView) view;
+
+            if(cartasLevantadas==2) {//Si hay dos cartas levantadas comprobamos si ha acertado
+                Toast.makeText(this, compruebaAcierto2(idLevantadas), Toast.LENGTH_LONG).show();
+                //Comprobar Acierto
+                if(compruebaAcierto(idLevantadas)){
+
+                }else{//si no ha acertado volteamos y desmarcamos las cartas levantadas, también actualizaremos el contador de cartas levantadas a 0
+
+                    tapaCartas(arrayImagesViews);
+                    desmarcaCartasLevantada(posicionLevantadas);
+                }
             }
             //compruebaAcierto(posicionLevantada);
         }
     }
+
+
 
 
     //Tengo que guardar las cartas que se hayan levantado (posicion), y cuando se hayan levantado dos debo comprobar si ha acertado,
@@ -96,25 +135,47 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     * */
     public Boolean compruebaAcierto(int[] cartasLevantadas){
         Boolean acertado=false;
-
-        if(arrayIdImages[cartasLevantadas[0]]==arrayIdImages[cartasLevantadas[1]]){
+        //sleep();
+        if(idLevantadas[0]==idLevantadas[1]){
             acertado=true;
         }
-
         return acertado;
     }
 
     public String compruebaAcierto2(int[] cartasLevantadas){
         Boolean acertado=false;
         String cadena="falso";
-        if(arrayIdImages[cartasLevantadas[0]]==arrayIdImages[cartasLevantadas[1]]){
+
+        if(idLevantadas[0]==idLevantadas[1]){
             acertado=true;
             cadena="verdadero";
         }
-
-
         return cadena;
     }
+
+    //tapaCartas
+    /*Proposito: Tapa dos cartas,
+    * Prototipo: public void tapaCartas(int[] posicionCartas)
+    * Precondiciones: Las cartas están levantadas
+    * Entradas: Un array de enteros que son las posiciones de las cartas
+    * Salidas: No hay
+    * Postcondiciones: Las cartas se han tapado
+    * */
+    public void tapaCartas(ImageView[] ImagescartasLevantadas){
+        //sleep();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ImagescartasLevantadas[0].setImageResource(R.drawable.reverso);
+                ImagescartasLevantadas[1].setImageResource(R.drawable.reverso);
+            }
+        },2000);
+    }
+
+
+
+
 
     //CompruebaCartaLevantada
     /*Proposito: Comprueba si una carta se ha levantado
@@ -154,8 +215,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     * Salidas: no hay
     * Postcondiciones: La carta se habrá desmarcado como levantada
     * */
-    public void desmarcaCartaLevantada(int position){
-        arrayLevantadas[position]=false;
+    public void desmarcaCartasLevantada(int[] positions){
+        arrayLevantadas[positions[0]]=false;
+        arrayLevantadas[positions[1]]=false;
+        cartasLevantadas=0;
     }
 
     public class CustomGridAdapter extends BaseAdapter {
