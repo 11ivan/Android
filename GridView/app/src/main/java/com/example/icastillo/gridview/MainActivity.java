@@ -18,17 +18,17 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
 
-    ImageView img1;
-    ImageView img2;
+  //  ImageView img1;
+   // ImageView img2;
 
-    ImageView[] arrayImagenes={img1, img2};
+    //ImageView[] arrayImagenes={img1, img2};
     Integer[] arrayIdImages={R.drawable.enanaroja, R.drawable.binaria, R.drawable.jupiter, R.drawable.sol, R.drawable.tierra, R.drawable.neptuno};
-    Integer[] arrayIdReverso={R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso};
+    //Integer[] arrayIdReverso={R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso};
     String[] arrayCadena={"Mamon", "Perraco", "No", "Quiere", "Imagenes"};
     TextView acertados;
     TextView porAcertar;
     GridView gridView;
-    ArrayAdapter<ImageView> adapterImages;
+    //ArrayAdapter<ImageView> adapterImages;
     CustomGridAdapter gridAdapter;
     Boolean[] arrayLevantadas={false, false, false, false, false, false};
     int cartasLevantadas=0;
@@ -49,7 +49,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         gridView=(GridView) findViewById(R.id.grid);
         //adapterImages=new ArrayAdapter<ImageView>(this, R.layout.stylecell, R.id.idImageView, arrayImagenes);
         //gridView.setAdapter(adapterImages);
-        gridAdapter=new CustomGridAdapter(this, arrayIdReverso);
+        gridAdapter=new CustomGridAdapter(this, arrayIdImages);
         gridView.setAdapter(gridAdapter);
         gridView.setOnItemClickListener(this);
     }
@@ -59,62 +59,39 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         levantaCarta(view, position);
     }
 
-    //sleep
-    /*Proposito: Para la ejecución del programa durante 1500 milisegundos
-    * Prototipo: public void sleep()
-    * Precondiciones: No hay
-    * Entradas: No hay
-    * Salidas: No hay
-    * Postcondiciones: El programa se para durante 1500 milisegundos
-    * */
-   /* public void sleep(){
-        Thread timer = new Thread() {
-            public void run(){
-                try {
-                    sleep(1500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        };
-        timer.start();
-        timer.run();
-    }*/
 
     //levantaCarta
     /*Proposito: Levanta una carta si no está levantada ya
     * Prototipo: public void levantaCarta(View view, int position)
     * Precondiciones: No hay
     * Entradas: Un View que será el ImageView de la carta a levantar y un entero que será la posición de la carta a levantar
-    * Salidas: No hay
+    * Salidas: no hay
     * Postcondiciones: La carta se habrá levantado sino se ha levantado ya
     * */
     public void levantaCarta(View view, int position){
         ImageView image;
-        cartasLevantadas++;
+        //cartasLevantadas++;
 
-        if (!compruebaCartaLevantada(position) && cartasLevantadas<=2) {
+        if (!compruebaCartaLevantada(position) && cartasLevantadas<2) {
+            cartasLevantadas++;
             marcaCartaLevantada(position);
             image = (ImageView) view;
             image.setImageResource(arrayIdImages[position]);
-            //sleep();
-            idLevantadas[cartasLevantadas-1]=arrayIdImages[position];
-            posicionLevantadas[cartasLevantadas-1]=position;
-            arrayImagesViews[cartasLevantadas-1]=(ImageView) view;
+            idLevantadas[cartasLevantadas - 1] = arrayIdImages[position];
+            posicionLevantadas[cartasLevantadas - 1] = position;
+            arrayImagesViews[cartasLevantadas - 1] = (ImageView) view;
 
-            if(cartasLevantadas==2) {//Si hay dos cartas levantadas comprobamos si ha acertado
+            if (cartasLevantadas == 2) {//Si hay dos cartas levantadas comprobamos si ha acertado
                 Toast.makeText(this, compruebaAcierto2(idLevantadas), Toast.LENGTH_LONG).show();
                 //Comprobar Acierto
-                if(compruebaAcierto(idLevantadas)){
+                if (compruebaAcierto(idLevantadas)) {
 
-                }else{//si no ha acertado volteamos y desmarcamos las cartas levantadas, también actualizaremos el contador de cartas levantadas a 0
-
+                } else {//si no ha acertado volteamos y desmarcamos las cartas levantadas, también actualizaremos el contador de cartas levantadas a 0
                     tapaCartas(arrayImagesViews);
+
                     desmarcaCartasLevantada(posicionLevantadas);
                 }
             }
-            //compruebaAcierto(posicionLevantada);
         }
     }
 
@@ -161,21 +138,21 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     * Salidas: No hay
     * Postcondiciones: Las cartas se han tapado
     * */
-    public void tapaCartas(ImageView[] ImagescartasLevantadas){
-        //sleep();
+    public void tapaCartas(final ImageView[] ImagescartasLevantadas){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+               /* try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
                 ImagescartasLevantadas[0].setImageResource(R.drawable.reverso);
                 ImagescartasLevantadas[1].setImageResource(R.drawable.reverso);
             }
-        },2000);
+        },1500);
     }
-
-
-
-
 
     //CompruebaCartaLevantada
     /*Proposito: Comprueba si una carta se ha levantado
@@ -251,7 +228,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView = new ImageView(mContext);
-            imageView.setImageResource(idImages[position]);
+           // imageView.setImageResource(idImages[position]);
+            imageView.setImageResource(R.drawable.reverso);
             //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             //imageView.setLayoutParams(new GridView.LayoutParams(70, 70));
             return imageView;
