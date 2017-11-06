@@ -27,7 +27,7 @@
         android:id="@+id/grid"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="20dp"
-        android:numColumns="2"
+        android:numColumns="3"
         android:columnWidth="100dp"
         android:stretchMode="columnWidth"
         android:gravity="center"
