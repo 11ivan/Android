@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -14,6 +16,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
@@ -31,12 +34,14 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     GridView gridView;
     //ArrayAdapter<ImageView> adapterImages;
     CustomGridAdapter gridAdapter;
-    Boolean[] arrayLevantadas={false, false, false, false, false, false};
+    //Boolean[] arrayLevantadas={false, false, false, false, false, false};
+    boolean[] arrayLevantadas;
     int cartasLevantadas=0;
     int[] idLevantadas=new int[2];
     int[] posicionLevantadas=new int[2];
     ImageView[] arrayImagesViews=new ImageView[2];
     GestoraActivity gestora;
+    int cantidadAciertos=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +51,14 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         //img2=new ImageView(this);
         //img1.setImageResource(R.drawable.binaria);
         //img2.setImageResource(R.drawable.enanaroja);
-        acertados=(TextView) findViewById(R.id.textoAcertados);
-        porAcertar=(TextView) findViewById(R.id.textoPorAcertar);
-        gridView=(GridView) findViewById(R.id.grid);
         gestora=new GestoraActivity();
-        arrayIdImages=gestora.cargaImagenesAleatorias(4);
+        arrayIdImages=gestora.cargaImagenesAleatorias(6);
+        arrayLevantadas=gestora.cargaArrayBoolean(arrayIdImages.length, false);
+        acertados=(TextView) findViewById(R.id.textoAcertados);
+        acertados.setText(String.valueOf(cantidadAciertos));
+        porAcertar=(TextView) findViewById(R.id.textoPorAcertar);
+        porAcertar.setText("/"+String.valueOf(arrayIdImages.length/2));
+        gridView=(GridView) findViewById(R.id.grid);
         //adapterImages=new ArrayAdapter<ImageView>(this, R.layout.stylecell, R.id.idImageView, arrayImagenes);
         //gridView.setAdapter(adapterImages);
         gridAdapter=new CustomGridAdapter(this, arrayIdImages);
@@ -72,15 +80,29 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     * Salidas: no hay
     * Postcondiciones: La carta se habrá levantado sino se ha levantado ya
     * */
-    public void levantaCarta(View view, int position){
-        ImageView image;
+    public void levantaCarta(View view, final int position){
+        final ImageView image;
         //cartasLevantadas++;
 
         if (!compruebaCartaLevantada(position) && cartasLevantadas<2) {
             cartasLevantadas++;
             marcaCartaLevantada(position);
             image = (ImageView) view;
+            Animation flip;
+            flip= AnimationUtils.loadAnimation(this, R.anim.rotate);
+            flip.reset();
+            image.startAnimation(flip);
+
+            /*Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    image.setImageResource(arrayIdImages[position]);
+                }
+            },1500);*/
             image.setImageResource(arrayIdImages[position]);
+
+
             idLevantadas[cartasLevantadas - 1] = arrayIdImages[position];
             posicionLevantadas[cartasLevantadas - 1] = position;
             arrayImagesViews[cartasLevantadas - 1] = (ImageView) view;
@@ -89,7 +111,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 Toast.makeText(this, compruebaAcierto2(idLevantadas), Toast.LENGTH_LONG).show();
                 //Comprobar Acierto
                 if (compruebaAcierto(idLevantadas)) {
-
+                        cantidadAciertos++;
+                        acertados.setText(String.valueOf(cantidadAciertos));
+                        cartasLevantadas=0;
                 } else {//si no ha acertado volteamos y desmarcamos las cartas levantadas, también actualizaremos el contador de cartas levantadas a 0
                     tapaCartas(arrayImagesViews);
                     //desmarcaCartasLevantada(posicionLevantadas);
@@ -99,6 +123,17 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
 
+    //desaparece cartas
+    /*public void disapearCards(){
+        Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        },1500);
+    }*/
 
 
     //Tengo que guardar las cartas que se hayan levantado (posicion), y cuando se hayan levantado dos debo comprobar si ha acertado,
@@ -124,11 +159,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     public String compruebaAcierto2(int[] cartasLevantadas){
         Boolean acertado=false;
-        String cadena="falso";
+        String cadena="Vuelve a probar";
 
         if(idLevantadas[0]==idLevantadas[1]){
             acertado=true;
-            cadena="verdadero";
+            cadena="Bien!!";
         }
         return cadena;
     }
