@@ -24,7 +24,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
   //  ImageView img1;
    // ImageView img2;
 
-    //ImageView[] arrayImagenes={img1, img2};
+    ImageView[] arrayImagenesUsadas;
     //Integer[] arrayIdImages={R.drawable.enanaroja, R.drawable.binaria, R.drawable.jupiter, R.drawable.sol, R.drawable.tierra, R.drawable.neptuno};
     Integer[] arrayIdImages;
     //Integer[] arrayIdReverso={R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso};
@@ -54,6 +54,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         gestora=new GestoraActivity();
         arrayIdImages=gestora.cargaImagenesAleatorias(6);
         arrayLevantadas=gestora.cargaArrayBoolean(arrayIdImages.length, false);
+        arrayImagenesUsadas=new ImageView[arrayIdImages.length];
         acertados=(TextView) findViewById(R.id.textoAcertados);
         acertados.setText(String.valueOf(cantidadAciertos));
         porAcertar=(TextView) findViewById(R.id.textoPorAcertar);
@@ -69,6 +70,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         levantaCarta(view, position);
+        arrayImagenesUsadas[position]=(ImageView) view;
     }
 
 
@@ -114,6 +116,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                         cantidadAciertos++;
                         acertados.setText(String.valueOf(cantidadAciertos));
                         cartasLevantadas=0;
+                        if(acertados.getText().toString().equals(porAcertar.getText().toString().replace("/", ""))){
+                            animaCartas();
+                        }
+
                 } else {//si no ha acertado volteamos y desmarcamos las cartas levantadas, también actualizaremos el contador de cartas levantadas a 0
                     tapaCartas(arrayImagesViews);
                     //desmarcaCartasLevantada(posicionLevantadas);
@@ -135,6 +141,24 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         },1500);
     }*/
 
+
+    public void animaCartas(){
+        ImageView image=null;
+        for(int i=0;i<arrayIdImages.length;i++){
+            image=arrayImagenesUsadas[i];
+            Animation flip;
+            flip= AnimationUtils.loadAnimation(this, R.anim.rotate);
+            flip.reset();
+            image.startAnimation(flip);
+           /* Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    image.startAnimation(flip);
+                }
+            },1500);*/
+        }
+    }
 
     //Tengo que guardar las cartas que se hayan levantado (posicion), y cuando se hayan levantado dos debo comprobar si ha acertado,
     //sino a acertado debo desmarcar las cartas levantadas, actualizar el contador de levantadas a 0
