@@ -22,7 +22,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
    // ImageView img2;
 
     //ImageView[] arrayImagenes={img1, img2};
-    Integer[] arrayIdImages={R.drawable.enanaroja, R.drawable.binaria, R.drawable.jupiter, R.drawable.sol, R.drawable.tierra, R.drawable.neptuno};
+    //Integer[] arrayIdImages={R.drawable.enanaroja, R.drawable.binaria, R.drawable.jupiter, R.drawable.sol, R.drawable.tierra, R.drawable.neptuno};
+    Integer[] arrayIdImages;
     //Integer[] arrayIdReverso={R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso};
     String[] arrayCadena={"Mamon", "Perraco", "No", "Quiere", "Imagenes"};
     TextView acertados;
@@ -35,6 +36,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     int[] idLevantadas=new int[2];
     int[] posicionLevantadas=new int[2];
     ImageView[] arrayImagesViews=new ImageView[2];
+    GestoraActivity gestora;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         acertados=(TextView) findViewById(R.id.textoAcertados);
         porAcertar=(TextView) findViewById(R.id.textoPorAcertar);
         gridView=(GridView) findViewById(R.id.grid);
+        gestora=new GestoraActivity();
+        arrayIdImages=gestora.cargaImagenesAleatorias(4);
         //adapterImages=new ArrayAdapter<ImageView>(this, R.layout.stylecell, R.id.idImageView, arrayImagenes);
         //gridView.setAdapter(adapterImages);
         gridAdapter=new CustomGridAdapter(this, arrayIdImages);
@@ -88,8 +92,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
                 } else {//si no ha acertado volteamos y desmarcamos las cartas levantadas, también actualizaremos el contador de cartas levantadas a 0
                     tapaCartas(arrayImagesViews);
-
-                    desmarcaCartasLevantada(posicionLevantadas);
+                    //desmarcaCartasLevantada(posicionLevantadas);
                 }
             }
         }
@@ -140,6 +143,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     * */
     public void tapaCartas(final ImageView[] ImagescartasLevantadas){
         Handler handler = new Handler();
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -150,6 +154,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 }*/
                 ImagescartasLevantadas[0].setImageResource(R.drawable.reverso);
                 ImagescartasLevantadas[1].setImageResource(R.drawable.reverso);
+                desmarcaCartasLevantada(posicionLevantadas);
             }
         },1500);
     }
