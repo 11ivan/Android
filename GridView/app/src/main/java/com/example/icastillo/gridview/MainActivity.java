@@ -21,21 +21,13 @@ import android.widget.ViewFlipper;
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 
-
-  //  ImageView img1;
-   // ImageView img2;
-
     ImageView[] arrayImagenesUsadas;
     //Integer[] arrayIdImages={R.drawable.enanaroja, R.drawable.binaria, R.drawable.jupiter, R.drawable.sol, R.drawable.tierra, R.drawable.neptuno};
     Integer[] arrayIdImages;
-    //Integer[] arrayIdReverso={R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso, R.drawable.reverso};
-    String[] arrayCadena={"Mamon", "Perraco", "No", "Quiere", "Imagenes"};
     TextView acertados;
     TextView porAcertar;
     GridView gridView;
-    //ArrayAdapter<ImageView> adapterImages;
     CustomGridAdapter gridAdapter;
-    //Boolean[] arrayLevantadas={false, false, false, false, false, false};
     boolean[] arrayLevantadas;
     int cartasLevantadas=0;
     int[] idLevantadas=new int[2];
@@ -43,26 +35,32 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     ImageView[] arrayImagesViews=new ImageView[2];
     GestoraActivity gestora;
     int cantidadAciertos=0;
-    int cantidadParejas=5;
+    int cantidadParejas=1;
     //ContadorActividad contadorActividad=new ContadorActividad();
     //Intent intent=new Intent(this, MainActivity.class);
+    //ContadorActividad contadorActividad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //img1=new ImageView(this);
-        //img2=new ImageView(this);
-        //img1.setImageResource(R.drawable.binaria);
-        //img2.setImageResource(R.drawable.enanaroja);
+        cantidadParejas++;
 
-        ContadorActividad contadorActividad=new ContadorActividad();
+
+        //ContadorActividad contadorActividad=new ContadorActividad();
         gestora=new GestoraActivity();
 
-        /*if(contadorActividad.getContador()>0) {
-            //arrayIdImages = gestora.cargaImagenesAleatorias(getIntent().getExtras().getInt("cantidadParejas"));
-            arrayIdImages = gestora.cargaImagenesAleatorias(cantidadParejas++);
+        /*if(contadorActividad.getContador()>1) {
+            arrayIdImages = gestora.cargaImagenesAleatorias(getIntent().getExtras().getInt("cantidadParejas"));
+            //arrayIdImages = gestora.cargaImagenesAleatorias(cantidadParejas++);
          }else{
+            arrayIdImages = gestora.cargaImagenesAleatorias(cantidadParejas);
+        }*/
+
+        /*if(savedInstanceState!=null) {
+            arrayIdImages = gestora.cargaImagenesAleatorias(savedInstanceState.getInt("cantidadParejas"));
+            //arrayIdImages = gestora.cargaImagenesAleatorias(cantidadParejas++);
+        }else{
             arrayIdImages = gestora.cargaImagenesAleatorias(cantidadParejas);
         }*/
         arrayIdImages = gestora.cargaImagenesAleatorias(cantidadParejas);
@@ -84,7 +82,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         levantaCarta(view, position);
-        arrayImagenesUsadas[position]=(ImageView) view;
+        //arrayImagenesUsadas[position]=(ImageView) view;//aquí!!!!!
     }
 
 
@@ -97,10 +95,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     * Postcondiciones: La carta se habrá levantado sino se ha levantado ya
     * */
     public void levantaCarta(View view, final int position){
+        final Intent intent=new Intent(this, MainActivity.class);
         final ImageView image;
         //cartasLevantadas++;
 
         if (!compruebaCartaLevantada(position) && cartasLevantadas<2) {
+            arrayImagenesUsadas[position]=(ImageView) view;
             cartasLevantadas++;
             marcaCartaLevantada(position);
             image = (ImageView) view;
@@ -109,15 +109,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             flip.reset();
             image.startAnimation(flip);
 
-            /*Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    image.setImageResource(arrayIdImages[position]);
-                }
-            },1500);*/
             image.setImageResource(arrayIdImages[position]);
-
 
             idLevantadas[cartasLevantadas - 1] = arrayIdImages[position];
             posicionLevantadas[cartasLevantadas - 1] = position;
@@ -133,16 +125,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                         cartasLevantadas=0;
                         if(acertados.getText().toString().equals(porAcertar.getText().toString().replace("/", ""))){
                             animaCartas();
-                            //cantidadParejas++;
-
-                           /* Intent intent=new Intent(this, MainActivity.class);
-                            intent.putExtra("cantidadParejas", cantidadParejas++);
-                            finish();
-                            startActivity(intent);*/
-
-                           /*finish();
-                           startActivity(getIntent());*/
-
+                            siguienteNivel();
                         }
 
                 } else {//si no ha acertado volteamos y desmarcamos las cartas levantadas, también actualizaremos el contador de cartas levantadas a 0
@@ -168,6 +151,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
 
     public void animaCartas(){
+        final Intent intent=new Intent(this, MainActivity.class);
+        //intent.putExtra("cantidadParejas", cantidadParejas++);
+        //finish();
+        //startActivity(intent);
         ImageView image=null;
         for(int i=0;i<arrayIdImages.length;i++){
             image=arrayImagenesUsadas[i];
@@ -175,17 +162,44 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             flip= AnimationUtils.loadAnimation(this, R.anim.rotate);
             flip.reset();
             image.startAnimation(flip);
-           /* Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    intent.putExtra("cantidadParejas", cantidadParejas++);
-                    finish();
-                    startActivity(intent);
-                }
-            },1500);*/
         }
+        /*Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //intent.putExtra("cantidadParejas", cantidadParejas++);
+                //finish();
+                //startActivity(intent);
+                //arrayIdImages=gestora.cargaImagenesAleatorias(cantidadParejas++);
+                //CustomGridAdapter gridAdapter=new CustomGridAdapter(this, arrayIdImages);
+                //gridView.setAdapter(new CustomGridAdapter(this, arrayIdImages));
+                Bundle bundle =new Bundle();
+                bundle.putInt("cantidadParejas", cantidadParejas++);
+                onCreate(bundle);
+            }
+        },1500);*/
     }
+
+    //siguienteNivel
+    /*Proposito:
+    * Prototipo:
+    * Precondiciones:
+    * Entradas:
+    * Salidas:
+    * Postcondiciones:
+    * */
+    public void siguienteNivel(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Bundle bundle =new Bundle();
+                bundle.putInt("cantidadParejas", cantidadParejas++);
+                onCreate(bundle);
+            }
+        },1500);
+    }
+
 
     //Tengo que guardar las cartas que se hayan levantado (posicion), y cuando se hayan levantado dos debo comprobar si ha acertado,
     //sino a acertado debo desmarcar las cartas levantadas, actualizar el contador de levantadas a 0
