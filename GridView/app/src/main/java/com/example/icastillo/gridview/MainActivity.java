@@ -1,6 +1,7 @@
 package com.example.icastillo.gridview;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     ImageView[] arrayImagesViews=new ImageView[2];
     GestoraActivity gestora;
     int cantidadAciertos=0;
+    int cantidadParejas=5;
+    //ContadorActividad contadorActividad=new ContadorActividad();
+    //Intent intent=new Intent(this, MainActivity.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +55,18 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         //img2=new ImageView(this);
         //img1.setImageResource(R.drawable.binaria);
         //img2.setImageResource(R.drawable.enanaroja);
+
+        ContadorActividad contadorActividad=new ContadorActividad();
         gestora=new GestoraActivity();
-        arrayIdImages=gestora.cargaImagenesAleatorias(6);
+
+        /*if(contadorActividad.getContador()>0) {
+            //arrayIdImages = gestora.cargaImagenesAleatorias(getIntent().getExtras().getInt("cantidadParejas"));
+            arrayIdImages = gestora.cargaImagenesAleatorias(cantidadParejas++);
+         }else{
+            arrayIdImages = gestora.cargaImagenesAleatorias(cantidadParejas);
+        }*/
+        arrayIdImages = gestora.cargaImagenesAleatorias(cantidadParejas);
+
         arrayLevantadas=gestora.cargaArrayBoolean(arrayIdImages.length, false);
         arrayImagenesUsadas=new ImageView[arrayIdImages.length];
         acertados=(TextView) findViewById(R.id.textoAcertados);
@@ -110,7 +124,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             arrayImagesViews[cartasLevantadas - 1] = (ImageView) view;
 
             if (cartasLevantadas == 2) {//Si hay dos cartas levantadas comprobamos si ha acertado
-                Toast.makeText(this, compruebaAcierto2(idLevantadas), Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, compruebaAcierto2(idLevantadas), Toast.LENGTH_LONG).show();---
+
                 //Comprobar Acierto
                 if (compruebaAcierto(idLevantadas)) {
                         cantidadAciertos++;
@@ -118,6 +133,16 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                         cartasLevantadas=0;
                         if(acertados.getText().toString().equals(porAcertar.getText().toString().replace("/", ""))){
                             animaCartas();
+                            //cantidadParejas++;
+
+                           /* Intent intent=new Intent(this, MainActivity.class);
+                            intent.putExtra("cantidadParejas", cantidadParejas++);
+                            finish();
+                            startActivity(intent);*/
+
+                           /*finish();
+                           startActivity(getIntent());*/
+
                         }
 
                 } else {//si no ha acertado volteamos y desmarcamos las cartas levantadas, también actualizaremos el contador de cartas levantadas a 0
@@ -154,7 +179,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    image.startAnimation(flip);
+                    intent.putExtra("cantidadParejas", cantidadParejas++);
+                    finish();
+                    startActivity(intent);
                 }
             },1500);*/
         }
