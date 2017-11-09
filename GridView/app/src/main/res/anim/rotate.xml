@@ -3,7 +3,7 @@
     android:fromDegrees="0"
     android:toDegrees="360"
     android:pivotX="10%"
-    android:pivotY="10%"
+    android:pivotY="-10%"
     android:duration="1000"
 
 />

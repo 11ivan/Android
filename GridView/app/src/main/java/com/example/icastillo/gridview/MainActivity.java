@@ -125,6 +125,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                         cartasLevantadas=0;
                         if(acertados.getText().toString().equals(porAcertar.getText().toString().replace("/", ""))){
                             animaCartas();
+                            cantidadAciertos=0;
                             siguienteNivel();
                         }
 
