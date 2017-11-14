@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.support.v4.content.FileProvider.getUriForFile;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     final int REQUEST_IMAGE_CAPTURE=1;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent takePicture=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePicture.resolveActivity(getPackageManager()) != null){
             //startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
+
             File photoFile = null;
             try {
                 photoFile = createImageFile();
@@ -54,12 +57,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
+                Uri photoURI = getUriForFile(this,"com.example.android.fileprovider",photoFile);
                 takePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
             }
+            //Uri photoURI = getUriForFile(this,"com.example.android.fileprovider",File.createTempFile());
         }
     }
 
@@ -69,9 +71,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName,".jpg", storageDir );
-
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = new File(getFilesDir(), "Pictures");
+        //File image = File.createTempFile(imageFileName,".jpg", storageDir );
+        File image=new File(storageDir, imageFileName+".jpg");
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
