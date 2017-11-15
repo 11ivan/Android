@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ActivityForResultCamara.iml" filepath="$PROJECT_DIR$/ActivityForResultCamara.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IntentMaps.iml" filepath="$PROJECT_DIR$/IntentMaps.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
