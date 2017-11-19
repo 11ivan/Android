@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ListaNBAActivityForResult.iml" filepath="$PROJECT_DIR$/ListaNBAActivityForResult.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GaleriaPersonalizada.iml" filepath="$PROJECT_DIR$/GaleriaPersonalizada.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
