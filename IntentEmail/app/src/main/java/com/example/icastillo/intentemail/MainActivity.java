@@ -64,29 +64,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return valido;
     }
 
-    /**
-     * Proposito: Validate given email with regular expression.
-     * Precondiciones: La cadena no estará vacía
-     * Entradas: Una cadena
-     * Salidas: Un booleano
-     * Postcondiciones: El booleano será verdadero si la cadena cumple la expresión regular false sino
-     */
-    /*public boolean validateEmail(String email) {
-        boolean vale;
-        // Compiles the given regular expression into a pattern.
-        Pattern pattern = Pattern.compile(PATTERN_EMAIL);
-
-        // Match the given input against this pattern
-        Matcher matcher = pattern.matcher(email);
-        vale=matcher.matches();
-        return vale;
-    }*/
-
-
 
     public static boolean validateEmail(String emailStr) {
         boolean vale;
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         vale=matcher.find();
         return vale;
     }
@@ -96,17 +77,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //String[] TO = {"ivancastillocalle@gmail.com"};
         //String[] CC = {"@gmail.com"};
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
+        //emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.setType("message/rfc822");
 
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, correoOrigen.getText().toString());
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{correoOrigen.getText().toString()});
         //emailIntent.putExtra(Intent.EXTRA_CC, correoOrigen.getText().toString());
         //emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Your subject");
         emailIntent.putExtra(Intent.EXTRA_TEXT, texto.getText().toString());
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-            finish();
+            //finish();
             //Log.i("Finished sending email...", "");
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(MainActivity.this,

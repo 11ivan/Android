@@ -45,8 +45,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void takePictureIntent(){
         Intent takePicture=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(takePicture.resolveActivity(getPackageManager()) != null){
-            //startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
+        startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
+        /*if(takePicture.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
 
             File photoFile = null;
             try {
@@ -60,9 +61,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Uri photoURI = getUriForFile(this,"com.example.android.fileprovider",photoFile);
                 takePicture.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
-            }
-            //Uri photoURI = getUriForFile(this,"com.example.android.fileprovider",File.createTempFile());
         }
+            //Uri photoURI = getUriForFile(this,"com.example.android.fileprovider",File.createTempFile());
+        }*/
+
     }
 
 
@@ -87,10 +89,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if(resultCode == Activity.RESULT_OK){
-                //extras=data.getExtras();
-                //imageBitMap=(Bitmap)extras.get("data");
-                //foto.setImageBitmap(imageBitMap);
-                foto.setImageURI(data.getData());
+                extras=data.getExtras();
+                imageBitMap=(Bitmap)extras.get("data");
+                foto.setImageBitmap(imageBitMap);
+                //foto.setImageURI(data.getData());
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {
