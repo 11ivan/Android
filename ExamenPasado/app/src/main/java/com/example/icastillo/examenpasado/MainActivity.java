@@ -21,6 +21,7 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
     Button btnAdd;
     MyAdapter adapterJugadores;
     ArrayList<Jugador> arrayJugadores;
+    ListaJugadoresMainActivity listaJugadoresMainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,12 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
         arrayJugadores=new ArrayList<Jugador>();
         adapterJugadores=new MyAdapter(this, R.layout.stylejugador, R.id.nombreJugador, arrayJugadores);
         setListAdapter(adapterJugadores);
+
+        listaJugadoresMainActivity=new ListaJugadoresMainActivity();
     }
+
+
+
 
 
     @Override
@@ -59,6 +65,7 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
                 //estadio.setText(equipo.getEstadio());
                 arrayJugadores.add(jugador);
                 adapterJugadores.notifyDataSetChanged();
+                //listaJugadoresMainActivity.getArrayListJugadoresActivity().add(jugador);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
