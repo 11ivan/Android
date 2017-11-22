@@ -48,10 +48,13 @@ public class MainActivity extends ListActivity implements TextWatcher, View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         button=(Button) findViewById(R.id.boton);
         button.setOnClickListener(this);
+
         adapterEquipos=new MyAdapter<Equipo>(this, R.layout.styleequiposimpar, R.id.idNombre, arrayEquipos);
         setListAdapter(adapterEquipos);
+
         autoCompleteText=(AutoCompleteTextView) findViewById(R.id.autocompleteText);
         autoCompleteText.addTextChangedListener(this);
         adapterAutoComplete=new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, arrayNombres);
