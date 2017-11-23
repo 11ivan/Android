@@ -17,9 +17,9 @@ public class ListaProductos2 {
         ProductoModa2 pantalon1=new ProductoModa2("Pantalon", "Pantalon Beige", "12.95", R.drawable.pantalonbeige, "Moda", "Beige", "42");
         ProductoModa2 pantalon2=new ProductoModa2("Pantalon", "Pantalon Caqui", "14.95", R.drawable.pantaloncaqui, "Moda", "Caqui", "41");
         ProductoModa2 pantalon3=new ProductoModa2("Pantalon", "Pantalon Negro", "11.95", R.drawable.pantalonnegro, "Moda", "Negro", "40");
-        ProductoModa2 zapato1=new ProductoModa2("Zapato", "Zapato Gris", "15.95", R.drawable.zapatogris, "Moda", "Rojo", "40");
-        ProductoModa2 zapato2=new ProductoModa2("Zapato", "Zapato Marron", "20.95", R.drawable.zapatomarron, "Moda", "Rojo", "42");
-        ProductoModa2 zapato3=new ProductoModa2("Zapato", "Zapato Negro", "23.95", R.drawable.zapatonegro, "Moda", "Rojo", "41");
+        ProductoModa2 zapato1=new ProductoModa2("Zapato", "Zapato Gris", "15.95", R.drawable.zapatogris, "Moda", "Gris", "40");
+        ProductoModa2 zapato2=new ProductoModa2("Zapato", "Zapato Marron", "20.95", R.drawable.zapatomarron, "Moda", "Marron", "42");
+        ProductoModa2 zapato3=new ProductoModa2("Zapato", "Zapato Negro", "23.95", R.drawable.zapatonegro, "Moda", "Negro", "41");
 
         ProductoMueble2 mesita=new ProductoMueble2("Mesa", "Mesa Beige", "50.95", R.drawable.mesabeige, "Muebles", "Beige");
         ProductoMueble2 mesit2=new ProductoMueble2("Mesa", "Mesa Roja", "89.95", R.drawable.mesarojiza, "Muebles", "Rojo");
