@@ -1,0 +1,11 @@
+EJERCICIO 1
+
+Hacer una aplicación que permita jugar al juego de "Piedra, papel, tijeras". La aplicación debe ser capaz de guardar y consultar estadísticas (partidas ganadas, partidas perdidas, veces que se ha elegido "Piedra", etc...), valiéndose para ello de SharedPreferences.
+
+EJERCICIO 2
+
+Realizar una aplicación que permita hacer fotografías con la aplicación de cámara nativa de Android. La aplicación debe poder guardar las fotografías, mostrarlas al usuario y hacerlas accesible a través de la galería nativa de Android.
+
+EJERCICIO 3
+
+Hacer una pequeña BD en Android que almacene información de equipos de la NBA. Posteriormente, hacer una aplicación que muestre en una lista los equipos de la NBA disponibles en la BD, y permita elegir uno de ellos para visualizar más información del mismo (por ejemplo: Logo, títulos ganados, etc...)
