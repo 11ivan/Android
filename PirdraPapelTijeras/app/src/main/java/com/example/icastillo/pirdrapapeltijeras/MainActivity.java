@@ -1,5 +1,6 @@
 package com.example.icastillo.pirdrapapeltijeras;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,17 +27,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        Intent intent=null;
         switch(view.getId()){
 
             case R.id.btnPlay:
-                
+                    intent=new Intent(this, JuegoActivity.class);
                 break;
-
 
             case R.id.btnEstadisticas:
-
+                    intent=new Intent(this, EstadisticasActivity.class);
                 break;
         }
+        startActivity(intent);
     }
 
 
