@@ -1,5 +1,7 @@
 package com.example.icastillo.pirdrapapeltijeras;
 
+import java.io.Serializable;
+
 /**
  * Created by icastillo on 04/12/2017.
  */
@@ -14,7 +16,7 @@ package com.example.icastillo.pirdrapapeltijeras;
 *
 * */
 
-public class Player {
+public class Player implements Serializable{
 
     private String nombre;
     private String password;
@@ -49,4 +51,26 @@ public class Player {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String toString(){
+        String cadena=nombre+","+password;
+        return cadena;
+    }
+
+    //Dos Player son iguales si tienen el mismo nombre y el mismo password
+    @Override
+    public boolean equals(Object obj){
+        boolean iguales=false;
+        Player playerComp=null;
+
+        if(obj instanceof Player){
+            playerComp=(Player) obj;
+            if(playerComp.getNombre().equals(this.nombre) && playerComp.getPassword().equals(this.password)){
+                iguales=true;
+            }
+        }
+        return iguales;
+    }
+
+
 }
