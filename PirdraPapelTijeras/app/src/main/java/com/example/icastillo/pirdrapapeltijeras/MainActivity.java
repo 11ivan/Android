@@ -10,6 +10,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button btnPlay;
     Button btnEstadisticas;
+    String nombreUsuario="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnPlay.setOnClickListener(this);
         btnEstadisticas.setOnClickListener(this);
 
+        nombreUsuario=getIntent().getStringExtra("NombreUsuario");
 
     }
 
@@ -32,10 +34,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btnPlay:
                     intent=new Intent(this, JuegoActivity.class);
+                    intent.putExtra("NombreUsuario", nombreUsuario);
                 break;
 
             case R.id.btnEstadisticas:
                     intent=new Intent(this, EstadisticasActivity.class);
+                    intent.putExtra("NombreUsuario", nombreUsuario);
                 break;
         }
         startActivity(intent);

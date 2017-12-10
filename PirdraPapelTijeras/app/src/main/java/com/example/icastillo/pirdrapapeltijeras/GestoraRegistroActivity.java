@@ -23,11 +23,11 @@ public class GestoraRegistroActivity {
     public int[] compruebaCamposRegistro(Context context, Player player, String confirmPassword){
         int[] arrayErrores={0,0,0,0};
         Util util=new Util();
-        UtilFicheros utilFicheros=new UtilFicheros();
+        GestoraFicheroPlayers gestoraFicheroPlayers =new GestoraFicheroPlayers();
 
         if(!util.compruebaCadena(player.getNombre())){
             arrayErrores[0]=1;
-        }else if(utilFicheros.nameExists(context, player.getNombre())){
+        }else if(gestoraFicheroPlayers.nameExists(context, player.getNombre())){
             arrayErrores[0]=2;
         }
 

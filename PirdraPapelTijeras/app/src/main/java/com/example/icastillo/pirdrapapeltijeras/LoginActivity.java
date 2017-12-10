@@ -8,8 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     EditText textUser;
@@ -19,7 +17,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button btnLogin;
     Button btnRegistro;
     Player player=new Player();
-    UtilFicheros utilFicheros=new UtilFicheros();
+    GestoraFicheroPlayers gestoraFicheroPlayers =new GestoraFicheroPlayers();
     GestoraLoginActivity gestoraLoginActivity=new GestoraLoginActivity();
 
     @Override
@@ -79,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     * */
     public void iniciaMainActivity(){
         Intent intent=new Intent(this, MainActivity.class);
+        intent.putExtra("NombreUsuario", player.getNombre());
         startActivity(intent);
     }
 

@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">PirdraPapelTijeras</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="veces_piedra">Veces piedra</string>
+    <string name="veces_papel">Veces papel</string>
+    <string name="veces_tijera">Veces tijera</string>
+    <string name="victorias">Victorias</string>
+    <string name="derrotas">Derrotas</string>
+    <string name="empates">Empates</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

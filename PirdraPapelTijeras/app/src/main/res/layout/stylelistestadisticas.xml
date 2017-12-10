@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtNombreJugador"
+
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Victorias:"
+        android:id="@+id/victorias"
+        android:layout_below="@id/txtNombreJugador"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="45dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtVictorias"
+
+        android:layout_toRightOf="@id/victorias"
+        android:layout_below="@id/txtNombreJugador"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Derrotas:"
+        android:id="@+id/derrotas"
+        android:layout_below="@id/txtNombreJugador"
+        android:layout_toRightOf="@id/txtVictorias"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="25dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtDerrotas"
+
+        android:layout_below="@id/txtNombreJugador"
+        android:layout_toRightOf="@id/derrotas"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Empates:"
+        android:id="@+id/empates"
+        android:layout_below="@id/txtNombreJugador"
+        android:layout_toRightOf="@id/txtDerrotas"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="25dp"
+        />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtEmpates"
+
+        android:layout_below="@id/txtNombreJugador"
+        android:layout_toRightOf="@id/empates"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Veces Piedra:"
+        android:id="@+id/vecesPiedra"
+        android:layout_below="@id/victorias"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="12dp"
+        />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtVecesPiedra"
+
+        android:layout_below="@id/victorias"
+        android:layout_toRightOf="@id/vecesPiedra"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Veces Papel:"
+        android:id="@+id/vecesPapel"
+        android:layout_below="@id/victorias"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/txtVecesPiedra"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtVecesPapel"
+
+        android:layout_below="@id/victorias"
+        android:layout_toRightOf="@id/vecesPapel"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Veces Tijera:"
+        android:id="@+id/vecesTijera"
+        android:layout_below="@id/victorias"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/txtVecesPapel"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtVecesTijera"
+
+        android:layout_below="@id/victorias"
+        android:layout_toRightOf="@id/vecesTijera"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="10dp"
+        />
+
+</RelativeLayout>

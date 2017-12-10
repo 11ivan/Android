@@ -2,6 +2,7 @@ package com.example.icastillo.pirdrapapeltijeras;
 
 import android.content.Context;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,12 +10,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 /**
  * Created by icastillo on 06/12/2017.
  */
 
-public class UtilFicheros {
+public class GestoraFicheroPlayers {
+
+    private final String FILE_PLAYERS="FilePlayers.dat";
 
     /*
     * Propósito: Ecribe un objeto Player en el fichero FilePlayers.dat
@@ -25,7 +29,7 @@ public class UtilFicheros {
     * */
     public boolean writePlayer(Context context, Player player){
         boolean exito=true;
-        File file=new File(context.getFilesDir(), "FilePlayers.dat");
+        File file=new File(context.getFilesDir(), FILE_PLAYERS);
         FileOutputStream fos=null;
         ObjectOutputStream oos=null;
         try {
@@ -65,7 +69,7 @@ public class UtilFicheros {
     * */
     public Player readPlayer(Context context, Player playerBuscado){
         Player player=null;
-        File file=new File(context.getFilesDir(), "FilePlayers.dat");
+        File file=new File(context.getFilesDir(), FILE_PLAYERS);
         FileInputStream fis=null;
         ObjectInputStream ois=null;
         boolean encontrado=false;
@@ -86,6 +90,10 @@ public class UtilFicheros {
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            }catch (EOFException e) {
+                if(encontrado==false){
+                    player=null;
+                }
             }catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -115,7 +123,7 @@ public class UtilFicheros {
     * */
     public boolean nameExists(Context context, String name){
         boolean existe=false;
-        File file=new File(context.getFilesDir(), "FilePlayers.dat");
+        File file=new File(context.getFilesDir(), FILE_PLAYERS);
         FileInputStream fis=null;
         ObjectInputStream ois=null;
         Player player=null;
@@ -135,6 +143,7 @@ public class UtilFicheros {
                 }
             }catch (FileNotFoundException e) {
                 e.printStackTrace();
+            }catch (EOFException e) {
             }catch (IOException e) {
                 e.printStackTrace();
             }catch (ClassNotFoundException e) {
@@ -154,5 +163,51 @@ public class UtilFicheros {
         }//fin si
         return existe;
     }
+
+    /*
+    * Propósito: Devuelve un listado con los nombres de los Player del fichero FilePlayers.dat
+    * Precondiciones: no hay
+    * Entradas: El contexto de la aplicacion
+    * Salidas: Un arrayList de Cadenas
+    * Postcondiciones: El arrayList contendrá los nombres de los player que haya en el fichero
+    * */
+    public ArrayList<String> getNamePlayerList(Context context){
+        ArrayList<String> arrayListNames=new ArrayList<>();
+        File file=new File(FILE_PLAYERS);
+        FileInputStream fis=null;
+        ObjectInputStream ois=null;
+        Player player=null;
+
+        try {
+            fis=new FileInputStream(file);
+            ois=new ObjectInputStream(fis){@Override protected void readStreamHeader(){}};
+
+            player=(Player) ois.readObject();
+            while (player!=null){
+                arrayListNames.add(player.getNombre());
+                player=(Player) ois.readObject();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (EOFException e){
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if(ois!=null) {
+                    ois.close();
+                }
+                if(fis!=null){
+                    fis.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return arrayListNames;
+    }
+
 
 }

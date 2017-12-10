@@ -21,12 +21,12 @@ public class GestoraLoginActivity {
     public int[] compruebaCamposLogin(Context context, Player player){
         int[] arrayErrores={0,0,0};
         Util util=new Util();
-        UtilFicheros utilFicheros=new UtilFicheros();
+        GestoraFicheroPlayers gestoraFicheroPlayers =new GestoraFicheroPlayers();
         Player playerCopia=null;
 
         if(!util.compruebaCadena(player.getNombre())){
             arrayErrores[0]=1;
-        }else if(!utilFicheros.nameExists(context, player.getNombre())){
+        }else if(!gestoraFicheroPlayers.nameExists(context, player.getNombre())){
             arrayErrores[0]=2;
         }
 
@@ -34,7 +34,7 @@ public class GestoraLoginActivity {
             arrayErrores[1]=1;
         }
         if(arrayErrores[0]==0 && arrayErrores[1]==0){
-            if(utilFicheros.readPlayer(context, player)==null){
+            if(gestoraFicheroPlayers.readPlayer(context, player)==null){
                 arrayErrores[2]=1;
             }
         }

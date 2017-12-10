@@ -21,7 +21,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     Button btnRegistro;
     Player player=new Player();
     Util util=new Util();
-    UtilFicheros utilFicheros=new UtilFicheros();
+    GestoraFicheroPlayers gestoraFicheroPlayers =new GestoraFicheroPlayers();
     GestoraRegistroActivity gestoraRegistroActivity=new GestoraRegistroActivity();
 
     @Override
@@ -61,7 +61,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         //Si no hay errores escribimos el usuario en el fichero y volvemos a LoginActivity
         if(!compruebaErrores(arrayErrores)){
             //Escribir usuario en fichero
-            utilFicheros.writePlayer(this, player);
+            gestoraFicheroPlayers.writePlayer(this, player);
             //Volver a LoginActivity
             iniciaLoginActivity();
         }
