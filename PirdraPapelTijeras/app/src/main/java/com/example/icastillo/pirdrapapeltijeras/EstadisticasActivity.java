@@ -17,10 +17,10 @@ import java.util.Calendar;
 
 public class EstadisticasActivity extends ListActivity {
 
+    GestoraEstadisticasActivity gestoraEstadisticasActivity=new GestoraEstadisticasActivity();
     Spinner spinner;
     ArrayList<Player> arrayListPlayers=new ArrayList<>();
     MyAdapter<Player> adapterPlayers;
-    GestoraEstadisticasActivity gestoraEstadisticasActivity=new GestoraEstadisticasActivity();
     SharedPreferences sharedPreferences;
 
     @Override
@@ -29,7 +29,7 @@ public class EstadisticasActivity extends ListActivity {
         setContentView(R.layout.activity_estadisticas);
 
         spinner=(Spinner) findViewById(R.id.spinner);
-        sharedPreferences=getPreferences(Context.MODE_PRIVATE);
+        sharedPreferences=getSharedPreferences( getString(R.string.file_estadisticas), Context.MODE_PRIVATE);
         arrayListPlayers=gestoraEstadisticasActivity.getListPlayers(this, sharedPreferences);
         adapterPlayers=new MyAdapter<Player>(this, R.layout.stylelistestadisticas, R.id.txtNombreJugador, arrayListPlayers);
         setListAdapter(adapterPlayers);
@@ -45,7 +45,7 @@ public class EstadisticasActivity extends ListActivity {
 
         @Override
         public int getViewTypeCount() {
-            return 1;
+            return 2;
         }
 
         @Override
@@ -60,7 +60,11 @@ public class EstadisticasActivity extends ListActivity {
 
             if(row==null ) {
                 LayoutInflater inflater = getLayoutInflater();
-                row=inflater.inflate(R.layout.stylelistestadisticas, parent, false);
+                if(position%getViewTypeCount()==0) {
+                    row = inflater.inflate(R.layout.styleliststadisticaspar, parent, false);
+                }else {
+                    row = inflater.inflate(R.layout.stylelistestadisticas, parent, false);
+                }
                 viewHolderPlayer=new ViewHolderPlayer(row, R.id.txtNombreJugador, R.id.txtVictorias, R.id.txtDerrotas, R.id.txtEmpates, R.id.txtVecesPiedra, R.id.txtVecesPapel, R.id.txtVecesTijera);
                 row.setTag(viewHolderPlayer);
             }else{
@@ -69,12 +73,12 @@ public class EstadisticasActivity extends ListActivity {
 
             player=new Player(arrayListPlayers.get(position));
             viewHolderPlayer.getNombre().setText(player.getNombre());
-            viewHolderPlayer.getVictorias().setText(player.getVictorias());
-            viewHolderPlayer.getDerrotas().setText(player.getDerrotas());
-            viewHolderPlayer.getEmpates().setText(player.getEmpates());
-            viewHolderPlayer.getVecesPiedra().setText(player.getVecesPiedra());
-            viewHolderPlayer.getVecesPapel().setText(player.getVecesPapel());
-            viewHolderPlayer.getVecesTijera().setText(player.getVecesTijera());
+            viewHolderPlayer.getVictorias().setText(String.valueOf(player.getVictorias()));
+            viewHolderPlayer.getDerrotas().setText(String.valueOf(player.getDerrotas()));
+            viewHolderPlayer.getEmpates().setText(String.valueOf(player.getEmpates()));
+            viewHolderPlayer.getVecesPiedra().setText(String.valueOf(player.getVecesPiedra()));
+            viewHolderPlayer.getVecesPapel().setText(String.valueOf(player.getVecesPapel()));
+            viewHolderPlayer.getVecesTijera().setText(String.valueOf(player.getVecesTijera()));
 
             return row;
         }

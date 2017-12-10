@@ -29,13 +29,13 @@ public class GestoraEstadisticasActivity {
 
         for (int i=0;i<listaNombresPlayers.size();i++){
             player=new Player();
-            player.setNombre(listaNombresPlayers.get(i));
-            player.setVictorias(sharedPreferences.getInt(player.getNombre()+"victorias", 0));
-            player.setDerrotas(sharedPreferences.getInt(player.getNombre()+"derrotas", 0));
-            player.setEmpates(sharedPreferences.getInt(player.getNombre()+"empates", 0));
-            player.setVecesPiedra(sharedPreferences.getInt(player.getNombre()+"veces_piedra", 0));
-            player.setVecesPapel(sharedPreferences.getInt(player.getNombre()+"veces_papel", 0));
-            player.setVecesTijera(sharedPreferences.getInt(player.getNombre()+"veces_tijera", 0));
+            player.setNombre(listaNombresPlayers.get(i).replace(",", ""));
+            player.setVictorias(sharedPreferences.getInt(player.getNombre()+context.getString(R.string.victorias), 0));
+            player.setDerrotas(sharedPreferences.getInt(player.getNombre()+context.getString(R.string.derrotas), 0));
+            player.setEmpates(sharedPreferences.getInt(player.getNombre()+context.getString(R.string.empates), 0));
+            player.setVecesPiedra(sharedPreferences.getInt(player.getNombre()+context.getString(R.string.veces_piedra), 0));
+            player.setVecesPapel(sharedPreferences.getInt(player.getNombre()+context.getString(R.string.veces_papel), 0));
+            player.setVecesTijera(sharedPreferences.getInt(player.getNombre()+context.getString(R.string.veces_tijera), 0));
             listPlayers.add(player);
         }
 

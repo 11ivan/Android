@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">PirdraPapelTijeras</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="file_estadisticas">File Estadisticas</string>
     <string name="veces_piedra">Veces piedra</string>
     <string name="veces_papel">Veces papel</string>
     <string name="veces_tijera">Veces tijera</string>

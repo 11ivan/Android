@@ -173,7 +173,7 @@ public class GestoraFicheroPlayers {
     * */
     public ArrayList<String> getNamePlayerList(Context context){
         ArrayList<String> arrayListNames=new ArrayList<>();
-        File file=new File(FILE_PLAYERS);
+        File file=new File(context.getFilesDir(), FILE_PLAYERS);
         FileInputStream fis=null;
         ObjectInputStream ois=null;
         Player player=null;

@@ -59,6 +59,12 @@ public class Player implements Serializable{
     public Player(Player player){
         this.nombre=player.getNombre();
         this.password=player.getPassword();
+        this.victorias=player.getVictorias();
+        this.derrotas=player.getDerrotas();
+        this.empates=player.getEmpates();
+        this.vecesPiedra=player.getVecesPiedra();
+        this.vecesPapel=player.getVecesPapel();
+        this.vecesTijera=player.getVecesTijera();
     }
 
     public String getNombre() {

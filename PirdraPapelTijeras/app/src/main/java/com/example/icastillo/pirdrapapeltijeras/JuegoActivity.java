@@ -25,7 +25,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     ImageView imagenMiEleccion;
     ImageView imagenEleccionMaquina;
     boolean haPulsado=false;
-    Integer[] arrayImagenes={R.drawable.piedra, R.drawable.ocb, R.drawable.tijeras};
+    Integer[] arrayImagenes={R.drawable.piedra, R.drawable.ocb, R.drawable.manostijeras};
     int posLevantadaMaquina;
     int posLevantadaUsuario;
     String nombreUsuario="";
@@ -63,7 +63,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         popupMenu.getMenuInflater().inflate(R.menu.popupmenu, popupMenu.getMenu());
         nombreUsuario=getIntent().getStringExtra("NombreUsuario");
 
-        sharedPreferences=getPreferences(Context.MODE_PRIVATE);
+        sharedPreferences=getSharedPreferences(getString(R.string.file_estadisticas), Context.MODE_PRIVATE);
         editor=sharedPreferences.edit();
     }
 
@@ -189,7 +189,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-        /*
+    /*
     * Proposito: Pone la imagen por defecto en las elecciones
     * Precondiciones: hay dos imagenes elegidas
     * Entradas: no hay
@@ -278,15 +278,15 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     * Salidas: No hay
     * Postcondiciones: Se ha guardado en el fichero sharedPreferences las estadísticas de juego
     * */
-    public void guardaEstadisticas(){
-        if(sharedPreferences.contains(nombreUsuario+getString(R.string.victorias))){
-            editor.putInt(nombreUsuario + getString(R.string.veces_piedra), vecesPiedra+sharedPreferences.getInt(getString(R.string.veces_piedra), 0) );
-            editor.putInt(nombreUsuario + getString(R.string.veces_papel), vecesPapel+sharedPreferences.getInt(getString(R.string.veces_papel), 0));
-            editor.putInt(nombreUsuario + getString(R.string.veces_tijera), vecesTijera+sharedPreferences.getInt(getString(R.string.veces_tijera), 0));
-            editor.putInt(nombreUsuario + getString(R.string.victorias), victorias+sharedPreferences.getInt(getString(R.string.victorias), 0));
-            editor.putInt(nombreUsuario + getString(R.string.derrotas), derrotas+sharedPreferences.getInt(getString(R.string.derrotas), 0));
-            editor.putInt(nombreUsuario + getString(R.string.empates), empates+sharedPreferences.getInt(getString(R.string.empates), 0));
-        }else {
+    public void guardaEstadisticas(){//QUIZAS PODRIA AHORRAR EL IF DEBIDO A LAS ENTRADAS DE LOS METODOS GET DE SHAREDPREFERERNCES
+        if(sharedPreferences.contains(nombreUsuario+getString(R.string.victorias))){//si ya se han guardado algunas estadisticas sobre este jugador se suman a las que ya tenia
+            editor.putInt(nombreUsuario + getString(R.string.veces_piedra), vecesPiedra + sharedPreferences.getInt(getString(R.string.veces_piedra), 0) );//las entradas de cualquier metodo get de
+            editor.putInt(nombreUsuario + getString(R.string.veces_papel), vecesPapel + sharedPreferences.getInt(getString(R.string.veces_papel), 0));    //sharedPreferences exige un valor por defecto
+            editor.putInt(nombreUsuario + getString(R.string.veces_tijera), vecesTijera + sharedPreferences.getInt(getString(R.string.veces_tijera), 0)); //en caso de no encntrar la clave buscada
+            editor.putInt(nombreUsuario + getString(R.string.victorias), victorias + sharedPreferences.getInt(getString(R.string.victorias), 0));
+            editor.putInt(nombreUsuario + getString(R.string.derrotas), derrotas + sharedPreferences.getInt(getString(R.string.derrotas), 0));
+            editor.putInt(nombreUsuario + getString(R.string.empates), empates + sharedPreferences.getInt(getString(R.string.empates), 0));
+        }else {//sino se guardaran como nuevas
             editor.putInt(nombreUsuario + getString(R.string.veces_piedra), vecesPiedra);
             editor.putInt(nombreUsuario + getString(R.string.veces_papel), vecesPapel);
             editor.putInt(nombreUsuario + getString(R.string.veces_tijera), vecesTijera);
