@@ -76,6 +76,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     * Postcondiciones: Se ha iniciado la actividad LoginActivity
     * */
     public void iniciaMainActivity(){
+        finish();
         Intent intent=new Intent(this, MainActivity.class);
         intent.putExtra("NombreUsuario", player.getNombre());
         startActivity(intent);
@@ -89,6 +90,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     * Postcondiciones: Se ha iniciado la actividad RegistroActivity
     * */
     public void iniciaRegistroActivity(){
+        finish();
         Intent intent=new Intent(this, RegistroActivity.class);
         startActivity(intent);
     }

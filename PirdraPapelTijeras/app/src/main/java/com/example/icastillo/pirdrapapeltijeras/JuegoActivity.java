@@ -25,7 +25,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     ImageView imagenMiEleccion;
     ImageView imagenEleccionMaquina;
     boolean haPulsado=false;
-    Integer[] arrayImagenes={R.drawable.piedra, R.drawable.ocb, R.drawable.manostijeras};
+    Integer[] arrayImagenes={R.drawable.piedra, R.drawable.papel, R.drawable.manostijeras};
     int posLevantadaMaquina;
     int posLevantadaUsuario;
     String nombreUsuario="";
@@ -264,6 +264,7 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
             case R.id.salir:
                     //popupMenu.dismiss();
                     guardaEstadisticas();
+                    finish();
                     Intent intent=new Intent(this, MainActivity.class);
                     startActivity(intent);
                 break;

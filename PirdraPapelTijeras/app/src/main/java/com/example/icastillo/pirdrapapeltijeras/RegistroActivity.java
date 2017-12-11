@@ -3,6 +3,7 @@ package com.example.icastillo.pirdrapapeltijeras;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,8 +76,23 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     * Postcondiciones: Se ha iniciado la actividad LoginActivity
     * */
     public void iniciaLoginActivity(){
+        finish();
         Intent intent=new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        boolean pulsado=false;
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            pulsado=true;
+            iniciaLoginActivity();
+        }
+        //return super.onKeyDown(keyCode, event);
+        return pulsado;
     }
 
 
