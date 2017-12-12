@@ -77,7 +77,8 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
         {
             pulsado=true;
             //Mostrar PopUpMenu
-            muestraPopUpMenu();
+            //muestraPopUpMenu();
+            popupMenu.show();
         }
         //return super.onKeyDown(keyCode, event);
         return pulsado;
@@ -280,21 +281,21 @@ public class JuegoActivity extends AppCompatActivity implements View.OnClickList
     * Postcondiciones: Se ha guardado en el fichero sharedPreferences las estadísticas de juego
     * */
     public void guardaEstadisticas(){//QUIZAS PODRIA AHORRAR EL IF DEBIDO A LAS ENTRADAS DE LOS METODOS GET DE SHAREDPREFERERNCES
-        if(sharedPreferences.contains(nombreUsuario+getString(R.string.victorias))){//si ya se han guardado algunas estadisticas sobre este jugador se suman a las que ya tenia
+        //if(sharedPreferences.contains(nombreUsuario+getString(R.string.victorias))){//si ya se han guardado algunas estadisticas sobre este jugador se suman a las que ya tenia
             editor.putInt(nombreUsuario + getString(R.string.veces_piedra), vecesPiedra + sharedPreferences.getInt(getString(R.string.veces_piedra), 0) );//las entradas de cualquier metodo get de
             editor.putInt(nombreUsuario + getString(R.string.veces_papel), vecesPapel + sharedPreferences.getInt(getString(R.string.veces_papel), 0));    //sharedPreferences exige un valor por defecto
             editor.putInt(nombreUsuario + getString(R.string.veces_tijera), vecesTijera + sharedPreferences.getInt(getString(R.string.veces_tijera), 0)); //en caso de no encntrar la clave buscada
             editor.putInt(nombreUsuario + getString(R.string.victorias), victorias + sharedPreferences.getInt(getString(R.string.victorias), 0));
             editor.putInt(nombreUsuario + getString(R.string.derrotas), derrotas + sharedPreferences.getInt(getString(R.string.derrotas), 0));
             editor.putInt(nombreUsuario + getString(R.string.empates), empates + sharedPreferences.getInt(getString(R.string.empates), 0));
-        }else {//sino se guardaran como nuevas
+        /*}else {//sino se guardaran como nuevas
             editor.putInt(nombreUsuario + getString(R.string.veces_piedra), vecesPiedra);
             editor.putInt(nombreUsuario + getString(R.string.veces_papel), vecesPapel);
             editor.putInt(nombreUsuario + getString(R.string.veces_tijera), vecesTijera);
             editor.putInt(nombreUsuario + getString(R.string.victorias), victorias);
             editor.putInt(nombreUsuario + getString(R.string.derrotas), derrotas);
             editor.putInt(nombreUsuario + getString(R.string.empates), empates);
-        }
+        }*/
         editor.commit();
     }
 

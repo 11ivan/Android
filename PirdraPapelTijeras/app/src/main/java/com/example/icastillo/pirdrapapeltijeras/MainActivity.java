@@ -62,6 +62,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return pulsado;
     }
 
+    /*
+    *
+    *
+    *
+    * */
     public void ShowDialog(){
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
         builder.setCancelable(false);
