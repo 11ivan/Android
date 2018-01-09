@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity(tableName = "Equipos")
 public class Equipo {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID")
     private int _id;
 
@@ -26,6 +26,11 @@ public class Equipo {
         _id=0;
         _nombre="";
         _estadio="";
+    }
+
+    public Equipo(String nombre, String estadio){
+        this._nombre=nombre;
+        this._estadio=estadio;
     }
 
     public int getId() {
