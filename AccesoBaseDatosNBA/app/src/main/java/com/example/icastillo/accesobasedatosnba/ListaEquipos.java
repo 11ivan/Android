@@ -1,58 +1,28 @@
 package com.example.icastillo.accesobasedatosnba;
 
 import android.app.ListActivity;
-import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Toast;
 
-public class MainActivity extends ListActivity implements View.OnClickListener {
+public class ListaEquipos extends ListActivity {
 
-    /*Equipo[] equipos={new Equipo("Boston Celtics", "TD Garden"),
-            new Equipo("Los Angeles Lakers", "Staples Center"),
-            new Equipo("New York Knicks", "Madison Square Garden"),
-            new Equipo("Chicago Bulls", "United Center"),
-            new Equipo("Miami Heat", "AmericanAirlines Arena"),
-            new Equipo("Dallas Maverick", "American Airlines Center"),
-            new Equipo("Denver Nugget", "Pepsi Center"),
-            new Equipo("Sacramento Kings", "Golden 1 Center")};*/
-
-    Button btnVerEquipos;
     MyAdapter<Equipo> adapterEquipos;
     Equipo[] equiposDataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        /*AppDataBase.getDataBase(this).
-                equipoDAO().insertEquipos(equipos);*/
-
-        btnVerEquipos=(Button) findViewById(R.id.btnEquipos);
-        btnVerEquipos.setOnClickListener(this);
+        setContentView(R.layout.activity_lista_equipos);
 
         equiposDataBase=AppDataBase.getDataBase(this).equipoDAO().getEquipos();
         adapterEquipos=new MyAdapter<Equipo>(this, R.layout.styleequipos, R.id.idEquipo, equiposDataBase );
-        //setListAdapter(adapterEquipos);
-    }
-
-
-
-    @Override
-    public void onClick(View view) {
-        /*Intent intent=new Intent(this, ListaEquipos.class);
-        startActivity(intent);*/
         setListAdapter(adapterEquipos);
     }
-
 
     class MyAdapter<T> extends ArrayAdapter<T> {
 
@@ -93,5 +63,6 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
         }
 
     }
+
 
 }

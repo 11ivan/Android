@@ -35,36 +35,35 @@ public class Jugador {
         _idEquipo=0;
     }
 
-    public int getID() {
+    public int get_id() {
         return _id;
     }
 
-    public void setId(int id) {
-        this._id = id;
+    public void set_id(int _id) {
+        this._id = _id;
     }
 
-    public String getNombre() {
+    public String get_nombre() {
         return _nombre;
     }
 
-    public void setNombre(String nombre) {
-        this._nombre = nombre;
+    public void set_nombre(String _nombre) {
+        this._nombre = _nombre;
     }
 
-    public int getIdEquipo() {
-        return _idEquipo;
-    }
-
-    public void setIdEquipo(int idEquipo) {
-        this._idEquipo = idEquipo;
-    }
-
-    public Date getFechaNac() {
+    public Date get_fechaNac() {
         return _fechaNac;
     }
 
-    public void setFechaNac(Date fechaNac) {
-        this._fechaNac = fechaNac;
+    public void set_fechaNac(Date _fechaNac) {
+        this._fechaNac = _fechaNac;
     }
 
+    public int get_idEquipo() {
+        return _idEquipo;
+    }
+
+    public void set_idEquipo(int _idEquipo) {
+        this._idEquipo = _idEquipo;
+    }
 }

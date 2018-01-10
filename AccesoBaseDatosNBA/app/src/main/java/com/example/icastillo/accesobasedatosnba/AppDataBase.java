@@ -6,6 +6,7 @@ import android.arch.persistence.room.DatabaseConfiguration;
 import android.arch.persistence.room.InvalidationTracker;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 /**
@@ -13,10 +14,11 @@ import android.content.Context;
  */
 
 @Database(entities = {Equipo.class, Jugador.class}, version = 1)
+@TypeConverters(value = Converters.class)
 public abstract class AppDataBase extends RoomDatabase {
 
     public abstract DAOEquipos equipoDAO();
-    public abstract Jugador jugadorDAO();
+    public abstract DAOJugadores jugadorDAO();
 
 
     private static AppDataBase INSTANCE;
@@ -26,7 +28,9 @@ public abstract class AppDataBase extends RoomDatabase {
         if(INSTANCE==null){
             synchronized (AppDataBase.class){
                 if(INSTANCE==null){
-                    INSTANCE= Room.databaseBuilder(context.getApplicationContext(),AppDataBase.class, "NBA.db").build();
+                    INSTANCE= Room.databaseBuilder(context.getApplicationContext(),AppDataBase.class, "NBA.db")
+                            .allowMainThreadQueries()
+                            .build();
                 }
             }
         }

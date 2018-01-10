@@ -33,30 +33,28 @@ public class Equipo {
         this._estadio=estadio;
     }
 
-    public int getId() {
+
+    public int get_id() {
         return _id;
     }
 
-    public void setId(int id) {
-        this._id = id;
+    public void set_id(int _id) {
+        this._id = _id;
     }
 
-    public String getNombre() {
+    public String get_nombre() {
         return _nombre;
     }
 
-    public void setNombre(String nombre) {
-        this._nombre = nombre;
+    public void set_nombre(String _nombre) {
+        this._nombre = _nombre;
     }
 
-    public String getEstadio() {
+    public String get_estadio() {
         return _estadio;
     }
 
-    public void setEstadio(String estadio) {
-        this._estadio = estadio;
+    public void set_estadio(String _estadio) {
+        this._estadio = _estadio;
     }
-
-
-
 }
