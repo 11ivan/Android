@@ -1,9 +1,14 @@
 package com.example.icastillo.accesobasedatosnba;
 
 import android.app.ListActivity;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +18,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class MainActivity extends ListActivity implements View.OnClickListener {
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     /*Equipo[] equipos={new Equipo("Boston Celtics", "TD Garden"),
             new Equipo("Los Angeles Lakers", "Staples Center"),
@@ -35,6 +41,24 @@ public class MainActivity extends ListActivity implements View.OnClickListener {
 
         /*AppDataBase.getDataBase(this).
                 equipoDAO().insertEquipos(equipos);*/
+
+        /*final VMMainActivity viewModel = ViewModelProviders.of((FragmentActivity) getApplicationContext()).get(VMMainActivity.class);
+        viewModel.userLiveData.observer(this, new Observer() {
+            @Override
+            public void onChanged(@Nullable Equipo data) {
+                // update ui.
+            }
+        });*/
+
+        final VMMainActivity viewModel = ViewModelProviders.of(this).get(VMMainActivity.class);
+
+        viewModel.userLiveData.observe(this, new Observer() {
+            @Override
+            public void onChanged(@Nullable Object o) {
+
+            }
+        });
+
 
         btnVerEquipos=(Button) findViewById(R.id.btnEquipos);
         btnVerEquipos.setOnClickListener(this);
