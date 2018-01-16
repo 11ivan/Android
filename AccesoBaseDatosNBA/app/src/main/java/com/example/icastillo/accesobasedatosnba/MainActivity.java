@@ -1,5 +1,6 @@
 package com.example.icastillo.accesobasedatosnba;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button btnVerEquipos;
     MyAdapter<Equipo> adapterEquipos;
     Equipo[] equiposDataBase;
+    ListView listView;
+    VMMainActivity viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,21 +54,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });*/
 
-        final VMMainActivity viewModel = ViewModelProviders.of(this).get(VMMainActivity.class);
+        listView=(ListView) findViewById(R.id.lista);
 
-        viewModel.userLiveData.observe(this, new Observer() {
+        //equiposDataBase=AppDataBase.getDataBase(this).equipoDAO().getEquipos();
+
+
+        viewModel = ViewModelProviders.of(this).get(VMMainActivity.class);
+
+        //viewModel.cargaLista(getApplication());
+
+        //adapterEquipos=new MyAdapter<Equipo>(this, R.layout.styleequipos, R.id.idEquipo, viewModel.equiposLiveData.getValue());
+
+        viewModel.equiposLiveData.observe(this, new Observer() {
             @Override
             public void onChanged(@Nullable Object o) {
-
+                /*if(adapterEquipos!=null) {
+                    listView.setAdapter(adapterEquipos);
+                }*/
+                if(viewModel.equiposLiveData.getValue().length>0) {
+                    adapterEquipos = new MyAdapter<Equipo>(getApplicationContext(), R.layout.styleequipos, R.id.idEquipo, viewModel.equiposLiveData.getValue());
+                    listView.setAdapter(adapterEquipos);
+                }
             }
         });
-
 
         btnVerEquipos=(Button) findViewById(R.id.btnEquipos);
         btnVerEquipos.setOnClickListener(this);
 
-        equiposDataBase=AppDataBase.getDataBase(this).equipoDAO().getEquipos();
-        adapterEquipos=new MyAdapter<Equipo>(this, R.layout.styleequipos, R.id.idEquipo, equiposDataBase );
         //setListAdapter(adapterEquipos);
     }
 
@@ -74,7 +90,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         /*Intent intent=new Intent(this, ListaEquipos.class);
         startActivity(intent);*/
-        setListAdapter(adapterEquipos);
+        viewModel.cargaLista(getApplication());
+        /*if(viewModel.equiposLiveData.getValue().length>0) {
+            adapterEquipos = new MyAdapter<Equipo>(this, R.layout.styleequipos, R.id.idEquipo, viewModel.equiposLiveData.getValue());
+            listView.setAdapter(adapterEquipos);
+        }*/
+
     }
 
 
@@ -109,9 +130,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 viewHolder=(ViewHolder) row.getTag();
             }
 
-            viewHolder.getId().setText(String.valueOf(equiposDataBase[position].get_id()));
-            viewHolder.getNombre().setText(equiposDataBase[position].get_nombre());
-            viewHolder.getEstadio().setText(equiposDataBase[position].get_estadio());
+            viewHolder.getId().setText(String.valueOf(viewModel.equiposLiveData.getValue()[position].get_id()));
+            viewHolder.getNombre().setText(viewModel.equiposLiveData.getValue()[position].get_nombre());
+            viewHolder.getEstadio().setText(viewModel.equiposLiveData.getValue()[position].get_estadio());
 
             return (row);
         }
