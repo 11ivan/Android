@@ -1,16 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cuatroenraya.icastillo.cuatroenraya.MainActivity">
+    tools:context="com.cuatroenraya.icastillo.cuatroenraya.MainActivity"
+    >
 
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tablero4enraya"
+        android:layout_centerInParent="true"
+        />
+
+    <LinearLayout
+        android:layout_width="89dp"
         android:layout_height="match_parent"
-        android:background="@drawable/Tablero4EnRayaMod"/>
+        android:orientation="vertical"
+        android:id="@+id/col0"
+        >
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="84dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/col1"
+        android:layout_toRightOf="@id/col0"
+        >
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="82dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/col2"
+        android:layout_toRightOf="@id/col1"
+        >
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="82dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/col3"
+        android:layout_toRightOf="@id/col2"
+        >
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="83dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/col4"
+        android:layout_toRightOf="@id/col3"
+        >
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="82dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/col5"
+        android:layout_toRightOf="@id/col4"
+        >
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="89dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/col6"
+        android:layout_toRightOf="@id/col5"
+        >
+    </LinearLayout>
 
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
