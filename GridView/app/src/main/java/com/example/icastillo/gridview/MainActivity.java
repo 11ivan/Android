@@ -95,7 +95,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     * Postcondiciones: La carta se habrá levantado sino se ha levantado ya
     * */
     public void levantaCarta(View view, final int position){
-        final Intent intent=new Intent(this, MainActivity.class);
+        //final Intent intent=new Intent(this, MainActivity.class);
         final ImageView image;
         //cartasLevantadas++;
 

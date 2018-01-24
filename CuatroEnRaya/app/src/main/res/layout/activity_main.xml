@@ -5,20 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.cuatroenraya.icastillo.cuatroenraya.MainActivity"
+    android:id="@+id/relative"
     >
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/tablero4enraya"
-        android:layout_centerInParent="true"
-        />
+        android:id="@+id/fichaRoja"
+        android:visibility="invisible"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fichaAmarilla"
+        android:visibility="invisible"/>
+
 
     <LinearLayout
-        android:layout_width="89dp"
+        android:layout_width="91dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col0"
+        android:layout_marginLeft="37dp"
+
         >
     </LinearLayout>
     <LinearLayout
@@ -30,7 +38,7 @@
         >
     </LinearLayout>
     <LinearLayout
-        android:layout_width="82dp"
+        android:layout_width="84dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col2"
@@ -38,7 +46,7 @@
         >
     </LinearLayout>
     <LinearLayout
-        android:layout_width="82dp"
+        android:layout_width="84dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col3"
@@ -70,6 +78,12 @@
         >
     </LinearLayout>
 
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/tablero4enraya"
+        android:layout_centerInParent="true"
+        android:id="@+id/imageTablero"
+        />
 
 </RelativeLayout>
