@@ -1,8 +1,10 @@
 package com.cuatroenraya.icastillo.cuatroenraya;
 
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -89,26 +91,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void insertarFicha(int columna){
+        //ImageView imageView=(ImageView) findViewById(R.id.fichaRoja);
+        //imageView.setVisibility(View.VISIBLE);
         ImageView imageView=new ImageView(this);
         imageView.setImageResource(R.drawable.ficha);
         LinearLayout.LayoutParams params = new LinearLayout
-                .LayoutParams(500,500);
-        params.setMargins(0,0,20,0);
+                .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //params.setMargins(0,0,0,0);
 
         imageView.setLayoutParams(params);
-
-        /*imageView.getLayoutParams().height=50;
-        imageView.getLayoutParams().width=50;*/
-
-
-        /*
-        ImageView imageView = (ImageView) dr;
-        imageView.setId(View.NO_ID);
-        int width = 60;
-        int height = 60;
-        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
-        imageView.setLayoutParams(parms);
-        */
 
         Animation translate;
         translate= AnimationUtils.loadAnimation(this, R.anim.translate);
@@ -118,12 +109,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case 0:
                 col0.addView(imageView);
-                //relativeLayout.addView(imageView, 1);//
+                //relativeLayout.addView(imageView);//
                 break;
 
             case 1:
                 col1.addView(imageView);//
-                //relativeLayout.addView(imageView, 2);//
+                //relativeLayout.addView(imageView);//
                 break;
 
             case 2:

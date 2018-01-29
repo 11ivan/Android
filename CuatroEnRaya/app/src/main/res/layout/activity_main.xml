@@ -8,16 +8,18 @@
     android:id="@+id/relative"
     >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fichaRoja"
-        android:visibility="invisible"/>
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fichaAmarilla"
-        android:visibility="invisible"/>
+    <!--<ImageView-->
+        <!--android:layout_width="70dp"-->
+        <!--android:layout_height="70dp"-->
+        <!--android:id="@+id/fichaRoja"-->
+        <!--android:layout_marginLeft="40dp"-->
+        <!--android:visibility="invisible"/>-->
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/fichaAmarilla"-->
+        <!--android:layout_marginLeft="70dp"-->
+        <!--android:visibility="invisible"/>-->
 
 
     <LinearLayout

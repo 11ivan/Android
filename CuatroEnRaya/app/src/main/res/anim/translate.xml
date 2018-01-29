@@ -3,9 +3,10 @@
     android:fillAfter="true">
 
     <translate
-        android:fromYDelta="0%p"
-        android:toYDelta="50%p"
+        android:fromYDelta="10%p"
+        android:toYDelta="85%p"
         android:duration="3000"
+
         />
 
 </set>
