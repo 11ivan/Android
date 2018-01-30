@@ -22,63 +22,63 @@
         <!--android:visibility="invisible"/>-->
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="91dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col0"
-        android:layout_marginLeft="37dp"
+        android:layout_marginLeft="41dp"
 
         >
-    </LinearLayout>
-    <LinearLayout
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="84dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col1"
         android:layout_toRightOf="@id/col0"
         >
-    </LinearLayout>
-    <LinearLayout
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="84dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col2"
         android:layout_toRightOf="@id/col1"
         >
-    </LinearLayout>
-    <LinearLayout
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="84dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col3"
         android:layout_toRightOf="@id/col2"
         >
-    </LinearLayout>
-    <LinearLayout
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="83dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col4"
         android:layout_toRightOf="@id/col3"
         >
-    </LinearLayout>
-    <LinearLayout
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="82dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col5"
         android:layout_toRightOf="@id/col4"
         >
-    </LinearLayout>
-    <LinearLayout
+    </RelativeLayout>
+    <RelativeLayout
         android:layout_width="89dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col6"
         android:layout_toRightOf="@id/col5"
         >
-    </LinearLayout>
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="wrap_content"

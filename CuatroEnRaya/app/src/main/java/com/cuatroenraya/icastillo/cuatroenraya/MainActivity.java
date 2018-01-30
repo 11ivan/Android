@@ -13,14 +13,15 @@ import android.widget.RelativeLayout;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    LinearLayout col0;
-    LinearLayout col1;
-    LinearLayout col2;
-    LinearLayout col3;
-    LinearLayout col4;
-    LinearLayout col5;
-    LinearLayout col6;
+    RelativeLayout col0;
+    RelativeLayout col1;
+    RelativeLayout col2;
+    RelativeLayout col3;
+    RelativeLayout col4;
+    RelativeLayout col5;
+    RelativeLayout col6;
     RelativeLayout relativeLayout;
+    int contador=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +30,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         relativeLayout=(RelativeLayout) findViewById(R.id.relative);
 
-        col0=(LinearLayout) findViewById(R.id.col0);
-        col1=(LinearLayout) findViewById(R.id.col1);
-        col2=(LinearLayout) findViewById(R.id.col2);
-        col3=(LinearLayout) findViewById(R.id.col3);
-        col4=(LinearLayout) findViewById(R.id.col4);
-        col5=(LinearLayout) findViewById(R.id.col5);
-        col6=(LinearLayout) findViewById(R.id.col6);
+        col0=(RelativeLayout) findViewById(R.id.col0);
+        col1=(RelativeLayout) findViewById(R.id.col1);
+        col2=(RelativeLayout) findViewById(R.id.col2);
+        col3=(RelativeLayout) findViewById(R.id.col3);
+        col4=(RelativeLayout) findViewById(R.id.col4);
+        col5=(RelativeLayout) findViewById(R.id.col5);
+        col6=(RelativeLayout) findViewById(R.id.col6);
 
         col0.setOnClickListener(this);
         col1.setOnClickListener(this);
@@ -44,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         col4.setOnClickListener(this);
         col5.setOnClickListener(this);
         col6.setOnClickListener(this);
-
     }
 
 
@@ -91,15 +91,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void insertarFicha(int columna){
-        //ImageView imageView=(ImageView) findViewById(R.id.fichaRoja);
-        //imageView.setVisibility(View.VISIBLE);
         ImageView imageView=new ImageView(this);
         imageView.setImageResource(R.drawable.ficha);
-        LinearLayout.LayoutParams params = new LinearLayout
-                .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        imageView.setScaleX(15);
+        imageView.setScaleY(11);
+        /*LinearLayout.LayoutParams params = new LinearLayout
+                .LayoutParams(50, 50);*/
         //params.setMargins(0,0,0,0);
 
-        imageView.setLayoutParams(params);
+        //imageView.setLayoutParams(params);
+        //imageView.setMinimumHeight(350);
+        //imageView.setMinimumWidth(500);
 
         Animation translate;
         translate= AnimationUtils.loadAnimation(this, R.anim.translate);
