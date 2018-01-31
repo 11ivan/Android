@@ -4,6 +4,7 @@ import android.media.Image;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -12,6 +13,9 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import javax.xml.datatype.Duration;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,13 +27,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RelativeLayout col5;
     RelativeLayout col6;
     RelativeLayout relativeLayout;
-    int[] contadores={0,0,0,0,0,0,0};
+
+    //Meter en un metodo para restablecer los valores al reiniciar la partida
+    int[] contadores=new int[7];
     int[][] arrayParaleloTablero=new int[7][6];// 7 Columnas y 6 Filas
     int turno=0;//turno será 0 cuando le toque al jugador y 1 cuando le toque a la máquina
     Integer[] idImagenesFichas={R.drawable.ficha, R.drawable.fichaamarillabuena};
     Maquina maquina=new Maquina();
     int totalFichasPuestas=0;
     int[] ultimaFichaPuesta=new int[2];
+    boolean hayGanador=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +62,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         col6.setOnClickListener(this);
 
 
-        /*  //Obtener ancho y alto el pixels para ajustar las imagenes
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            int width = metrics.widthPixels; // ancho absoluto en pixels
-            int height = metrics.heightPixels; // alto absoluto en pixels
+        //Obtener ancho y alto el pixels para ajustar las imagenes
+        /*DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels; // ancho absoluto en pixels
+        int height = metrics.heightPixels; // alto absoluto en pixels
         */
     }
 
@@ -118,8 +125,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     * */
     public void insertarFicha(int columna){
 
-        //Si la columna no está llena
-        if(contadores[columna]<6) {
+        //Si la columna no está llena y no hay ganador
+        if(contadores[columna]<6 && !hayGanador) {
 
             ImageView imageView = new ImageView(this);
             imageView.setImageResource(idImagenesFichas[turno]);
@@ -170,18 +177,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Aumentamos el total de fichas puestas
             totalFichasPuestas++;
 
-            //Comprobar ganador
-            compruebaGanador();
+            //Si la cantidad de fichas puestas es mayor o igual que 7
+            if(totalFichasPuestas>=7) {
+                //Comprobar ganador
+                compruebaGanador();
+            }
 
-            //Cambiamos el turno
-            cambiaTurno();
+            //Si no hay ganador
+            if(!hayGanador) {
+                //Cambiamos el turno
+                cambiaTurno();
+            }
         }//fin si
     }
 
 
     /*
     * Proposito:
-    * Precondiciones:
+    * Precondiciones: No debe haber ganador
     * Entradas:
     * Salidas:
     * Postcondiciones:
@@ -234,28 +247,105 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /*
     * Proposito: Cuando se pone una ficha en el tablero comprueba si ha ganado
-    * Precondiciones: Se ha puesto una ficha en el tablero
+    * Precondiciones: Se ha puesto una ficha en el tablero y el total de fichas puestas debe ser mayor o igual que 7
     * Entradas: No hay
     * Salidas: Un entero
     * Postcondiciones: El entero será ...
-    * Restricciones: El total de fichas puestas debe ser mayor o igual que 7
     * */
-    private int compruebaGanador(){
-        int ganador=-1;
-
-        if(totalFichasPuestas>=7){
-
-            //Tomar como referencia la ultima ficha puesta para hacer el barrido
-
-            //Metodo para contar las fichas que hay en una columna/fila/diagonal
-
-            //Comprobar si la última ficha puesta está en la cuarta fila o más arriba(en este caso no haremos barrido vertical)
+    private void compruebaGanador(){
+        //Metodo para contar las fichas que hay en una columna/fila/diagonal
+        //Más eficiente sería comprobar si la última ficha puesta está en la cuarta fila o más arriba(comprobacion vertical), o tenga alguna ficha a su izquierda/derecha(comprobacion horizontal)
 
 
+
+        //La comprobacion Horizontal siempre se va a hacer  (Por ahora)
+
+        //Las diagonales también se comprobarán
+        // Diagonal Izquierda a Derecha Cuando la posicion no sea Columna:1 Fila:5
+
+        //Si en la comprobacion horizontal no hubo ganador
+        if(!hayGanador) {
+            //Segun la fila que se ha colocado la ultima ficha
+            switch (ultimaFichaPuesta[1]) {
+                /*case 0:
+
+                    break;
+
+                case 1:
+
+                    break;
+
+                case 2:
+
+                    break;*/
+
+                case 3://Si la fila es cualquiera de éstas se comprobará vertical desde la fila en que se puso la ficha hasta abajo
+                case 4:comprobacionVertical();
+                case 5:
+
+                    break;
+
+            }
         }
-        return ganador;
+        //Hacer metodos para las diferentes comprobaciones (Vertical, Horizontal, Diagonal Izquierda a Derecha, Diagonal Derecha a Izquierda) [Las diagonales se recorreran de arriba hacia abajo]
+
+        /*for(int i=0;i<arrayParaleloTablero.length;i++){
+
+            for(int j=0;j<arrayParaleloTablero[][].){
+
+            }
+
+        }*/
     }
 
+
+    /*
+    * Proposito:
+    * Precondiciones:
+    * Entradas:
+    * Salidas:
+    * Postcondiciones:
+    * */
+    private void comprobacionVertical(){
+        int aciertos=0;
+        int columna=ultimaFichaPuesta[0];
+        int fila=ultimaFichaPuesta[1];
+        int fichaActual=0;
+        int fichaSiguiente=0;
+        int iteraciones=fila-3;//-3 porque solo necesitamos 3 iteraciones a partir de la fila de la ficha puesta
+        boolean sigue=true;
+
+        //Esteblecemos el indice an la fila de la ultima ficha puesta
+        for(int i=fila;i>iteraciones && sigue;i--){
+            fichaActual=arrayParaleloTablero[columna][i];
+            fichaSiguiente=arrayParaleloTablero[columna][i-1];
+
+            //Si la ficha es distinta de la siguiente no hay más que comprobar
+            if(fichaActual!=fichaSiguiente){
+                sigue=false;
+            }else {
+                aciertos++;
+            }
+        }
+        if(aciertos==3){
+            hayGanador=true;
+            Toast.makeText(this, "ALguien ha ganado", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /*
+    * Proposito:
+    * Precondiciones:
+    * Entradas:
+    * Salidas:
+    * Postcondiciones:
+    * */
+    private void comprobacionHorizontal(){
+
+        for(int i=0;i<arrayParaleloTablero.length;i++){
+
+        }
+    }
 
     /*
     * Proposito: Recibe el indice de la columna y devuelve la animacion con los parametros
@@ -271,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(column==0){
             toXDelta=9;
         }
-
+        //Según la cantidad de fichas que tenga la columna
         switch (contadores[column]){
 
             case 0:
