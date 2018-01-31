@@ -228,8 +228,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else {
             arrayParaleloTablero[columna][contadores[columna]] = 2;
         }
-        ultimaFichaPuesta[0]=columna;
-        ultimaFichaPuesta[1]=turno;
+        ultimaFichaPuesta[0]=columna;//Columna de la ficha puesta
+        ultimaFichaPuesta[1]=contadores[columna];//Fila de la ficha puesta
     }
 
     /*
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     * Precondiciones: Se ha puesto una ficha en el tablero
     * Entradas: No hay
     * Salidas: Un entero
-    * Postcondiciones: El entero será
+    * Postcondiciones: El entero será ...
     * Restricciones: El total de fichas puestas debe ser mayor o igual que 7
     * */
     private int compruebaGanador(){
@@ -247,6 +247,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //Tomar como referencia la ultima ficha puesta para hacer el barrido
 
+            //Metodo para contar las fichas que hay en una columna/fila/diagonal
+
+            //Comprobar si la última ficha puesta está en la cuarta fila o más arriba(en este caso no haremos barrido vertical)
 
 
         }
