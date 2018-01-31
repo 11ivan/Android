@@ -23,16 +23,15 @@
 
 
     <RelativeLayout
-        android:layout_width="91dp"
+        android:layout_width="82dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col0"
-        android:layout_marginLeft="41dp"
-
+        android:layout_alignStart="@id/imageTablero"
         >
-    </RelativeLayout>
+    </RelativeLayout><!--android:layout_marginLeft="72.5dp"-->
     <RelativeLayout
-        android:layout_width="84dp"
+        android:layout_width="77dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col1"
@@ -40,7 +39,7 @@
         >
     </RelativeLayout>
     <RelativeLayout
-        android:layout_width="84dp"
+        android:layout_width="77dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col2"
@@ -48,7 +47,7 @@
         >
     </RelativeLayout>
     <RelativeLayout
-        android:layout_width="84dp"
+        android:layout_width="77dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col3"
@@ -56,7 +55,7 @@
         >
     </RelativeLayout>
     <RelativeLayout
-        android:layout_width="83dp"
+        android:layout_width="77dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col4"
@@ -64,7 +63,7 @@
         >
     </RelativeLayout>
     <RelativeLayout
-        android:layout_width="82dp"
+        android:layout_width="77dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col5"
@@ -72,7 +71,7 @@
         >
     </RelativeLayout>
     <RelativeLayout
-        android:layout_width="89dp"
+        android:layout_width="77dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/col6"
@@ -81,10 +80,11 @@
     </RelativeLayout>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="550dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/tablero4enraya"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:id="@+id/imageTablero"
         />
 
