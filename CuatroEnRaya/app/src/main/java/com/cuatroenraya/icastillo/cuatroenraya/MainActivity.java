@@ -184,7 +184,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             //Si no hay ganador
-            if(!hayGanador) {
+            if(hayGanador) {
+                //Mostramos mensaje de ganador
+                //Toast.makeText(this, "Ha ganado?", Toast.LENGTH_SHORT).show();
+            }else {
                 //Cambiamos el turno
                 cambiaTurno();
             }
@@ -249,55 +252,381 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     * Proposito: Cuando se pone una ficha en el tablero comprueba si ha ganado
     * Precondiciones: Se ha puesto una ficha en el tablero y el total de fichas puestas debe ser mayor o igual que 7
     * Entradas: No hay
-    * Salidas: Un entero
-    * Postcondiciones: El entero será ...
+    * Salidas: No hay
+    * Postcondiciones: Habrá un ganador o no.
     * */
     private void compruebaGanador(){
-        //Metodo para contar las fichas que hay en una columna/fila/diagonal
-        //Más eficiente sería comprobar si la última ficha puesta está en la cuarta fila o más arriba(comprobacion vertical), o tenga alguna ficha a su izquierda/derecha(comprobacion horizontal)
-
-
-
         //La comprobacion Horizontal siempre se va a hacer  (Por ahora)
+        comprobacionHorizontal();
 
         //Las diagonales también se comprobarán
-        // Diagonal Izquierda a Derecha Cuando la posicion no sea Columna:1 Fila:5
+        if(!hayGanador && sePuedeComprobarDiagonaIzquierdaDerecha()){
+            //Comprobar diagonal de izquierda a derecha desde abajo hacia arriba
+            compruebaDiagonaIzquierdaDerecha();
+        }
+
+        if(!hayGanador && sePuedeComprobarDiagonaDerechaIzquierda()){
+            //Comprobar diagonal de derecha a izquierda desde abajo hacia arriba
+            compruebaDiagonaDerechaIzquierda();
+        }
 
         //Si en la comprobacion horizontal no hubo ganador
         if(!hayGanador) {
             //Segun la fila que se ha colocado la ultima ficha
             switch (ultimaFichaPuesta[1]) {
-                /*case 0:
-
-                    break;
-
-                case 1:
-
-                    break;
-
-                case 2:
-
-                    break;*/
-
-                case 3://Si la fila es cualquiera de éstas se comprobará vertical desde la fila en que se puso la ficha hasta abajo
-                case 4:comprobacionVertical();
+                case 3://Si la fila es cualquiera de éstas se comprobará vertical desde la columna y fila en que se puso la ficha hasta abajo
+                case 4:
+                    comprobacionVertical();
                 case 5:
-
                     break;
-
             }
         }
-        //Hacer metodos para las diferentes comprobaciones (Vertical, Horizontal, Diagonal Izquierda a Derecha, Diagonal Derecha a Izquierda) [Las diagonales se recorreran de arriba hacia abajo]
-
-        /*for(int i=0;i<arrayParaleloTablero.length;i++){
-
-            for(int j=0;j<arrayParaleloTablero[][].){
-
-            }
-
-        }*/
     }
 
+    /*
+    * Proposito: Metodo para comprobar si es necesario realizar la comprobacion de la diagonal de izquierda a derecha, desde abajo hacia arriba /
+    * Precondiciones:
+    * Entradas:
+    * Salidas: Un entero con la longitud en esa diagonal
+    * Postcondiciones:
+    *
+    * Solo se hara esta comprobacion cuando la ficha no este en
+    * */
+    public boolean sePuedeComprobarDiagonaIzquierdaDerecha(){
+        boolean sePuede=true;
+        int columna=ultimaFichaPuesta[0];
+        int fila=ultimaFichaPuesta[1];
+
+        if(columna==0 && fila==5 || columna==0 && fila==4 || columna==0 && fila==3 || columna==1 && fila==4 || columna==2 && fila==5 || columna==1 && fila==5
+                || columna==4 && fila==0 || columna==5 && fila==0 || columna==6 && fila==0 || columna==5 && fila==1 || columna==6 && fila==1 || columna==6 && fila==2){
+            sePuede=false;
+        }
+
+        return sePuede;
+    }
+
+    /*
+    * Proposito: Metodo para comprobar acierto en la diagonal de izquierda a derecha, desde abajo hacia arriba /
+    * Precondiciones:
+    * Entradas:
+    * Salidas: Un entero con la longitud en esa diagonal
+    * Postcondiciones:
+    * */
+    public void compruebaDiagonaIzquierdaDerecha(){
+        int aciertos=0;
+        int columna=0;
+        int fila=2;
+        int iteraciones=2;
+        int fichaActual=0;
+        int siguienteFicha=0;
+        boolean sal=false;
+
+        //Primera diagonal
+        for (int i=0;i<=iteraciones && !sal;i++){
+            fichaActual=arrayParaleloTablero[i][fila];
+            siguienteFicha=arrayParaleloTablero[i+1][fila+1];
+            if(fichaActual!=0 && fichaActual==siguienteFicha){
+                aciertos++;
+            }else{
+                sal=true;//Si en alguna comprobacion de esta diagonal falla no habra que comprobar mas (solo caben 4 fichas)
+            }
+            fila++;
+        }
+        if (aciertos==3){
+            Toast.makeText(this, "Alguien ha ganado DIAGONAL1", Toast.LENGTH_SHORT).show();
+            hayGanador=true;
+        }
+
+        if (!hayGanador){ //Segunda diagonal (5 Fichas)
+            aciertos=0;
+            iteraciones++;//3 iteraciones
+            fila=1;
+            for (int i=0;i<=iteraciones && aciertos<3;i++){
+                fichaActual=arrayParaleloTablero[i][fila];
+                siguienteFicha=arrayParaleloTablero[i+1][fila+1];
+                if(fichaActual!=0 && fichaActual==siguienteFicha){
+                    aciertos++;
+                }else if(aciertos>0){
+                    aciertos=0;
+                }
+                fila++;
+            }
+            if (aciertos==3){
+                Toast.makeText(this, "Alguien ha ganado DIAGONAL2", Toast.LENGTH_SHORT).show();
+                hayGanador=true;
+            }
+        }
+
+
+        if (!hayGanador){ //Tercera diagonal
+            aciertos=0;
+            iteraciones++;//4 iteraciones
+            fila=0;
+            for (int i=0;i<=iteraciones && aciertos<3;i++){
+                fichaActual=arrayParaleloTablero[i][fila];
+                siguienteFicha=arrayParaleloTablero[i+1][fila+1];
+                if(fichaActual!=0 && fichaActual==siguienteFicha){
+                    aciertos++;
+                }else if(aciertos>0){
+                    aciertos=0;
+                }
+                fila++;
+            }
+            if (aciertos==3){
+                Toast.makeText(this, "Alguien ha ganado DIAGONAL3", Toast.LENGTH_SHORT).show();
+                hayGanador=true;
+            }
+        }
+
+
+        if (!hayGanador){ //Cuarta diagonal//Aqui cambia la cosa
+            //4 iteraciones
+            aciertos=0;
+            fila=0;
+            columna=1;
+            for (int i=0;i<=iteraciones && aciertos<3;i++){
+                fichaActual=arrayParaleloTablero[columna][fila];
+                siguienteFicha=arrayParaleloTablero[columna+1][fila+1];
+                if(fichaActual!=0 && fichaActual==siguienteFicha){
+                    aciertos++;
+                }else if(aciertos>0){
+                    aciertos=0;
+                }
+                columna++;
+                fila++;
+            }
+            if (aciertos==3){
+                Toast.makeText(this, "Alguien ha ganado DIAGONAL4", Toast.LENGTH_SHORT).show();
+                hayGanador=true;
+            }
+        }
+
+
+        if (!hayGanador){ //Quinta diagonal  //ESTA NO DETECTA GANADOR
+            //3 iteraciones
+            iteraciones=3;
+            aciertos=0;
+            fila=0;
+            columna=2;
+            for (int i=0;i<=iteraciones && aciertos<3;i++){
+                fichaActual=arrayParaleloTablero[columna][fila];
+                siguienteFicha=arrayParaleloTablero[columna+1][fila+1];
+                if(fichaActual!=0 && fichaActual==siguienteFicha){
+                    aciertos++;
+                }else if(aciertos>0){
+                    aciertos=0;
+                }
+                columna++;
+                fila++;
+            }
+            if (aciertos==3){
+                Toast.makeText(this, "Alguien ha ganado DIAGONAL5", Toast.LENGTH_SHORT).show();
+
+                hayGanador=true;
+            }
+        }
+
+
+        if (!hayGanador){ //Sexta diagonal  //ESTA TAMPOCO NO DETECTA GANADOR
+            //2 iteraciones
+            sal=false;
+            iteraciones=2;
+            aciertos=0;
+            fila=0;
+            columna=3;
+            for (int i=0;i<=iteraciones && !sal;i++){
+                fichaActual=arrayParaleloTablero[columna][fila];
+                siguienteFicha=arrayParaleloTablero[columna+1][fila+1];
+                if(fichaActual!=0 && fichaActual==siguienteFicha){
+                    aciertos++;
+                }else {
+                    sal=true;
+                }
+                columna++;
+                fila++;
+            }
+            if (aciertos==3){
+                Toast.makeText(this, "Alguien ha ganado DIAGONAL6", Toast.LENGTH_SHORT).show();
+                hayGanador=true;
+            }
+        }
+
+    }
+
+
+    /*
+    * Proposito: Metodo para comprobar si es necesario realizar la comprobacion de la diagonal de derecha a izquierda, desde abajo hacia arriba \
+    * Precondiciones:
+    * Entradas:
+    * Salidas: Un entero con la longitud en esa diagonal
+    * Postcondiciones:
+    * */
+    public boolean sePuedeComprobarDiagonaDerechaIzquierda(){
+        boolean sePuede=true;
+        int columna=ultimaFichaPuesta[0];
+        int fila=ultimaFichaPuesta[1];
+
+        if(columna==0 && fila==0 || columna==0 && fila==1 || columna==0 && fila==2 || columna==1 && fila==0 || columna==1 && fila==1 || columna==2 && fila==0
+                || columna==4 && fila==5 || columna==5 && fila==5 || columna==5 && fila==4 || columna==6 && fila==5 || columna==6 && fila==4 || columna==6 && fila==3){
+            sePuede=false;
+        }
+
+        return sePuede;
+    }
+
+    /*
+    * Proposito: Metodo para acierto en la diagonal de derecha a izquierda, desde abajo hacia arriba \
+    * Precondiciones:
+    * Entradas:
+    * Salidas: Un entero con la longitud en esa diagonal
+    * Postcondiciones:
+    * */
+    public void compruebaDiagonaDerechaIzquierda(){
+        int aciertos=0;
+        int columna=6;
+        int fila=2;
+        int iteraciones=2;
+        int fichaActual=0;
+        int siguienteFicha=0;
+        boolean sal=false;
+
+        //Primera diagonal
+        for (int i=0;i<=iteraciones && !sal;i++){
+            fichaActual=arrayParaleloTablero[columna][fila];
+            siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
+            if(fichaActual!=0 && fichaActual==siguienteFicha){
+                aciertos++;
+            }else{
+                sal=true;//Si en alguna comprobacion de esta diagonal falla no habra que comprobar mas (solo caben 4 fichas)
+            }
+            columna--;
+            fila++;
+        }
+        if (aciertos==3){
+            Toast.makeText(this, "Alguien ha ganado DIAGONAL1 dchaIzq", Toast.LENGTH_SHORT).show();
+            hayGanador=true;
+        }
+
+        if (!hayGanador){ //Segunda diagonal (5 Fichas)
+            aciertos=0;
+            iteraciones++;//3 iteraciones
+            fila=1;
+            columna=6;
+            for (int i=0;i<=iteraciones && aciertos<3;i++){
+                fichaActual=arrayParaleloTablero[columna][fila];
+                siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
+                if(fichaActual!=0 && fichaActual==siguienteFicha){
+                    aciertos++;
+                }else if(aciertos>0){
+                    aciertos=0;
+                }
+                columna--;
+                fila++;
+            }
+            if (aciertos==3){
+                Toast.makeText(this, "Alguien ha ganado DIAGONAL2 dchaIzq", Toast.LENGTH_SHORT).show();
+                hayGanador=true;
+            }
+        }
+
+
+        if (!hayGanador){ //Tercera diagonal
+            aciertos=0;
+            iteraciones++;//4 iteraciones
+            fila=0;
+            columna=6;
+            for (int i=0;i<=iteraciones && aciertos<3;i++){
+                fichaActual=arrayParaleloTablero[columna][fila];
+                siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
+                if(fichaActual!=0 && fichaActual==siguienteFicha){
+                    aciertos++;
+                }else if(aciertos>0){
+                    aciertos=0;
+                }
+                columna--;
+                fila++;
+            }
+            if (aciertos==3){
+                Toast.makeText(this, "Alguien ha ganado DIAGONAL3 dchaIzq", Toast.LENGTH_SHORT).show();
+                hayGanador=true;
+            }
+        }
+
+
+        if (!hayGanador){ //Cuarta diagonal//Aqui cambia la cosa
+            //4 iteraciones
+            aciertos=0;
+            fila=0;
+            columna=5;
+            for (int i=0;i<=iteraciones && aciertos<3;i++){
+                fichaActual=arrayParaleloTablero[columna][fila];
+                siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
+                if(fichaActual!=0 && fichaActual==siguienteFicha){
+                    aciertos++;
+                }else if(aciertos>0){
+                    aciertos=0;
+                }
+                columna--;
+                fila++;
+            }
+            if (aciertos==3){
+                Toast.makeText(this, "Alguien ha ganado DIAGONAL4 dchaIzq", Toast.LENGTH_SHORT).show();
+                hayGanador=true;
+            }
+        }
+
+
+        if (!hayGanador){ //Quinta diagonal
+            //3 iteraciones
+            iteraciones=3;
+            aciertos=0;
+            fila=0;
+            columna=4;
+            for (int i=0;i<=iteraciones && aciertos<3;i++){
+                fichaActual=arrayParaleloTablero[columna][fila];
+                siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
+                if(fichaActual!=0 && fichaActual==siguienteFicha){
+                    aciertos++;
+                }else if(aciertos>0){
+                    aciertos=0;
+                }
+                columna--;
+                fila++;
+            }
+            if (aciertos==3){
+                Toast.makeText(this, "Alguien ha ganado DIAGONAL5 dchaIzq", Toast.LENGTH_SHORT).show();
+
+                hayGanador=true;
+            }
+        }
+
+
+        if (!hayGanador){ //Sexta diagonal
+            //2 iteraciones
+            sal=false;
+            iteraciones=2;
+            aciertos=0;
+            fila=0;
+            columna=3;
+            for (int i=0;i<=iteraciones && !sal;i++){
+                fichaActual=arrayParaleloTablero[columna][fila];
+                siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
+                if(fichaActual!=0 && fichaActual==siguienteFicha){
+                    aciertos++;
+                }else {
+                    sal=true;
+                }
+                columna--;
+
+                fila++;
+            }
+            if (aciertos==3){
+                Toast.makeText(this, "Alguien ha ganado DIAGONAL6 dchaIzq", Toast.LENGTH_SHORT).show();
+                hayGanador=true;
+            }
+        }
+
+    }
 
     /*
     * Proposito:
@@ -329,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if(aciertos==3){
             hayGanador=true;
-            Toast.makeText(this, "ALguien ha ganado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Alguien ha ganado VERTICAL", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -341,9 +670,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     * Postcondiciones:
     * */
     private void comprobacionHorizontal(){
+        int aciertos=0;
+        int fila=ultimaFichaPuesta[1];
+        boolean sal=false;
+        int fichaActual=0;
+        int siguienteFicha=0;
 
-        for(int i=0;i<arrayParaleloTablero.length;i++){
+        //Si la ultima ficha puesta no tiene una igual a su izquierda o su derecha no hay mas que comprobar
+        /*if(ultimaFichaPuesta[1]==arrayParaleloTablero[0][1]){
 
+        }*/
+        for(int i=0;i<arrayParaleloTablero.length-1 && aciertos<3;i++){
+            fichaActual=arrayParaleloTablero[i][fila];
+            siguienteFicha=arrayParaleloTablero[i+1][fila];
+            if(fichaActual!=0 && fichaActual==siguienteFicha){
+                aciertos++;
+            }else if(aciertos>0){
+                aciertos=0;
+            }
+
+        }
+        if(aciertos==3){
+            Toast.makeText(this, "Alguien ha ganado HORIZONTAL", Toast.LENGTH_SHORT).show();
+            hayGanador=true;
         }
     }
 
