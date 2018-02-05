@@ -23,14 +23,14 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    /*Equipo[] equipos={new Equipo("Boston Celtics", "TD Garden"),
+    Equipo[] equipos={new Equipo("Boston Celtics", "TD Garden"),
             new Equipo("Los Angeles Lakers", "Staples Center"),
             new Equipo("New York Knicks", "Madison Square Garden"),
             new Equipo("Chicago Bulls", "United Center"),
             new Equipo("Miami Heat", "AmericanAirlines Arena"),
             new Equipo("Dallas Maverick", "American Airlines Center"),
             new Equipo("Denver Nugget", "Pepsi Center"),
-            new Equipo("Sacramento Kings", "Golden 1 Center")};*/
+            new Equipo("Sacramento Kings", "Golden 1 Center")};
 
     Button btnVerEquipos;
     MyAdapter<Equipo> adapterEquipos;
@@ -43,45 +43,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*AppDataBase.getDataBase(this).
-                equipoDAO().insertEquipos(equipos);*/
+        //AppDataBase.getDataBase(this).equipoDAO().insertEquipos(equipos);
 
-        /*final VMMainActivity viewModel = ViewModelProviders.of((FragmentActivity) getApplicationContext()).get(VMMainActivity.class);
-        viewModel.userLiveData.observer(this, new Observer() {
-            @Override
-            public void onChanged(@Nullable Equipo data) {
-                // update ui.
-            }
-        });*/
 
         listView=(ListView) findViewById(R.id.lista);
 
-        //equiposDataBase=AppDataBase.getDataBase(this).equipoDAO().getEquipos();
-
-
         viewModel = ViewModelProviders.of(this).get(VMMainActivity.class);
+        viewModel.cargaRepositorio(getApplication());
 
-        //viewModel.cargaLista(getApplication());
 
-        //adapterEquipos=new MyAdapter<Equipo>(this, R.layout.styleequipos, R.id.idEquipo, viewModel.equiposLiveData.getValue());
-
-        viewModel.equiposLiveData.observe(this, new Observer() {
-            @Override
-            public void onChanged(@Nullable Object o) {
-                /*if(adapterEquipos!=null) {
-                    listView.setAdapter(adapterEquipos);
-                }*/
-                if(viewModel.equiposLiveData.getValue().length>0) {
-                    adapterEquipos = new MyAdapter<Equipo>(getApplicationContext(), R.layout.styleequipos, R.id.idEquipo, viewModel.equiposLiveData.getValue());
-                    listView.setAdapter(adapterEquipos);
+        if(viewModel.equiposLiveData!=null ) {
+            viewModel.equiposLiveData.observe(this, new Observer() {
+                @Override
+                public void onChanged(@Nullable Object o) {
+                    if (viewModel.equiposLiveData.getValue().length > 0) {
+                        adapterEquipos = new MyAdapter<Equipo>(getApplicationContext(), R.layout.styleequipos, R.id.idEquipo, viewModel.equiposLiveData.getValue());
+                        listView.setAdapter(adapterEquipos);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         btnVerEquipos=(Button) findViewById(R.id.btnEquipos);
         btnVerEquipos.setOnClickListener(this);
-
-        //setListAdapter(adapterEquipos);
     }
 
 
@@ -90,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         /*Intent intent=new Intent(this, ListaEquipos.class);
         startActivity(intent);*/
-        viewModel.cargaLista(getApplication());
+        viewModel.cargaLista();
         /*if(viewModel.equiposLiveData.getValue().length>0) {
             adapterEquipos = new MyAdapter<Equipo>(this, R.layout.styleequipos, R.id.idEquipo, viewModel.equiposLiveData.getValue());
             listView.setAdapter(adapterEquipos);

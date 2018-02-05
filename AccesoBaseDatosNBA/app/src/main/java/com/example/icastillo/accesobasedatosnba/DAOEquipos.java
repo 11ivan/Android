@@ -1,5 +1,6 @@
 package com.example.icastillo.accesobasedatosnba;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -24,5 +25,8 @@ public interface DAOEquipos {
     public void deleteEquipos(Equipo... equipos);
 
     @Query("Select * From Equipos")
-    public Equipo[] getEquipos();
+    public Equipo[] getEquiposArray();
+
+    @Query("Select * From Equipos")
+    public LiveData<Equipo[]> getEquiposLiveData();
 }

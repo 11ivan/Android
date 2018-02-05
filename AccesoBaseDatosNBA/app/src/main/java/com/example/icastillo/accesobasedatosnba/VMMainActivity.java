@@ -13,16 +13,26 @@ import android.content.Context;
 
 public class VMMainActivity extends ViewModel {
 
-    public final MutableLiveData<Equipo[]> equiposLiveData=new MutableLiveData<>();
+    public LiveData<Equipo[]> equiposLiveData;
+    private RepositorioEquipos repositorioEquipos;
 
     public VMMainActivity() {
         // trigger user load.
         //userLiveData = new LiveData<>();
-
+        //repositorioEquipos=new RepositorioEquipos();
     }
 
-    public void cargaLista(Application application){
-        this.equiposLiveData.setValue(AppDataBase.getDataBase(application.getApplicationContext()).equipoDAO().getEquipos());
+    public RepositorioEquipos getRepositorioEquipos() {
+        return repositorioEquipos;
+    }
+
+    public void cargaRepositorio(Application application){
+        repositorioEquipos=new RepositorioEquipos(application);
+        //repositorioEquipos.setApplication(application);
+    }
+
+    public void cargaLista(){
+        this.equiposLiveData=repositorioEquipos.getListaEquipos();
     }
 
     void doAction() {

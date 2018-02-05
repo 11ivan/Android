@@ -275,8 +275,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Segun la fila que se ha colocado la ultima ficha
             switch (ultimaFichaPuesta[1]) {
                 case 3://Si la fila es cualquiera de éstas se comprobará vertical desde la columna y fila en que se puso la ficha hasta abajo
-                case 4:
-                    comprobacionVertical();
+                case 4:comprobacionVertical();
                 case 5:
                     break;
             }
