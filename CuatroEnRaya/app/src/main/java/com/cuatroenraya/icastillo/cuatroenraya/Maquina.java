@@ -22,6 +22,13 @@ public class Maquina {
         return columna;
     }
 
+    /*
+    * Proposito: Comprueba si una columna del tablero ya está llena
+    * Precondiciones: No hay
+    * Entradas: Un array de dos dimernsiones que es el array paralelo al tablero, y un entero que es la columna a comprobar
+    * Salidas: Un booleano
+    * Postcondiciones: El booleano será verdadero si la columna está llena y false sino
+    * */
     private boolean columnaLlena(int[][] arrayParaleloTablero, int columna){
         boolean llena=false;
 
