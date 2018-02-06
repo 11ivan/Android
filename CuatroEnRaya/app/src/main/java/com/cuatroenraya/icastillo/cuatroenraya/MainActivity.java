@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button btnPlay;
     Button btnOptions;
-
+    OptionsFragment optionsFragment=new OptionsFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +74,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void cargaFragmentOpciones(){
         //FragmentManager fragmentManager=getFragmentManager();
         FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction();
-        OptionsFragment optionsFragment=new OptionsFragment();
+        //OptionsFragment optionsFragment=new OptionsFragment();
         fragmentTransaction.add(R.id.relativeMainActivity, optionsFragment);
         fragmentTransaction.commit();
         //FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction().add(R.id.relativeMainActivity, new OptionsFragment()).commit();
     }
 
+    /*   public void cargaFragmentBotones(){
+        //FragmentManager fragmentManager=getFragmentManager();
+        FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction();
+        //OptionsFragment optionsFragment=new OptionsFragment();
+        fragmentTransaction.add(R.id.relativeMainActivity, optionsFragment);
+        fragmentTransaction.commit();
+        //FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction().add(R.id.relativeMainActivity, new OptionsFragment()).commit();
+    }*/
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -87,5 +95,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public void ClickListener(View v) {
+        switch (v.getId()){
+            case R.id.btnBackOpciones:
+                FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction();
+                //OptionsFragment optionsFragment=new OptionsFragment();
+                fragmentTransaction.remove(optionsFragment);
+                fragmentTransaction.commit();
+                break;
 
+            /*case R.id.btnOptions:
+                //intent=new Intent(this, GameActivity.class);
+                //Metodo para iniciar Fragment de opciones
+                cargaFragmentOpciones();
+                break;*/
+
+        }
+    }
 }

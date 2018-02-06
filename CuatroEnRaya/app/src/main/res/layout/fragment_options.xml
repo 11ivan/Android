@@ -2,14 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cuatroenraya.icastillo.cuatroenraya.OptionsFragment"
+    tools:context="com.cuatroenraya.icastillo.cuatroenraya.OptionsFragment">
+    <!--android:background="#99000000"  NEGRO CON OPACIDAD-->
 
-    ><!--android:background="#99000000"  NEGRO CON OPACIDAD-->
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnBackOpciones"
+        android:background="@android:drawable/ic_media_previous"/>
+
 
 </RelativeLayout>

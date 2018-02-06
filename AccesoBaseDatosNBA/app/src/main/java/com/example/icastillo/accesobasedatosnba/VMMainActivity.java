@@ -32,6 +32,7 @@ public class VMMainActivity extends ViewModel {
     }
 
     public void cargaLista(){
+        this.equiposLiveData.set
         this.equiposLiveData=repositorioEquipos.getListaEquipos();
     }
 
