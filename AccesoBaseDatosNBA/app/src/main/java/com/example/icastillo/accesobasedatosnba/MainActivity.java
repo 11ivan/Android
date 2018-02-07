@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         viewModel = ViewModelProviders.of(this).get(VMMainActivity.class);
 
-        viewModel.insertaEquipos(equipos);
+        //viewModel.insertaEquipos(equipos);
 
         //if(viewModel.equiposLiveData!=null ) {
             viewModel.equiposMLiveData.observe(this, new Observer() {
@@ -83,6 +83,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.btnEquipos:
                 viewModel.cargaLista();
+                /*viewModel.equiposMLiveData.observe(this, new Observer() {
+                    @Override
+                    public void onChanged(@Nullable Object o) {
+                        if (viewModel.equiposMLiveData.getValue().length > 0) {
+                            adapterEquipos = new MyAdapter<Equipo>(getApplicationContext(), R.layout.styleequipos, R.id.idEquipo, viewModel.equiposMLiveData.getValue());
+                            listView.setAdapter(adapterEquipos);
+                        }
+                    }
+                });*/
             break;
             case R.id.btnAddEquipo:
                 addEquipo();

@@ -1,5 +1,6 @@
 package com.cuatroenraya.icastillo.cuatroenraya;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     RelativeLayout relativeLayout;
     PopupMenu popupMenu;
     Button btnPause;
+    Dialog dialog;
 
     //Meter en un metodo para restablecer los valores al reiniciar la partida
     int[] contadores=new int[7];
@@ -60,12 +62,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         col4.setOnClickListener(this);
         col5.setOnClickListener(this);
         col6.setOnClickListener(this);
-        btnPause.setOnClickListener(this);
+
 
         popupMenu=new PopupMenu(this, btnPause);
         popupMenu.setOnMenuItemClickListener(this);
         popupMenu.getMenuInflater().inflate(R.menu.popupmenu, popupMenu.getMenu());
 
+        dialog=new Dialog(this);
+        dialog.setContentView(R.layout.customdialog);
+        dialog.setTitle("Pause");
+        dialog.setCanceledOnTouchOutside(false);
+
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.show();
+            }
+        });
         //Obtener ancho y alto el pixels para ajustar las imagenes
         /*DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -191,7 +204,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             if(hayGanador) {
                 //Mostramos mensaje de ganador/Perdedor
 
+
                 //Preguntamos si reinicia partida
+
 
                 //Toast.makeText(this, "Ha ganado?", Toast.LENGTH_SHORT).show();
             }else {
@@ -757,8 +772,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         {
             pulsado=true;
             //Mostrar PopUpMenu
-            //muestraPopUpMenu();
-            popupMenu.show();
+            //popupMenu.show();
+            dialog.show();
         }
         //return super.onKeyDown(keyCode, event);
         return pulsado;

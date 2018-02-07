@@ -1,9 +1,11 @@
 package com.cuatroenraya.icastillo.cuatroenraya;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +72,10 @@ public class MenuPrincipalFragment extends Fragment implements View.OnClickListe
         View view=inflater.inflate(R.layout.fragment_menu_principal, container, false);
 
         btnPlay=(Button) view.findViewById(R.id.btnPlay);
-        btnPlay.setOnClickListener(this);
+        btnOptions=(Button) view.findViewById(R.id.btnOptions);
 
+        btnPlay.setOnClickListener(this);
+        btnOptions.setOnClickListener(this);
 
 
         return view;
@@ -85,13 +89,12 @@ public class MenuPrincipalFragment extends Fragment implements View.OnClickListe
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try{
+            mListener=(MenuPrincipalFragment.OnFragmentInteractionListener) activity;
+        }catch (ClassCastException cce){
+
         }
     }
 
@@ -103,7 +106,15 @@ public class MenuPrincipalFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnPlay:
+                mListener.ClickListener(view);
+            break;
 
+            case R.id.btnOptions:
+                mListener.ClickListener(view);
+            break;
+        }
     }
 
     /**
@@ -119,5 +130,6 @@ public class MenuPrincipalFragment extends Fragment implements View.OnClickListe
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+        void ClickListener(View view);
     }
 }

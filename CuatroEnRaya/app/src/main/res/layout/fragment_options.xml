@@ -6,6 +6,8 @@
     <!--android:background="#99000000"  NEGRO CON OPACIDAD-->
 
 
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,7 +18,7 @@
     <!--<pl.droidsonroids.gif.GifImageView
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-
+        android:layout_toRightOf="@id/btnBackOpciones"
         android:src="@drawable/dado"
         />-->
 

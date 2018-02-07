@@ -15,7 +15,7 @@ import android.support.annotation.NonNull;
 public class VMMainActivity extends AndroidViewModel{
 
     public  MutableLiveData<Equipo[]> equiposMLiveData=new MutableLiveData<Equipo[]>();
-    //public  LiveData<Equipo[]> equiposLiveData=new MutableLiveData<Equipo[]>();
+    //public  LiveData<Equipo[]> equiposMLiveData=new MutableLiveData<Equipo[]>();
     private RepositorioEquipos repositorioEquipos;
 
     public VMMainActivity(@NonNull Application application) {
@@ -35,9 +35,8 @@ public class VMMainActivity extends AndroidViewModel{
 
     @SuppressLint("StaticFieldLeak")
     public void cargaLista(){
-        //this.equiposMLiveData.setValue(repositorioEquipos.getLiveDataEquipos().getValue());
-        //this.equiposMLiveData.setValue(repositorioEquipos.getArrayEquipos());
-        //this.equiposMLiveData.setValue(repositorioEquipos.getArrayEquiposDesdeLiveData());
+        //this.equiposMLiveData=repositorioEquipos.getLiveDataEquipos();
+
         new AsyncTask<Void,Void,Equipo[]>() {
             @Override
             protected Equipo[] doInBackground(Void... voids) {
@@ -51,7 +50,6 @@ public class VMMainActivity extends AndroidViewModel{
                 equiposMLiveData.setValue(equipos);
             }
         }.execute();
-        //equiposMLiveData.postValue(repositorioEquipos.getListaEquipos().getValue());
     }
 
     @SuppressLint("StaticFieldLeak")

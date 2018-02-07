@@ -24,21 +24,24 @@ import android.widget.Toast;
 
 import javax.xml.datatype.Duration;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, OptionsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OptionsFragment.OnFragmentInteractionListener, MenuPrincipalFragment.OnFragmentInteractionListener {
 
     Button btnPlay;
     Button btnOptions;
     OptionsFragment optionsFragment=new OptionsFragment();
+    MenuPrincipalFragment menuPrincipalFragment=new MenuPrincipalFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnPlay=(Button) findViewById(R.id.btnPlay);
+        cargaFragmentPrincipal();
+
+        /*btnPlay=(Button) findViewById(R.id.btnPlay);
         btnPlay.setOnClickListener(this);
         btnOptions=(Button) findViewById(R.id.btnOptions);
-        btnOptions.setOnClickListener(this);
+        btnOptions.setOnClickListener(this);*/
 
 
 
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    @Override
+    /*@Override
     public void onClick(View v) {
         Intent intent=null;
         switch (v.getId()){
@@ -68,49 +71,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
-    }
+    }*/
 
+
+    public void startActivityGame(){
+        Intent intent=new Intent(this, GameActivity.class);
+        startActivity(intent);
+    }
 
     public void cargaFragmentOpciones(){
-        //FragmentManager fragmentManager=getFragmentManager();
         FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction();
-        //OptionsFragment optionsFragment=new OptionsFragment();
-        fragmentTransaction.add(R.id.relativeMainActivity, optionsFragment);
+        fragmentTransaction.replace(R.id.relativeMainActivity, optionsFragment);
         fragmentTransaction.commit();
-        //FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction().add(R.id.relativeMainActivity, new OptionsFragment()).commit();
     }
 
-    /*   public void cargaFragmentBotones(){
-        //FragmentManager fragmentManager=getFragmentManager();
+    public void cargaFragmentPrincipal(){
         FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction();
-        //OptionsFragment optionsFragment=new OptionsFragment();
-        fragmentTransaction.add(R.id.relativeMainActivity, optionsFragment);
+        fragmentTransaction.add(R.id.relativeMainActivity, menuPrincipalFragment);
         fragmentTransaction.commit();
-        //FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction().add(R.id.relativeMainActivity, new OptionsFragment()).commit();
-    }*/
+    }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
-
-
     @Override
     public void ClickListener(View v) {
+        FragmentTransaction fragmentTransaction;
         switch (v.getId()){
+
+            //Casos del Fragment opciones
             case R.id.btnBackOpciones:
-                FragmentTransaction fragmentTransaction=getFragmentManager().beginTransaction();
+                fragmentTransaction=getFragmentManager().beginTransaction();
                 //OptionsFragment optionsFragment=new OptionsFragment();
-                fragmentTransaction.remove(optionsFragment);
+                fragmentTransaction.replace(R.id.relativeMainActivity, menuPrincipalFragment);
                 fragmentTransaction.commit();
                 break;
 
-            /*case R.id.btnOptions:
-                //intent=new Intent(this, GameActivity.class);
-                //Metodo para iniciar Fragment de opciones
-                cargaFragmentOpciones();
-                break;*/
+            //Casos del Fragment del menu principal
+            case R.id.btnPlay:
+                    startActivityGame();
+                break;
 
+            case R.id.btnOptions:
+                fragmentTransaction=getFragmentManager().beginTransaction();
+                //OptionsFragment optionsFragment=new OptionsFragment();
+                fragmentTransaction.replace(R.id.relativeMainActivity, optionsFragment);
+                fragmentTransaction.commit();
+                break;
         }
     }
+
+
+
+
 }
