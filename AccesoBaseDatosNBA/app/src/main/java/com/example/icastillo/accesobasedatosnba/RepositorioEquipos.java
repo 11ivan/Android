@@ -29,9 +29,27 @@ public class RepositorioEquipos {
         this.application = application;
     }
 
-    public LiveData<Equipo[]> getListaEquipos() {
+    public LiveData<Equipo[]> getLiveDataEquipos() {
         LiveData<Equipo[]> liveDataEquipos=AppDataBase.getDataBase(this.application.getApplicationContext()).equipoDAO().getEquiposLiveData();
         return liveDataEquipos;
+    }
+
+    public Equipo[] getArrayEquipos() {
+        Equipo[] equipos=AppDataBase.getDataBase(this.application.getApplicationContext()).equipoDAO().getEquiposArray();
+        return equipos;
+    }
+
+    public Equipo[] getArrayEquiposDesdeLiveData() {
+        Equipo[] equipos=AppDataBase.getDataBase(this.application.getApplicationContext()).equipoDAO().getEquiposLiveData().getValue();
+        return equipos;
+    }
+
+    public void insertaEquipos(Equipo[] equipos){
+        AppDataBase.getDataBase(this.application.getApplicationContext()).equipoDAO().insertEquipos(equipos);
+    }
+
+    public void insertaLiveDataEquipos(LiveData<Equipo[]> equipos){
+        //AppDataBase.getDataBase(this.application.getApplicationContext()).equipoDAO().insertEquiposLiveData(equipos);
     }
 
 }

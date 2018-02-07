@@ -12,5 +12,12 @@
         android:id="@+id/btnBackOpciones"
         android:background="@android:drawable/ic_media_previous"/>
 
+    <!--DADO GIF-->
+    <!--<pl.droidsonroids.gif.GifImageView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+
+        android:src="@drawable/dado"
+        />-->
 
 </RelativeLayout>
