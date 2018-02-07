@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cuatroenraya.icastillo.cuatroenraya.OptionsFragment">
+    tools:context="com.cuatroenraya.icastillo.cuatroenraya.application.OptionsFragment">
     <!--android:background="#99000000"  NEGRO CON OPACIDAD-->
 
 
@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnBackOpciones"
         android:background="@android:drawable/ic_media_previous"/>
+
 
     <!--DADO GIF-->
     <!--<pl.droidsonroids.gif.GifImageView

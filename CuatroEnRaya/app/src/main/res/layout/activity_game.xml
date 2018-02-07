@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cuatroenraya.icastillo.cuatroenraya.GameActivity"
+    tools:context="com.cuatroenraya.icastillo.cuatroenraya.application.GameActivity"
     android:id="@+id/relative"
     >
 
@@ -15,6 +15,13 @@
         android:id="@+id/btnPause"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"/>
+
+    <Chronometer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/chronometer"
+        android:layout_below="@id/btnPause"
+        android:layout_marginLeft="25dp"/>
 
     <RelativeLayout
         android:layout_width="82dp"
@@ -81,5 +88,6 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/imageTablero"
         />
+
 
 </RelativeLayout>
