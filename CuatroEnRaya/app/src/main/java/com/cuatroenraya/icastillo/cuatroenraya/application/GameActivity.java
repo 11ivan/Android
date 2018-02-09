@@ -1,25 +1,30 @@
 package com.cuatroenraya.icastillo.cuatroenraya.application;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cuatroenraya.icastillo.cuatroenraya.R;
 import com.cuatroenraya.icastillo.cuatroenraya.clases.Maquina;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Timer;
+
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //Columnas, Relative Principal y Cronometro
     RelativeLayout col0;
     RelativeLayout col1;
     RelativeLayout col2;
@@ -28,12 +33,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     RelativeLayout col5;
     RelativeLayout col6;
     RelativeLayout relativeLayout;
+    Chronometer chronometer;
+    //java.sql.Date actual;
     //PopupMenu popupMenu;
+
+    //Boton Pause
     Button btnPause;
+
+    //Dialog Pause
     Dialog dialog;
     Button btnContinuar;
     Button btnReiniciar;
     Button btnSalir;
+
+    //Dialog Reiniciar Partida
+    Dialog dialogReinicio;
+    Button btnSi;
+    Button btnNo;
 
     //Meter en un metodo para restablecer los valores al reiniciar la partida
     int[] contadores=new int[7];
@@ -51,7 +67,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_game);
 
         relativeLayout=(RelativeLayout) findViewById(R.id.relative);
-
+        chronometer=(Chronometer) findViewById(R.id.chronometer);
         col0=(RelativeLayout) findViewById(R.id.col0);
         col1=(RelativeLayout) findViewById(R.id.col1);
         col2=(RelativeLayout) findViewById(R.id.col2);
@@ -60,6 +76,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         col5=(RelativeLayout) findViewById(R.id.col5);
         col6=(RelativeLayout) findViewById(R.id.col6);
         btnPause=(Button) findViewById(R.id.btnPause);
+
 
         col0.setOnClickListener(this);
         col1.setOnClickListener(this);
@@ -77,13 +94,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Pausar cronometro
+                chronometer.stop();
                 //Mostrar Menu Pause
                 dialog.show();
             }
         });
 
+        //Dialog Pause
         dialog=new Dialog(this);
-        dialog.setContentView(R.layout.customdialog);
+        dialog.setContentView(R.layout.customdialogpause);
         dialog.setTitle("Pause");
         dialog.setCanceledOnTouchOutside(false);
 
@@ -96,7 +116,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 //Continuar partida
+                //Cerrar cuadro dialogo
                 dialog.dismiss();
+                //Devolver valor al cronometro e iniciar si el valor era mayor que 0
+                //chronometer.setBase(SystemClock.elapsedRealtime()-chronometer.getBase());
+                //chronometer.start();
+                updateChronometer();
             }
         });
         btnReiniciar.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +140,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        //Dialog Reinicio
+        dialogReinicio=new Dialog(this);
+        dialogReinicio.setContentView(R.layout.dialogreiniciarpartida);
+        dialogReinicio.setCanceledOnTouchOutside(false);
+        btnSi=(Button)dialogReinicio.findViewById(R.id.btnSi);
+        btnNo=(Button) dialogReinicio.findViewById(R.id.btnNo);
+
+        btnSi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reiniciaPartida();
+                dialogReinicio.dismiss();
+            }
+        });
+
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Enviar a Menu Principal
+            }
+        });
+
+
         //Obtener ancho y alto el pixels para ajustar las imagenes
         /*DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -123,19 +171,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         */
     }
 
-    /*public void muestraDialog(){
-        long time= Long.valueOf(1);
-        Boolean sal=false;
-        dialog.show();
+    public void
+    updateChronometer(){
+        int stoppedMilliseconds = 0;
 
-        do {
-            try {
-                Thread.sleep(time);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }while (!sal);
-    }*/
+        String chronoText = chronometer.getText().toString();
+        String array[] = chronoText.split(":");
+        if (array.length == 2) {
+            stoppedMilliseconds = Integer.parseInt(array[0]) * 60 * 1000 + Integer.parseInt(array[1]) * 1000;
+        } else if (array.length == 3) {
+            stoppedMilliseconds = Integer.parseInt(array[0]) * 60 * 60 * 1000 + Integer.parseInt(array[1]) * 60 * 1000 + Integer.parseInt(array[2]) * 1000;
+        }
+        chronometer.setBase(SystemClock.elapsedRealtime() - stoppedMilliseconds);
+        chronometer.start();
+    }
 
     @Override
     public void onClick(View view) {
@@ -189,7 +238,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     * Postcondiciones:
     * */
     public void insertarFicha(int columna){
-
         //Si la columna no está llena y no hay ganador
         if(contadores[columna]<6 && !hayGanador) {
 
@@ -198,7 +246,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             imageView.setScaleX(13);
             imageView.setScaleY(11);
 
-            //Comprobar cantidad de fichas que tiene la columna para definir la animacion
+            //Comprobamos la cantidad de fichas que tiene la columna para definir la animacion
             TranslateAnimation translateAnimation=getCurrentAnimation(columna);
 
             switch (columna) {
@@ -233,37 +281,72 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
             imageView.startAnimation(translateAnimation);
 
-            //Ponemos marca en el array paralelo al tablero,
-            marcaArrayParaleloTablero(columna);
-
-            //Aumentamos el contador de la columna
-            contadores[columna]+=1;
-
-            //Aumentamos el total de fichas puestas
-            totalFichasPuestas++;
-
-            //Si la cantidad de fichas puestas es mayor o igual que 7
-            if(totalFichasPuestas>=7) {
-                //Comprobar ganador
-                compruebaGanador();
-            }
-
-            //Si hay ganador
-            if(hayGanador) {
-                //Mostramos mensaje de ganador/Perdedor
-                mostrarMensajeVictoriaDerrota();
-
-                //Preguntamos si reinicia partida
-
-
-                //Toast.makeText(this, "Ha ganado?", Toast.LENGTH_SHORT).show();
-            }else {
-                //Cambiamos el turno
-                cambiaTurno();
-            }
+            //Gestionamos la jugada
+            gestionaJugada(columna);
         }//fin si
     }
 
+    /*
+    * Proposito:
+    * Precondiciones:
+    * Entradas:
+    * Salidas:
+    * Postcondiciones:
+    * */
+    public void preguntaSiReinicia(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dialogReinicio.show();
+            }
+        },1000);
+    }
+
+    /*
+    * Proposito:
+    * Precondiciones:
+    * Entradas:
+    * Salidas:
+    * Postcondiciones:
+    * */
+    public void gestionaJugada(int columna){
+        //Ponemos marca en el array paralelo al tablero,
+        marcaArrayParaleloTablero(columna);
+
+        //Aumentamos el contador de la columna
+        contadores[columna]+=1;
+
+        //Aumentamos el total de fichas puestas
+        totalFichasPuestas++;
+
+        //Si es la primera ficha iniciamos el cronometro
+        if(totalFichasPuestas==1){
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+        }
+
+        //Si la cantidad de fichas puestas es mayor o igual que 7
+        if(totalFichasPuestas>=7) {
+            //Comprobar si hay
+            // ganador
+            compruebaGanador();
+        }
+        //Si hay ganador
+        if(hayGanador) {
+            //Paramos el cronometro y gu
+
+
+            //Mostramos mensaje de ganador/Perdedor
+            mostrarMensajeVictoriaDerrota();
+
+            //Preguntamos si reinicia partida
+            preguntaSiReinicia();
+        }else {
+            //Cambiamos el turno
+            cambiaTurno();
+        }
+    }
 
     /*
     * Proposito:
@@ -845,7 +928,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
 
         //REINICIAMOS AQUI POR AHORA
-        reiniciaPartida();
+        //reiniciaPartida();
     }
 
     /*
@@ -871,6 +954,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         col4.removeAllViews();
         col5.removeAllViews();
         col6.removeAllViews();
+        //chronometer=(Chronometer) findViewById(R.id.chronometer);
+        //chronometer.stop();
+        chronometer.setBase(SystemClock.elapsedRealtime());//Poner cronometro a 0
     }
 
 

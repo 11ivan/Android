@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/chronometer"
         android:layout_below="@id/btnPause"
-        android:layout_marginLeft="25dp"/>
+        android:layout_marginLeft="25dp"
+        />
 
     <RelativeLayout
         android:layout_width="82dp"
