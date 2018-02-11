@@ -34,12 +34,18 @@ public interface DAOUsuarios {
     public void updateUsuario(Usuario usuario);
 
     @Query("Update Usuarios set Nombre=:nombre Where ID=:id")
-    public void updateUsuario(String nombre, int id);
+    public void updateNombreUsuario(String nombre, int id);
 
     @Query("Select * From Usuarios")
-    public LiveData<Usuario[]> getUsuarios();
+    public LiveData<Usuario[]> getUsuariosLiveData();
+
+    @Query("Select * From Usuarios")
+    public Usuario[] getUsuarios();
 
     @Query("Select * From Usuarios Where ID=:id")
-    public LiveData<Usuario> getUsuarios(int id);
+    public LiveData<Usuario> getUsuario(int id);
+
+    @Query("Select * From Usuarios LIMIT 1")
+    public LiveData<Usuario> getUsuario();
 
 }

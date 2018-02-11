@@ -2,29 +2,27 @@ package com.cuatroenraya.icastillo.cuatroenraya.application;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RadioGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cuatroenraya.icastillo.cuatroenraya.R;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OptionsFragment.OnFragmentInteractionListener} interface
+ * {@link IntroducirNombreUsuarioFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link OptionsFragment#newInstance} factory method to
+ * Use the {@link IntroducirNombreUsuarioFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OptionsFragment extends Fragment implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class IntroducirNombreUsuarioFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,14 +34,12 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
 
     private OnFragmentInteractionListener mListener;
 
-    //Mis Variables xml
-    Button btnBack;
-    Activity activity;
-    RadioGroup radioGroupSeleccionTablero;
-    ImageView imageTableroSeleccionado;
+    //Mis variables XML
+    EditText editTextNombreUsuario;
+    Button btnContinuar;
 
 
-    public OptionsFragment() {
+    public IntroducirNombreUsuarioFragment() {
         // Required empty public constructor
     }
 
@@ -53,11 +49,11 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment OptionsFragment.
+     * @return A new instance of fragment IntroducirNombreUsuarioFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static OptionsFragment newInstance(String param1, String param2) {
-        OptionsFragment fragment = new OptionsFragment();
+    public static IntroducirNombreUsuarioFragment newInstance(String param1, String param2) {
+        IntroducirNombreUsuarioFragment fragment = new IntroducirNombreUsuarioFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -75,22 +71,14 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_options, container, false);
-
-        //Boton Atras
-        btnBack=(Button) view.findViewById(R.id.btnBackOpciones);
-        btnBack.setOnClickListener(this);
-
-        //RadioGroup Seleccion Tablero
-        radioGroupSeleccionTablero=(RadioGroup)view.findViewById(R.id.radioGroupSeleccionTablero);
-        radioGroupSeleccionTablero.setOnCheckedChangeListener(this);
-
-        //Imagen Tablero Seleccionado
-        imageTableroSeleccionado=(ImageView)view.findViewById(R.id.imageSeleccionTablero);
-
+        View view=inflater.inflate(R.layout.fragment_introducir_nombre_usuario, container, false);
+        editTextNombreUsuario=(EditText) view.findViewById(R.id.editTextNombreUsuario);
+        btnContinuar=(Button) view.findViewById(R.id.btnContinuarFragmentNombreUsuario);
+        btnContinuar.setOnClickListener(this);
+        //((MainActivity) getActivity()).viewModelMainActivity.
         return view;
     }
 
@@ -101,28 +89,12 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
         }
     }
 
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
-
     @Override
-    public void onAttach(Activity activity)
-    {
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         try{
             mListener=(OnFragmentInteractionListener) activity;
-            //((OnFragmentInteractionListener) mListener).ClickListener(view);
-        }catch (ClassCastException cce){
-
-        }
-        //this.activity = activity;
+        }catch (ClassCastException cce){}
     }
 
     @Override
@@ -132,25 +104,15 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
     }
 
     @Override
-    public void onClick(View view) {
-        mListener.ClickListener(view);
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId){
-
-            case R.id.radioButtonAzul:
-                imageTableroSeleccionado.setImageResource(R.drawable.tablero4enraya);
-            break;
-
-            case R.id.radioButtonAluminio:
-                imageTableroSeleccionado.setImageResource(R.drawable.tableroaluminio);
-            break;
-
+    public void onClick(View v) {
+        if(editTextNombreUsuario.getText().toString().replaceAll(" ", "").length()==0){
+            Toast.makeText(getActivity(), "El nombre de usuario no puede estar vacio", Toast.LENGTH_LONG).show();
+        }else {
+            ((MainActivity)getActivity()).nombreUsuario=editTextNombreUsuario.getText().toString();
+            mListener.ClickListener(v);
         }
-    }
 
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -167,9 +129,4 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
         void onFragmentInteraction(Uri uri);
         void ClickListener(View view);
     }
-
-    /*public interface OnClickListener{
-        void ClickListener(View view);
-    }*/
-
 }

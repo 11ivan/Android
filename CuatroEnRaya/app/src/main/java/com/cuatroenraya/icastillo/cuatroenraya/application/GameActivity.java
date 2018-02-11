@@ -24,7 +24,7 @@ import java.util.Timer;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //Columnas, Relative Principal y Cronometro
+    //Columnas, Relative Principal, Cronometro e Imagen del tablero
     RelativeLayout col0;
     RelativeLayout col1;
     RelativeLayout col2;
@@ -34,7 +34,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     RelativeLayout col6;
     RelativeLayout relativeLayout;
     Chronometer chronometer;
-    //java.sql.Date actual;
+    ImageView imagenTablero;
     //PopupMenu popupMenu;
 
     //Boton Pause
@@ -55,7 +55,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     int[] contadores=new int[7];
     int[][] arrayParaleloTablero=new int[7][6];// 7 Columnas y 6 Filas
     int turno=0;//turno será 0 cuando le toque al jugador y 1 cuando le toque a la máquina
-    Integer[] idImagenesFichas={R.drawable.ficha, R.drawable.fichaamarillabuena};
+    Integer[] idImagenesFichas={R.drawable.ficharoja, R.drawable.fichaamarilla};
     Maquina maquina=new Maquina();
     int totalFichasPuestas=0;
     int[] ultimaFichaPuesta=new int[2];
@@ -76,7 +76,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         col5=(RelativeLayout) findViewById(R.id.col5);
         col6=(RelativeLayout) findViewById(R.id.col6);
         btnPause=(Button) findViewById(R.id.btnPause);
-
+        imagenTablero=(ImageView) findViewById(R.id.imageTablero);
 
         col0.setOnClickListener(this);
         col1.setOnClickListener(this);
@@ -101,7 +101,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        //Dialog Pause
+        //Dialog Pause. Se muestra al pulsar el boton pause o atras en el dispositivo
         dialog=new Dialog(this);
         dialog.setContentView(R.layout.customdialogpause);
         dialog.setTitle("Pause");
@@ -140,7 +140,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        //Dialog Reinicio
+        //Dialog Reinicio. Se muestra cuando gana o pierde partida
         dialogReinicio=new Dialog(this);
         dialogReinicio.setContentView(R.layout.dialogreiniciarpartida);
         dialogReinicio.setCanceledOnTouchOutside(false);
@@ -171,8 +171,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         */
     }
 
-    public void
-    updateChronometer(){
+    public void updateChronometer(){
         int stoppedMilliseconds = 0;
 
         String chronoText = chronometer.getText().toString();
@@ -293,7 +292,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     * Salidas:
     * Postcondiciones:
     * */
-    public void preguntaSiReinicia(){
+    public void preguntaVolverAJugar(){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -334,14 +333,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
         //Si hay ganador
         if(hayGanador) {
-            //Paramos el cronometro y gu
-
+            //Paramos el cronometro
+            chronometer.stop();
 
             //Mostramos mensaje de ganador/Perdedor
             mostrarMensajeVictoriaDerrota();
 
-            //Preguntamos si reinicia partida
-            preguntaSiReinicia();
+            //Preguntamos si vuelve a jugar
+            preguntaVolverAJugar();
+
         }else {
             //Cambiamos el turno
             cambiaTurno();
@@ -681,7 +681,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-
         if (!hayGanador){ //Tercera diagonal
             aciertos=0;
             iteraciones++;//4 iteraciones
@@ -704,7 +703,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-
         if (!hayGanador){ //Cuarta diagonal//Aqui cambia la cosa
             //4 iteraciones
             aciertos=0;
@@ -726,7 +724,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 hayGanador=true;
             }
         }
-
 
         if (!hayGanador){ //Quinta diagonal
             //3 iteraciones
@@ -752,7 +749,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-
         if (!hayGanador){ //Sexta diagonal
             //2 iteraciones
             sal=false;
@@ -769,7 +765,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     sal=true;
                 }
                 columna--;
-
                 fila++;
             }
             if (aciertos==3){
@@ -777,7 +772,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 hayGanador=true;
             }
         }
-
     }
 
     /*
@@ -840,7 +834,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             }else if(aciertos>0){
                 aciertos=0;
             }
-
         }
         if(aciertos==3){
             Toast.makeText(this, "Alguien ha ganado HORIZONTAL", Toast.LENGTH_SHORT).show();
@@ -868,23 +861,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             case 0:
                 translateAnimation=new TranslateAnimation(0, toXDelta, -450, 415);
                 break;
-
             case 1:
                 translateAnimation=new TranslateAnimation(0, toXDelta, -450, 255);
                 break;
-
             case 2:
                 translateAnimation=new TranslateAnimation(0, toXDelta, -450, 110);
                 break;
-
             case 3:
                 translateAnimation=new TranslateAnimation(0, toXDelta, -450, -50);
                 break;
-
             case 4:
                 translateAnimation=new TranslateAnimation(0, toXDelta, -450, -205);
                 break;
-
             case 5:
                 translateAnimation=new TranslateAnimation(0, toXDelta, -450, -350);
                 break;
@@ -904,13 +892,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             pulsado=true;
             //Mostrar PopUpMenu
             //popupMenu.show();
+            chronometer.stop();
             dialog.show();
         }
         //return super.onKeyDown(keyCode, event);
         return pulsado;
     }
-
-
 
     public void mostrarMensajeVictoriaDerrota(){
         String mensaje="";
@@ -955,7 +942,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         col5.removeAllViews();
         col6.removeAllViews();
         //chronometer=(Chronometer) findViewById(R.id.chronometer);
-        //chronometer.stop();
+        chronometer.stop();
         chronometer.setBase(SystemClock.elapsedRealtime());//Poner cronometro a 0
     }
 
