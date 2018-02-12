@@ -9,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.cuatroenraya.icastillo.cuatroenraya.R;
+import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Configuracion;
 
 
 /**
@@ -41,7 +43,9 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
     Activity activity;
     RadioGroup radioGroupSeleccionTablero;
     ImageView imageTableroSeleccionado;
+    EditText editTextNombreUsuario;
 
+    Configuracion configuracion;
 
     public OptionsFragment() {
         // Required empty public constructor
@@ -90,6 +94,14 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
 
         //Imagen Tablero Seleccionado
         imageTableroSeleccionado=(ImageView)view.findViewById(R.id.imageSeleccionTablero);
+
+        //EditText del nombre del usuario
+        editTextNombreUsuario=(EditText) view.findViewById(R.id.editTextNombreUsuarioFragmentOptions);
+
+
+        //Cargar los datos de la configuracion del usuario
+        editTextNombreUsuario.setText(((MainActivity)getActivity()).usuarioDeViewModel.getNombre());
+
 
         return view;
     }

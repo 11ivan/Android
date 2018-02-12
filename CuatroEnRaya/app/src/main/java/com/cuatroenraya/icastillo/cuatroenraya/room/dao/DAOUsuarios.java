@@ -46,6 +46,9 @@ public interface DAOUsuarios {
     public LiveData<Usuario> getUsuario(int id);
 
     @Query("Select * From Usuarios LIMIT 1")
-    public LiveData<Usuario> getUsuario();
+    public LiveData<Usuario> getUsuarioLiveData();
+
+    @Query("Select * From Usuarios LIMIT 1")
+    public Usuario getUsuario();
 
 }

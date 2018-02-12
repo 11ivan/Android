@@ -33,9 +33,17 @@ public class RepositorioUsuarios {
         AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().insertUsuario(usuario);
     }
 
-    public LiveData<Usuario> getUsuario(){
-        LiveData<Usuario> liveData=AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().getUsuario();
+    public void insertUsuarios(Usuario[] usuarios){
+        AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().insertUsuarios(usuarios);
+    }
+    public LiveData<Usuario> getUsuarioLiveData(){
+        LiveData<Usuario> liveData=AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().getUsuarioLiveData();
         return liveData;
+    }
+
+    public Usuario getUsuario(){
+        Usuario usuario=AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().getUsuario();
+        return usuario;
     }
 
 }

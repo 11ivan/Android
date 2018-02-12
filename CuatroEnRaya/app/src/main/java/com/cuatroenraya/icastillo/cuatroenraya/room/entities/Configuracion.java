@@ -4,7 +4,10 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.content.Intent;
 import android.support.annotation.ColorInt;
+
+import com.cuatroenraya.icastillo.cuatroenraya.R;
 
 /**
  * Created by icastillo on 07/02/2018.
@@ -21,17 +24,17 @@ public class Configuracion {
     @ForeignKey(entity = Usuario.class, parentColumns = "ID", childColumns = "IdUsuario")
     private int idUsuario;
 
-    @ColumnInfo(name = "Dificultad")
-    private String dificultad;
+    /*@ColumnInfo(name = "Dificultad")
+    private String dificultad;*/
 
     @ColumnInfo(name = "TipoTablero")
-    private int tipoTablero;
+    private Integer tipoTablero;
 
     public Configuracion() {
         this.id = 0;
         this.idUsuario = 0;
-        this.dificultad = "";
-        this.tipoTablero = 0;
+        //this.dificultad = "";
+        this.tipoTablero = R.drawable.tablero4enraya;
     }
 
     /*public Configuracion(int id, int idUsuario, String dificultad, int tipoTablero) {
@@ -57,19 +60,18 @@ public class Configuracion {
         this.idUsuario = idUsuario;
     }
 
-    public String getDificultad() {
+    /*public String getDificultad() {
         return dificultad;
     }
-
     public void setDificultad(String dificultad) {
         this.dificultad = dificultad;
-    }
+    }*/
 
-    public int getTipoTablero() {
+    public Integer getTipoTablero() {
         return tipoTablero;
     }
 
-    public void setTipoTablero(int tipoTablero) {
+    public void setTipoTablero(Integer tipoTablero) {
         this.tipoTablero = tipoTablero;
     }
 }

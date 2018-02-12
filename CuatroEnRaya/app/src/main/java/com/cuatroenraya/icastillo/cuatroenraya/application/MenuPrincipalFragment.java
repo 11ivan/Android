@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.cuatroenraya.icastillo.cuatroenraya.R;
 
@@ -34,6 +35,7 @@ public class MenuPrincipalFragment extends Fragment implements View.OnClickListe
     private OnFragmentInteractionListener mListener;
     Button btnPlay;
     Button btnOptions;
+    TextView txtNombre;
 
     public MenuPrincipalFragment() {
         // Required empty public constructor
@@ -74,10 +76,12 @@ public class MenuPrincipalFragment extends Fragment implements View.OnClickListe
 
         btnPlay=(Button) view.findViewById(R.id.btnPlay);
         btnOptions=(Button) view.findViewById(R.id.btnOptions);
+        txtNombre=(TextView) view.findViewById(R.id.txtNombre);
+
+        txtNombre.setText( ((MainActivity)getActivity()).usuarioDeViewModel.getNombre() );
 
         btnPlay.setOnClickListener(this);
         btnOptions.setOnClickListener(this);
-
 
         return view;
     }
