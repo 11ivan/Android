@@ -1,10 +1,12 @@
 package com.cuatroenraya.icastillo.cuatroenraya.application;
 
 import android.app.FragmentTransaction;
-import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -23,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
     IntroducirNombreUsuarioFragment introducirNombreUsuarioFragment=new IntroducirNombreUsuarioFragment();
     String fragmentCargado="";
     String KEYFRAGMENT="ultimoFragment";
-    LiveData<Usuario[]> liveDataUsuarios;
+    Usuario[] arrayUsuarios;
     ViewModelMainActivity viewModelMainActivity;
     Usuario usuario=new Usuario();
     String nombreUsuario="";
@@ -35,17 +37,32 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         setContentView(R.layout.activity_main);
 
         //usuarioLiveData=new Usuario();
-        viewModelMainActivity=new ViewModelMainActivity(getApplication());
+        //viewModelMainActivity=new ViewModelMainActivity(getApplication());
+        viewModelMainActivity= ViewModelProviders.of(this).get(ViewModelMainActivity.class);
+
 
         //Comprobar si hay algun usuario en la base de datos
         //Si hay usuario mostrar mensaje de bienvenida(Ya que será el único usuario en la base de datos)
         //Si no hay usuario Cargamos el Fragment para pedir un nombre de usuario
-        liveDataUsuarios=viewModelMainActivity.getUsuariosLiveData();
-        if(viewModelMainActivity.getUsuariosLiveData().getValue()==null){
+        //viewModelMainActivity.cargaUsuariosLiveData();//
+
+        viewModelMainActivity.liveDataArrayUsuarios.observe(this, new Observer<Usuario[]>() {
+            @Override
+            public void onChanged(@Nullable Usuario[] usuarios) {
+                arrayUsuarios=viewModelMainActivity.liveDataArrayUsuarios.getValue();
+                //arrayUsuarios=usuarios;
+            }
+        });
+
+        //viewModelMainActivity.cargaArrayUsuarios();
+        viewModelMainActivity.cargaUsuariosLiveData();
+
+        if(viewModelMainActivity.arrayUsuarios.length==0){
             cargaFragmentNombreUsuario();
         }else {
             //Recuperamos el usuario
             viewModelMainActivity.cargaUsuario();
+            Usuario usuario=viewModelMainActivity.getUsuarioLiveData().getValue();
             //Cargamos el Fragment pricipal
             cargaFragmentPrincipal();
         }
@@ -56,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         int width = metrics.widthPixels; // ancho absoluto en pixels
         int height = metrics.heightPixels; // alto absoluto en pixels
         */
+
     }
 
     @Override
