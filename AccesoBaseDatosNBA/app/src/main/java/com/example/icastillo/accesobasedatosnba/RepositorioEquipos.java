@@ -18,7 +18,6 @@ public class RepositorioEquipos {
 
     public RepositorioEquipos(Application application){
         this.application=application;
-
     }
 
     public Application getApplication() {

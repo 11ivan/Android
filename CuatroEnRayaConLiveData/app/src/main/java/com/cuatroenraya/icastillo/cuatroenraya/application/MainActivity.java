@@ -24,9 +24,6 @@ import com.cuatroenraya.icastillo.cuatroenraya.room.repositories.RepositorioConf
 import com.cuatroenraya.icastillo.cuatroenraya.room.repositories.RepositorioUsuarios;
 import com.cuatroenraya.icastillo.cuatroenraya.viewmodels.ViewModelMainActivity;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 public class MainActivity extends AppCompatActivity implements OptionsFragment.OnFragmentInteractionListener, MenuPrincipalFragment.OnFragmentInteractionListener, IntroducirNombreUsuarioFragment.OnFragmentInteractionListener {
 
     OptionsFragment optionsFragment=new OptionsFragment();
@@ -54,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         viewModelMainActivity= ViewModelProviders.of(this).get(ViewModelMainActivity.class);
         viewModelMainActivity.cargaArrayUsuarios();
 
-        /*GregorianCalendar calendar=new GregorianCalendar();
-        Toast.makeText(this, String.valueOf(calendar.get(Calendar.YEAR)), Toast.LENGTH_LONG).show();*/
 
         viewModelMainActivity.getUsuarioLiveData().observe(this, new Observer<Usuario>() {
             @Override
@@ -71,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
 
         //Si no hay usuario pedimos un nombre de usuario
         if(viewModelMainActivity.arrayUsuarios.length==0){
