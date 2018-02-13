@@ -48,6 +48,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
     EditText editTextNombreUsuario;
     RadioButton radioButtonAzul;
     RadioButton radioButtonAluminio;
+    Button btnUpdateConfiguracion;
 
     Configuracion configuracion;
     RepositorioConfiguraciones repositorioConfiguraciones;
@@ -93,6 +94,16 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
         btnBack=(Button) view.findViewById(R.id.btnBackOpciones);
         btnBack.setOnClickListener(this);
 
+        //Boton update configuracion
+        btnUpdateConfiguracion=(Button) view.findViewById(R.id.btnActualizaConfiguracion);
+        btnUpdateConfiguracion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                configuracion.setTipoTablero(R.drawable.tablero4enraya);
+                repositorioConfiguraciones.updateConfiguracionUsuario(configuracion);
+            }
+        });
+
         //RadioGroup Seleccion Tablero
         radioGroupSeleccionTablero=(RadioGroup)view.findViewById(R.id.radioGroupSeleccionTablero);
         radioGroupSeleccionTablero.setOnCheckedChangeListener(this);
@@ -105,12 +116,17 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
 
 
         //Cargar los datos de la configuracion del usuario
-        editTextNombreUsuario.setText(((MainActivity)getActivity()).usuarioDeViewModel.getNombre());
+        editTextNombreUsuario.setText(((MainActivity)getActivity()).usuarioDeViewModel.getNombre());//Sin embargo el EditText no da ningun error ¿?
 
         repositorioConfiguraciones=new RepositorioConfiguraciones(getActivity().getApplication());
-        configuracion=repositorioConfiguraciones.getConfiguracionUsuario( ((MainActivity)getActivity()).usuarioDeViewModel.getId() );
 
-        imageTableroSeleccionado.setImageResource(configuracion.getTipoTablero());
+        ((MainActivity)getActivity()).viewModelMainActivity.cargaUsuario();
+
+        int id=((MainActivity)getActivity()).usuarioDeViewModel.getId();
+        configuracion=repositorioConfiguraciones.getConfiguracionUsuario( id );
+
+        imageTableroSeleccionado.setImageResource(configuracion.getTipoTablero());//EXCEPCION FANTASMA (APARECIÓ EN UNO DE LOS GIROS DE PANTALLA) configuracion da null >>
+                                                                                  //CAPTURADO Carga Fragment antes de entrar en onChanged debido al giro de pantalla Trae el id por defecto del Usuario
 
         return view;
     }

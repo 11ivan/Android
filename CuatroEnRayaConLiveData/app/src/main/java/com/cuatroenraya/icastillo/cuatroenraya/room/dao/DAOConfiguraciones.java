@@ -28,7 +28,10 @@ public interface DAOConfiguraciones {
     public void deleteConfiguracion(int idUsuario);
 
     @Update
-    public void updatePuntuacion(Configuracion configuracion);
+    public void updateConfiguracion(Configuracion configuracion);
+
+    @Query("Update Configuraciones set TipoTablero=:tipoTablero WHERE idUsuario=:idUsuario")
+    public void updateConfiguracionUsuario(int tipoTablero, int idUsuario);
 
     @Query("Select * From Configuraciones")
     public LiveData<Configuracion[]> getConfiguraciones();

@@ -11,6 +11,13 @@
         android:id="@+id/btnBackOpciones"
         android:background="@android:drawable/ic_media_previous"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnActualizaConfiguracion"
+        android:background="@android:drawable/ic_input_add"
+        android:layout_toRightOf="@id/btnBackOpciones"
+        android:layout_marginLeft="20dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

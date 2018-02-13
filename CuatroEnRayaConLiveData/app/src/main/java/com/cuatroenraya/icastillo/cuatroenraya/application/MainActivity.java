@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
     String KEYFRAGMENT="ultimoFragment";
     Usuario[] arrayUsuarios;
     ViewModelMainActivity viewModelMainActivity;
-    Usuario usuarioDeViewModel=new Usuario();
+    Usuario usuarioDeViewModel=new Usuario();//Dato Bindeado al ViewModel
     String nombreUsuario="";
     RepositorioUsuarios repositorioUsuarios;
     Configuracion configuracion=new Configuracion();
@@ -47,33 +47,34 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
 
         repositorioUsuarios=new RepositorioUsuarios(getApplication());
         repositorioConfiguraciones=new RepositorioConfiguraciones(getApplication());
-        //usuarioLiveData=new Usuario();
-        viewModelMainActivity= ViewModelProviders.of(this).get(ViewModelMainActivity.class);
-        viewModelMainActivity.cargaArrayUsuarios();
 
+        viewModelMainActivity = ViewModelProviders.of(this).get(ViewModelMainActivity.class);
 
         viewModelMainActivity.getUsuarioLiveData().observe(this, new Observer<Usuario>() {
             @Override
             public void onChanged(@Nullable Usuario usuario) {
                 Toast.makeText(getApplicationContext(), "Ha entrado en onChanged", Toast.LENGTH_LONG).show();
                 usuarioDeViewModel=usuario;
-                cargaFragmentCorrespondiente();//Cargamos el Fragment que corresponda
+
+                //Si después de cargar el usuario es null pedimos el nomrbe de Usuario
+                if(usuarioDeViewModel==null){
+                    cargaFragmentNombreUsuario();
+                }else {//Sino cargamos el Fragment que corresponda
+                    cargaFragmentCorrespondiente();
+                }
             }
         });
 
-        try {//CACHO DE CUERNO CON PATAS!!
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        //Recuperamos el usuario
+        viewModelMainActivity.cargaUsuario();//De aquí tira para el metodo onChanged
 
         //Si no hay usuario pedimos un nombre de usuario
-        if(viewModelMainActivity.arrayUsuarios.length==0){
+        /*if(usuarioDeViewModel==null){
             cargaFragmentNombreUsuario();
         }else {
             //Recuperamos el usuario
             viewModelMainActivity.cargaUsuario();
-        }
+        }*/
 
         //Obtener ancho y alto el pixels para ajustar las imagenes
         /*DisplayMetrics metrics = new DisplayMetrics();
@@ -95,14 +96,17 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         // Restore UI state from the savedInstanceState.
         // This bundle has also been passed to onCreate.
         fragmentCargado = savedInstanceState.getString(KEYFRAGMENT);
-        switch (fragmentCargado){
+        /*switch (fragmentCargado){
+            case "principal":
+                cargaFragmentPrincipal();
+                break;
             case "opciones":
                 cargaFragmentOpciones();
             break;
             case "nombreusuario":
                 cargaFragmentNombreUsuario();
                 break;
-        }
+        }*/
     }
 
     public void cargaFragmentCorrespondiente(){
@@ -113,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
             case "opciones":
                 cargaFragmentOpciones();
                 break;
+            /*case "nombreusuario":
+                cargaFragmentNombreUsuario();
+                break;*/
         }
     }
 
@@ -156,6 +163,10 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                     cargaFragmentPrincipal();
             break;
 
+            /*case R.id.btnActualizaConfiguracion:
+                    repositorioConfiguraciones.updateConfiguracion();
+                break;*/
+
             //Casos del Fragment del menu principal
             case R.id.btnPlay:
                     startActivityGame();
@@ -166,10 +177,9 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
 
             //Casos Fragment Introducir Nombre Usuario
             case R.id.btnContinuarFragmentNombreUsuario:
-
+                usuarioDeViewModel=new Usuario();
                 usuarioDeViewModel.setNombre(nombreUsuario);
-                Usuario[] usuarios={usuarioDeViewModel};
-                viewModelMainActivity.insertUsuarios(usuarios);//Insertamos el usuario en la base de datos
+                viewModelMainActivity.insertUsuario(usuarioDeViewModel);//Insertamos el usuario en la base de datos
 
                 //El proximo fragment a cargar cuando entre en onchaged debe ser el principal
                 fragmentCargado="principal";
@@ -177,31 +187,19 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                 //Cargamos en el view model el usuario insertado
                 viewModelMainActivity.cargaUsuario();
 
-                /*try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
-
                 Handler handler=new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //Insertamos una configuracion por defecto para el usuario
-                        configuracion.setIdUsuario(usuarioDeViewModel.getId());//El id del usuario debe ser 1
+                        configuracion.setIdUsuario(usuarioDeViewModel.getId());
                         configuracion.setTipoTablero(R.drawable.tableroaluminio);
                         repositorioConfiguraciones.insertConfiguracion(configuracion);
-
                     }
-                }, 1500);
-
-                //Insertamos una configuracion por defecto para el usuario
+                }, 1000);
+                //Insertamos una configuracion por defecto para el usuario          //¿INSERTA UNA CONFIGURACION POR DEFECTO?>>(NO)
                 /*configuracion.setIdUsuario(usuarioDeViewModel.getId());//El id del usuario debe ser 1
                 configuracion.setTipoTablero(R.drawable.tableroaluminio);
                 repositorioConfiguraciones.insertConfiguracion(configuracion);*/
-
-                //Cargamos el Fragment Principal
-                //cargaFragmentPrincipal(); //Ahora lo cargamos en el metodo onChange del ViewModel
             break;
         }
     }

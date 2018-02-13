@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
@@ -164,11 +165,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //Obtener ancho y alto el pixels para ajustar las imagenes
-        /*DisplayMetrics metrics = new DisplayMetrics();
+        DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels; // ancho absoluto en pixels
         int height = metrics.heightPixels; // alto absoluto en pixels
-        */
+
     }
 
     public void updateChronometer(){
@@ -242,8 +243,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             ImageView imageView = new ImageView(this);
             imageView.setImageResource(idImagenesFichas[turno]);
-            imageView.setScaleX(13);
-            imageView.setScaleY(11);
+            imageView.setScaleX(11);
+            imageView.setScaleY(10);
 
             //Comprobamos la cantidad de fichas que tiene la columna para definir la animacion
             TranslateAnimation translateAnimation=getCurrentAnimation(columna);
@@ -851,30 +852,30 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     * */
     private TranslateAnimation getCurrentAnimation(int column){
         TranslateAnimation translateAnimation=null;
-        int toXDelta=2;
-        if(column==0){
+        int toXDelta=0;
+        /*if(column==0){
             toXDelta=9;
-        }
+        }*/
         //Según la cantidad de fichas que tenga la columna
         switch (contadores[column]){
 
             case 0:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, 415);
+                translateAnimation=new TranslateAnimation(0, toXDelta, -350, 220);
                 break;
             case 1:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, 255);
+                translateAnimation=new TranslateAnimation(0, toXDelta, -350, col0.getBottom());
                 break;
             case 2:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, 110);
+                translateAnimation=new TranslateAnimation(0, toXDelta, -350, col0.getBottom());
                 break;
             case 3:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, -50);
+                translateAnimation=new TranslateAnimation(0, toXDelta, -350, col0.getBottom());
                 break;
             case 4:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, -205);
+                translateAnimation=new TranslateAnimation(0, toXDelta, -350, col0.getBottom());
                 break;
             case 5:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, -350);
+                translateAnimation=new TranslateAnimation(0, toXDelta, -350, col0.getBottom());
                 break;
         }
         translateAnimation.setDuration(1000);
