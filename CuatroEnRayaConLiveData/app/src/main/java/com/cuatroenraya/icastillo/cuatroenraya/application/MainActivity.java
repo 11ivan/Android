@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
             public void onChanged(@Nullable Usuario usuario) {
                 Toast.makeText(getApplicationContext(), "Ha entrado en onChanged", Toast.LENGTH_LONG).show();
                 usuarioDeViewModel=usuario;
+                //usuarioDeViewModel=viewModelMainActivity.getUsuarioLiveData().getValue();
 
                 //Si después de cargar el usuario es null pedimos el nomrbe de Usuario
                 if(usuarioDeViewModel==null){

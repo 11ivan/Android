@@ -120,7 +120,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
 
         repositorioConfiguraciones=new RepositorioConfiguraciones(getActivity().getApplication());
 
-        ((MainActivity)getActivity()).viewModelMainActivity.cargaUsuario();
+        //((MainActivity)getActivity()).viewModelMainActivity.cargaUsuario();
 
         int id=((MainActivity)getActivity()).usuarioDeViewModel.getId();
         configuracion=repositorioConfiguraciones.getConfiguracionUsuario( id );
