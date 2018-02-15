@@ -2,6 +2,7 @@ package com.cuatroenraya.icastillo.cuatroenraya.room.repositories;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.cuatroenraya.icastillo.cuatroenraya.room.AppDatabase;
@@ -25,6 +26,11 @@ public class RepositorioConfiguraciones {
     @SuppressLint("StaticFieldLeak")
     public void insertConfiguracion(Configuracion configuracion){
        new InsertConfiguracionAsyncTask(this.application).execute(configuracion);
+    }
+
+    public LiveData<Configuracion> getConfiguracionLivedata(){
+        LiveData<Configuracion> configuracionLiveData=AppDatabase.getDatabase(this.application.getApplicationContext()).configuracionesDAO().getConfiguracion();
+        return configuracionLiveData;
     }
 
     @SuppressLint("StaticFieldLeak")

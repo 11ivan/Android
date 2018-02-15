@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
     Usuario usuarioDeViewModel=new Usuario();//Dato Bindeado al ViewModel
     String nombreUsuario="";
     RepositorioUsuarios repositorioUsuarios;
-    Configuracion configuracion=new Configuracion();
+    Configuracion configuracionDeUsuario=new Configuracion();
     RepositorioConfiguraciones repositorioConfiguraciones;
 
 
@@ -48,17 +48,19 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         repositorioUsuarios=new RepositorioUsuarios(getApplication());
         repositorioConfiguraciones=new RepositorioConfiguraciones(getApplication());
 
-        viewModelMainActivity = ViewModelProviders.of(this).get(ViewModelMainActivity.class);
+        viewModelMainActivity = ViewModelProviders.of(this).get(ViewModelMainActivity.class);//Ya está inicializado usuarioLiveData
 
         viewModelMainActivity.getUsuarioLiveData().observe(this, new Observer<Usuario>() {
             @Override
             public void onChanged(@Nullable Usuario usuario) {
                 Toast.makeText(getApplicationContext(), "Ha entrado en onChanged", Toast.LENGTH_LONG).show();
                 usuarioDeViewModel=usuario;
+                //configuracionDeUsuario=repositorioConfiguraciones.getConfiguracionUsuario(usuarioDeViewModel.getId());//Cargamos la configuaración  PUEDE SER NULL
                 //Si después de cargar el usuario es null pedimos el nombre
                 if(usuarioDeViewModel==null){
                     cargaFragmentNombreUsuario();
                 }else {//Sino cargamos el Fragment que corresponda
+                    configuracionDeUsuario=repositorioConfiguraciones.getConfiguracionUsuario(usuarioDeViewModel.getId());//Cargamos la configuaración  PUEDE SER NULL >> YA NO DEBERIA
                     cargaFragmentCorrespondiente();
                 }
             }
@@ -69,8 +71,6 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
 
         //Recuperamos el usuario
         viewModelMainActivity.cargaUsuario();//De aquí tira para el metodo onChanged
-
-
 
         //Obtener ancho y alto el pixels para ajustar las imagenes
         /*DisplayMetrics metrics = new DisplayMetrics();
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEYFRAGMENT, fragmentCargado);
+        outState.putString(Keys.KEYFRAGMENT, fragmentCargado);
     }
 
     @Override
@@ -91,18 +91,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         super.onRestoreInstanceState(savedInstanceState);
         // Restore UI state from the savedInstanceState.
         // This bundle has also been passed to onCreate.
-        fragmentCargado = savedInstanceState.getString(KEYFRAGMENT);
-        /*switch (fragmentCargado){
-            case "principal":
-                cargaFragmentPrincipal();
-                break;
-            case "opciones":
-                cargaFragmentOpciones();
-            break;
-            case "nombreusuario":
-                cargaFragmentNombreUsuario();
-                break;
-        }*/
+        fragmentCargado = savedInstanceState.getString(Keys.KEYFRAGMENT);
     }
 
     public void cargaFragmentCorrespondiente(){
@@ -113,15 +102,15 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
             case "opciones":
                 cargaFragmentOpciones();
                 break;
-            /*case "nombreusuario":
-                cargaFragmentNombreUsuario();
-                break;*/
         }
     }
 
     //Inicia la actividad del juego
     public void startActivityGame(){
         Intent intent=new Intent(this, GameActivity.class);
+        intent.putExtra(Keys.ID_USUARIO, usuarioDeViewModel.getId());
+        intent.putExtra(Keys.NOMBRE_USUARIO, usuarioDeViewModel.getNombre());
+        intent.putExtra(Keys.TABLERO, configuracionDeUsuario.getTipoTablero());
         startActivity(intent);
     }
 
@@ -159,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                     cargaFragmentPrincipal();
             break;
 
-            /*case R.id.btnActualizaConfiguracion:
+            /*case R.id.btnActualizaConfiguracion:  //Lo gestionamos desde el fragment
                     repositorioConfiguraciones.updateConfiguracion();
                 break;*/
 
@@ -181,15 +170,16 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                 fragmentCargado="principal";
 
                 //Cargamos en el view model el usuario insertado
-                viewModelMainActivity.cargaUsuario();
+                viewModelMainActivity.cargaUsuario();//Hay que cargarlo para obtener el id, es necesario para insertar la configuracion
 
                 Handler handler=new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        configuracion.setIdUsuario(usuarioDeViewModel.getId());
-                        configuracion.setTipoTablero(R.drawable.tableroaluminio);
-                        repositorioConfiguraciones.insertConfiguracion(configuracion);
+                        configuracionDeUsuario=new Configuracion();
+                        configuracionDeUsuario.setIdUsuario(usuarioDeViewModel.getId());
+                        configuracionDeUsuario.setTipoTablero(R.drawable.tableroaluminio);
+                        repositorioConfiguraciones.insertConfiguracion(configuracionDeUsuario);
                     }
                 }, 1000);
                 //Insertamos una configuracion por defecto para el usuario          //¿INSERTA UNA CONFIGURACION POR DEFECTO?>>(NO)

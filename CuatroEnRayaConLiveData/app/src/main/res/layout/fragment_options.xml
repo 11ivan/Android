@@ -1,29 +1,42 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cuatroenraya.icastillo.cuatroenraya.application.OptionsFragment">
+    tools:context="com.cuatroenraya.icastillo.cuatroenraya.application.OptionsFragment"
+    >
     <!--android:background="#99000000"  NEGRO CON OPACIDAD-->
-
-    <Button
-        android:layout_width="wrap_content"
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnBackOpciones"
-        android:background="@android:drawable/ic_media_previous"/>
+        android:id="@+id/relativeBotones"
+        android:background="#D4CD6A"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnActualizaConfiguracion"
-        android:background="@android:drawable/ic_input_add"
-        android:layout_toRightOf="@id/btnBackOpciones"
-        android:layout_marginLeft="20dp"/>
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnBackOpciones"
+            android:background="@android:drawable/ic_menu_revert"
+            android:layout_marginLeft="5dp"/>
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnActualizaConfiguracion"
+            android:background="@android:drawable/ic_menu_save"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/relativeSelccionTablero"
-        android:layout_below="@id/btnBackOpciones"
+        android:layout_below="@id/relativeBotones"
         >
 
         <RelativeLayout
@@ -69,8 +82,8 @@
         </RadioGroup>
 
         <ImageView
-            android:layout_width="210dp"
-            android:layout_height="120dp"
+            android:layout_width="250dp"
+            android:layout_height="140dp"
             android:id="@+id/imageSeleccionTablero"
             android:layout_below="@id/radioGroupSeleccionTablero"
             android:layout_centerHorizontal="true"
@@ -121,5 +134,5 @@
         android:layout_toRightOf="@id/btnBackOpciones"
         android:src="@drawable/dado"
         />-->
-
 </RelativeLayout>
+</ScrollView>

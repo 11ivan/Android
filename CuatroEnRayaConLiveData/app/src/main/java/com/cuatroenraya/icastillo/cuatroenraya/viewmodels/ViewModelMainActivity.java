@@ -8,7 +8,9 @@ import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Configuracion;
 import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Usuario;
+import com.cuatroenraya.icastillo.cuatroenraya.room.repositories.RepositorioConfiguraciones;
 import com.cuatroenraya.icastillo.cuatroenraya.room.repositories.RepositorioUsuarios;
 
 /**
@@ -18,13 +20,17 @@ import com.cuatroenraya.icastillo.cuatroenraya.room.repositories.RepositorioUsua
 public class ViewModelMainActivity extends AndroidViewModel {
 
     RepositorioUsuarios repositorioUsuarios;
+    RepositorioConfiguraciones repositorioConfiguraciones;
     private LiveData<Usuario> usuarioLiveData;
+    //private LiveData<Configuracion> configuracionLivedata;
     //public Usuario[] arrayUsuarios;
 
     public ViewModelMainActivity(@NonNull Application application) {
         super(application);
         repositorioUsuarios=new RepositorioUsuarios(application);
+        repositorioConfiguraciones=new RepositorioConfiguraciones(application);
         usuarioLiveData=repositorioUsuarios.getUsuarioLiveData();
+        //configuracionLivedata=repositorioConfiguraciones.getConfiguracionLivedata();
     }
 
     public LiveData<Usuario> getUsuarioLiveData() {
@@ -34,6 +40,14 @@ public class ViewModelMainActivity extends AndroidViewModel {
     public void setUsuarioLiveData(LiveData<Usuario> usuarioLiveData) {
         this.usuarioLiveData = usuarioLiveData;
     }
+
+    /*public LiveData<Configuracion> getConfiguracionLivedata() {
+        return configuracionLivedata;
+    }
+
+    public void setConfiguracionLivedata(LiveData<Configuracion> configuracionLivedata) {
+        this.configuracionLivedata = configuracionLivedata;
+    }*/
 
     @SuppressLint("StaticFieldLeak")
     public void cargaUsuario(){
@@ -45,6 +59,10 @@ public class ViewModelMainActivity extends AndroidViewModel {
         repositorioUsuarios.insertUsuario(usuario);
     }
 
+    public void updateUsuario(Usuario usuario){
+        repositorioUsuarios.updateUsuario(usuario);
+        //cargaUsuario();   //Para que entre en onChanged
+    }
 
 
 }

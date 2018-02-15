@@ -36,6 +36,9 @@ public interface DAOConfiguraciones {
     @Query("Select * From Configuraciones")
     public LiveData<Configuracion[]> getConfiguraciones();
 
+    @Query("Select * From Configuraciones LIMIT 1")
+    public LiveData<Configuracion> getConfiguracion();
+
     @Query("Select * From Configuraciones Where IdUsuario=:idUsuario")
     public LiveData<Configuracion> getLiveDataConfiguracionUsuario(int idUsuario);
 

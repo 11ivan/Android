@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.cuatroenraya.icastillo.cuatroenraya.R;
 import com.cuatroenraya.icastillo.cuatroenraya.clases.Maquina;
 
+import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -60,6 +61,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     int totalFichasPuestas=0;
     int[] ultimaFichaPuesta=new int[2];
     boolean hayGanador=false;
+    boolean haEmpezado=false;
+
+    //Datos del usuario
+    String nombreUsuario="";
+    Integer idImagenTablero=0;
+    int idUsuario=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +93,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         col4.setOnClickListener(this);
         col5.setOnClickListener(this);
         col6.setOnClickListener(this);
+
+        nombreUsuario=getIntent().getStringExtra(Keys.NOMBRE_USUARIO);
+        idUsuario=getIntent().getIntExtra(Keys.ID_USUARIO, 0);
+        idImagenTablero=getIntent().getIntExtra(Keys.TABLERO, 0);
+
+        //Cargar el tablero del usuario
+        cargaTableroJugador();
+
+        //Mostrar nombre de Usuario**
 
         //No está en uso
         /*popupMenu=new PopupMenu(this, btnPause);
@@ -121,7 +138,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 //Devolver valor al cronometro e iniciar si el valor era mayor que 0
                 //chronometer.setBase(SystemClock.elapsedRealtime()-chronometer.getBase());
                 //chronometer.start();
-                updateChronometer();
+                if(haEmpezado) {
+                    updateChronometer();
+                }
             }
         });
         btnReiniciar.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +182,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
+
         //Obtener ancho y alto el pixels para ajustar las imagenes
         /*DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -171,9 +191,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         */
     }
 
+    public void cargaTableroJugador(){
+        switch (idImagenTablero){
+            case R.drawable.tablero4enraya:
+                imagenTablero.setImageResource(R.drawable.tablero4enraya);
+            break;
+
+            case R.drawable.tableroaluminio:
+                imagenTablero.setImageResource(R.drawable.tableroaluminio);
+            break;
+        }
+        //imagenTablero.setScaleX(1);
+        //imagenTablero.setScaleY(1);
+    }
+
+
     public void updateChronometer(){
         int stoppedMilliseconds = 0;
-
         String chronoText = chronometer.getText().toString();
         String array[] = chronoText.split(":");
         if (array.length == 2) {
@@ -243,7 +277,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             ImageView imageView = new ImageView(this);
             imageView.setImageResource(idImagenesFichas[turno]);
             imageView.setScaleX(15);
-            imageView.setScaleY(14);
+            imageView.setScaleY(15);
 
             //Comprobamos la cantidad de fichas que tiene la columna para definir la animacion
             TranslateAnimation translateAnimation=getCurrentAnimation(columna);
@@ -321,6 +355,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         //Si es la primera ficha iniciamos el cronometro
         if(totalFichasPuestas==1){
+            haEmpezado=true;
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.start();
         }
@@ -858,7 +893,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 translateAnimation=new TranslateAnimation(0, 0, -350, 275);
                 break;
             case 1:
-                translateAnimation=new TranslateAnimation(0, 0, -350, 179);
+                translateAnimation=new TranslateAnimation(0, 0, -350, 178);
                 break;
             case 2:
                 translateAnimation=new TranslateAnimation(0, 0, -350, 80);
@@ -930,6 +965,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         totalFichasPuestas=0;
         ultimaFichaPuesta=new int[2];
         hayGanador=false;
+        haEmpezado=false;
         col0.removeAllViews();
         col1.removeAllViews();
         col2.removeAllViews();

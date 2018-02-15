@@ -29,6 +29,10 @@ public class RepositorioUsuarios {
         return liveData;
     }
 
+    public void updateUsuario(Usuario usuario){
+        new UpdateUsuarioAsync(this.application).execute(usuario);
+    }
+
     //Clase para tarea asincrona de insertar persona
     private static class InsertUsuarioAsyncTask extends AsyncTask<Usuario, Void, Void> {
         @SuppressLint("StaticFieldLeak")
@@ -41,6 +45,22 @@ public class RepositorioUsuarios {
         @Override
         protected Void doInBackground(Usuario... usuarios) {
             AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().insertUsuario(usuarios[0]);
+            return null;
+        }
+    }
+
+    //Clase asincrona para actualizar un Usuario
+    private static class UpdateUsuarioAsync extends AsyncTask<Usuario, Void, Void>{
+
+        private Application application;
+
+        UpdateUsuarioAsync(Application application){
+            this.application=application;
+        }
+
+        @Override
+        protected Void doInBackground(Usuario... usuarios) {
+            AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().updateUsuario(usuarios[0]);
             return null;
         }
     }
