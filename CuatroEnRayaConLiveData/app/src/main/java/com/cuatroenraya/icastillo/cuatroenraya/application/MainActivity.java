@@ -26,8 +26,8 @@ import com.cuatroenraya.icastillo.cuatroenraya.viewmodels.ViewModelMainActivity;
 
 public class MainActivity extends AppCompatActivity implements OptionsFragment.OnFragmentInteractionListener, MenuPrincipalFragment.OnFragmentInteractionListener, IntroducirNombreUsuarioFragment.OnFragmentInteractionListener {
 
-    OptionsFragment optionsFragment=new OptionsFragment();
-    MenuPrincipalFragment menuPrincipalFragment=new MenuPrincipalFragment();
+    OptionsFragment optionsFragment;
+    MenuPrincipalFragment menuPrincipalFragment;
     IntroducirNombreUsuarioFragment introducirNombreUsuarioFragment=new IntroducirNombreUsuarioFragment();
     String fragmentCargado="principal";
     String KEYFRAGMENT="ultimoFragment";
@@ -55,9 +55,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
             public void onChanged(@Nullable Usuario usuario) {
                 Toast.makeText(getApplicationContext(), "Ha entrado en onChanged", Toast.LENGTH_LONG).show();
                 usuarioDeViewModel=usuario;
-                //usuarioDeViewModel=viewModelMainActivity.getUsuarioLiveData().getValue();
-
-                //Si después de cargar el usuario es null pedimos el nomrbe de Usuario
+                //Si después de cargar el usuario es null pedimos el nombre
                 if(usuarioDeViewModel==null){
                     cargaFragmentNombreUsuario();
                 }else {//Sino cargamos el Fragment que corresponda
@@ -66,16 +64,13 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
             }
         });
 
+        menuPrincipalFragment=new MenuPrincipalFragment();
+        optionsFragment=new OptionsFragment();
+
         //Recuperamos el usuario
         viewModelMainActivity.cargaUsuario();//De aquí tira para el metodo onChanged
 
-        //Si no hay usuario pedimos un nombre de usuario
-        /*if(usuarioDeViewModel==null){
-            cargaFragmentNombreUsuario();
-        }else {
-            //Recuperamos el usuario
-            viewModelMainActivity.cargaUsuario();
-        }*/
+
 
         //Obtener ancho y alto el pixels para ajustar las imagenes
         /*DisplayMetrics metrics = new DisplayMetrics();

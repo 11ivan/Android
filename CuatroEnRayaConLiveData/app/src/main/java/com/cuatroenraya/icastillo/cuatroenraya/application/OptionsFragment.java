@@ -116,7 +116,10 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
 
 
         //Cargar los datos de la configuracion del usuario
-        editTextNombreUsuario.setText(((MainActivity)getActivity()).usuarioDeViewModel.getNombre());//Sin embargo el EditText no da ningun error ¿?
+        String nombreUsuario=((MainActivity)getActivity()).usuarioDeViewModel.getNombre();//¿Por qué carga el Fragment antes de entrar en onChanged?
+        editTextNombreUsuario.setText(nombreUsuario);
+
+//CARGA EL FRAGMENT DE FORMA AUTOMATICA, PASA POR ONCHANGED Y VUELVE A CARGAR EL FRAGMENT CON MI METODO
 
         repositorioConfiguraciones=new RepositorioConfiguraciones(getActivity().getApplication());
 
@@ -124,9 +127,9 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
 
         int id=((MainActivity)getActivity()).usuarioDeViewModel.getId();
         configuracion=repositorioConfiguraciones.getConfiguracionUsuario( id );
-
-        imageTableroSeleccionado.setImageResource(configuracion.getTipoTablero());//EXCEPCION FANTASMA (APARECIÓ EN UNO DE LOS GIROS DE PANTALLA) configuracion da null >>
-                                                                                  //CAPTURADO Carga Fragment antes de entrar en onChanged debido al giro de pantalla Trae el id por defecto del Usuario
+        if(configuracion!=null) {
+            imageTableroSeleccionado.setImageResource(configuracion.getTipoTablero());//configuracion da null >>
+        }                                                  //CAPTURADO Carga Fragment antes de entrar en onChanged debido al giro de pantalla Trae el id por defecto del Usuario
 
         return view;
     }

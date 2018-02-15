@@ -242,8 +242,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             ImageView imageView = new ImageView(this);
             imageView.setImageResource(idImagenesFichas[turno]);
-            imageView.setScaleX(13);
-            imageView.setScaleY(11);
+            imageView.setScaleX(15);
+            imageView.setScaleY(14);
 
             //Comprobamos la cantidad de fichas que tiene la columna para definir la animacion
             TranslateAnimation translateAnimation=getCurrentAnimation(columna);
@@ -851,30 +851,26 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     * */
     private TranslateAnimation getCurrentAnimation(int column){
         TranslateAnimation translateAnimation=null;
-        int toXDelta=2;
-        if(column==0){
-            toXDelta=9;
-        }
         //Según la cantidad de fichas que tenga la columna
         switch (contadores[column]){
 
             case 0:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, 415);
+                translateAnimation=new TranslateAnimation(0, 0, -350, 275);
                 break;
             case 1:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, 255);
+                translateAnimation=new TranslateAnimation(0, 0, -350, 179);
                 break;
             case 2:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, 110);
+                translateAnimation=new TranslateAnimation(0, 0, -350, 80);
                 break;
             case 3:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, -50);
+                translateAnimation=new TranslateAnimation(0, 0, -350, -17);
                 break;
             case 4:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, -205);
+                translateAnimation=new TranslateAnimation(0, 0, -350, -113);
                 break;
             case 5:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -450, -350);
+                translateAnimation=new TranslateAnimation(0, 0, -350, -209);
                 break;
         }
         translateAnimation.setDuration(1000);
