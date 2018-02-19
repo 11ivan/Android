@@ -174,6 +174,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         btnNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //Enviar a Menu Principal
                 goToMainActivity();
             }
@@ -188,27 +189,33 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     //Cargamos los datos de la partida
                     datosGameActivity = datosGameActivityAct;
 
-                    //Colocar las fichas en el tablero
-                    cargaFichasEnTablero();
-                    //Dar valor al cronometro
-                    updateChronometerLoadGame();
+                    if (!datosGameActivity.isHayGanador()) {
+                        //Colocar las fichas en el tablero
+                        cargaFichasEnTablero();
+                        //Dar valor al cronometro
+                        updateChronometerLoadGame();
 
-                    //Comprobar si el turno lo tiene la maquina para insertar la ficha
-                    if (datosGameActivity.getTurno()==1){
-                        //Si el turno lo tiene la maquina iniciamos el cronometro e insertamos la ficha
-                        //updateChronometer();
-                        chronometer.start();
-                        maquina.ponFicha(datosGameActivity.getArrayParaleloTablero(), datosGameActivity.getUltimaFichaPuesta());
-                    }else {//Sino mostramos el dialog de pause porque el turno lo tenia el Usuario
-                        if(!datosGameActivity.isHayGanador()) {
-                            dialog.show();
-                        }else{
-                            reiniciaPartida();
+                        //Comprobar si el turno lo tiene la maquina para insertar la ficha
+                        if (datosGameActivity.getTurno() == 1) {
+                            //Si el turno lo tiene la maquina iniciamos el cronometro e insertamos la ficha
+                            //updateChronometer();
+                            chronometer.start();
+                            maquina.ponFicha(datosGameActivity.getArrayParaleloTablero(), datosGameActivity.getUltimaFichaPuesta());
+                        } else {//Sino mostramos el dialog de pause porque el turno lo tenia el Usuario
+                            if (!datosGameActivity.isHayGanador() && datosGameActivity.isHaEmpezado()) {
+                                dialog.show();
+                            } else {
+                                reiniciaPartida();
+                            }
                         }
-                    }
 
-                    //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
-                    repositorioDatosGameActivity.deleteDatosGameActivity(datosGameActivity);
+                        //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
+                        repositorioDatosGameActivity.deleteDatosGameActivity(datosGameActivity);
+                    }else {
+                        //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
+                        repositorioDatosGameActivity.deleteDatosGameActivity(datosGameActivity);
+                        reiniciaPartida();
+                    }
                 }
             }
         });

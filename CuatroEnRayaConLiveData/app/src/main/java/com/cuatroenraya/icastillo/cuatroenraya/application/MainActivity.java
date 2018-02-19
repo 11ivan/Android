@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         viewModelMainActivity.getUsuarioLiveData().observe(this, new Observer<Usuario>() {
             @Override
             public void onChanged(@Nullable Usuario usuario) {
-                Toast.makeText(getApplicationContext(), "Ha entrado en onChanged", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Ha entrado en onChanged", Toast.LENGTH_LONG).show();
                 usuarioDeViewModel=usuario;
                 //configuracionDeUsuario=repositorioConfiguraciones.getConfiguracionUsuario(usuarioDeViewModel.getId());//Cargamos la configuaración  PUEDE SER NULL
                 //Si después de cargar el usuario es null pedimos el nombre
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                         configuracionDeUsuario.setTipoTablero(R.drawable.tableroaluminio);
                         repositorioConfiguraciones.insertConfiguracion(configuracionDeUsuario);
                     }
-                }, 1000);
+                }, 500);
                 //Insertamos una configuracion por defecto para el usuario          //¿INSERTA UNA CONFIGURACION POR DEFECTO?>>(NO)
                 /*configuracion.setIdUsuario(usuarioDeViewModel.getId());//El id del usuario debe ser 1
                 configuracion.setTipoTablero(R.drawable.tableroaluminio);
