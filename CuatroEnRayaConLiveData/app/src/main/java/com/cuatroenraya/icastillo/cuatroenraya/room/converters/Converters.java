@@ -2,8 +2,10 @@ package com.cuatroenraya.icastillo.cuatroenraya.room.converters;
 
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by icastillo on 10/01/18.
@@ -24,6 +26,15 @@ public class Converters {
             return date.getTime();
         }
     }
+
+    /*@TypeConverter
+    public String fromGregorianCalendar(GregorianCalendar gregorianCalendar){
+        String valorGre
+
+
+
+        return gregorianCalendar;
+    }*/
 
     @TypeConverter
     public String fromIntArray(int[] array){

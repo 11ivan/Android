@@ -198,9 +198,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         //Si el turno lo tiene la maquina iniciamos el cronometro e insertamos la ficha
                         //updateChronometer();
                         chronometer.start();
-                        maquina.ponFicha(datosGameActivity.getArrayParaleloTablero());
+                        maquina.ponFicha(datosGameActivity.getArrayParaleloTablero(), datosGameActivity.getUltimaFichaPuesta());
                     }else {//Sino mostramos el dialog de pause porque el turno lo tenia el Usuario
-                        dialog.show();
+                        if(!datosGameActivity.isHayGanador()) {
+                            dialog.show();
+                        }else{
+                            reiniciaPartida();
+                        }
                     }
 
                     //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
@@ -607,7 +611,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                insertarFicha(maquina.ponFicha(datosGameActivity.getArrayParaleloTablero()));
+                insertarFicha(maquina.ponFicha(datosGameActivity.getArrayParaleloTablero(), datosGameActivity.getUltimaFichaPuesta()));
             }
         },1500);
     }

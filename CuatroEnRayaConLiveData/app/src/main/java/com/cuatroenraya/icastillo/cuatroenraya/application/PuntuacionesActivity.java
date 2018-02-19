@@ -19,6 +19,9 @@ import com.cuatroenraya.icastillo.cuatroenraya.clases.ViewHolderPuntuacion;
 import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Puntuacion;
 import com.cuatroenraya.icastillo.cuatroenraya.viewmodels.ViewModelPuntuacionesActivity;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class PuntuacionesActivity extends AppCompatActivity {
 
     Puntuacion[] arrayPuntuaciones;
@@ -81,8 +84,15 @@ public class PuntuacionesActivity extends AppCompatActivity {
                 viewHolder=(ViewHolderPuntuacion) row.getTag();
             }
 
+            GregorianCalendar gregorianCalendar=new GregorianCalendar();
+            gregorianCalendar.setTime(arrayPuntuaciones[position].getFechaPartida());
+            int dia=gregorianCalendar.get(Calendar.DAY_OF_MONTH);
+            int mes =gregorianCalendar.get(Calendar.MONTH);
+            mes+=1;
+            int year=gregorianCalendar.get(Calendar.YEAR);
+
             viewHolder.getTextViewResultado().setText(String.valueOf(arrayPuntuaciones[position].getResultado()));
-            viewHolder.getTextViewFechaPertida().setText(arrayPuntuaciones[position].getFechaPartida().toString());
+            viewHolder.getTextViewFechaPertida().setText(dia+"/"+mes+"/"+year);
             viewHolder.getTextViewTiempoPartida().setText(arrayPuntuaciones[position].getTiempoPartida());
 
             return (row);
