@@ -136,6 +136,11 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         fragmentTransaction.commit();
     }
 
+    public void goToPuntuacionesActivity(){
+        Intent intent = new Intent(this, PuntuacionesActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {}
 
@@ -158,6 +163,9 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
             break;
             case R.id.btnOptions:
                     cargaFragmentOpciones();
+            break;
+            case R.id.btnPuntuaciones:
+                    goToPuntuacionesActivity();
             break;
 
             //Casos Fragment Introducir Nombre Usuario

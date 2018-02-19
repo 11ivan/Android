@@ -11,9 +11,11 @@ import android.content.Context;
 
 import com.cuatroenraya.icastillo.cuatroenraya.room.converters.Converters;
 import com.cuatroenraya.icastillo.cuatroenraya.room.dao.DAOConfiguraciones;
+import com.cuatroenraya.icastillo.cuatroenraya.room.dao.DAODatosGameActivity;
 import com.cuatroenraya.icastillo.cuatroenraya.room.dao.DAOPuntuaciones;
 import com.cuatroenraya.icastillo.cuatroenraya.room.dao.DAOUsuarios;
 import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Configuracion;
+import com.cuatroenraya.icastillo.cuatroenraya.room.entities.DatosGameActivity;
 import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Puntuacion;
 import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Usuario;
 
@@ -21,19 +23,16 @@ import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Usuario;
  * Created by icastillo on 07/02/2018.
  */
 
-@Database(entities = {Usuario.class, Puntuacion.class, Configuracion.class}, version = 1/*, exportSchema = false*/)
+@Database(entities = {Usuario.class, Puntuacion.class, Configuracion.class, DatosGameActivity.class}, version = 1/*, exportSchema = false*/)
 @TypeConverters(value = Converters.class)
 public abstract class AppDatabase  extends RoomDatabase {
 
     public abstract DAOUsuarios usuariosDAO();
     public abstract DAOPuntuaciones puntuacionesDAO();
     public abstract DAOConfiguraciones configuracionesDAO();
-
+    public abstract DAODatosGameActivity daoDatosGameActivityDAO();
 
     private static AppDatabase INSTANCE;
-
-
-
 
     public static AppDatabase getDatabase(final Context context){
         if(INSTANCE==null){
@@ -45,7 +44,6 @@ public abstract class AppDatabase  extends RoomDatabase {
         }
         return INSTANCE;
     }
-
 
     @Override
     protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration config) {

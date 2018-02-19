@@ -37,7 +37,7 @@ public class Puntuacion {
     private Date fechaPartida;
 
     @ColumnInfo(name = "TiempoPartida")
-    private int tiempoPartida;
+    private String tiempoPartida;
 
     @ColumnInfo(name="Resultado")
     private String resultado;
@@ -46,7 +46,7 @@ public class Puntuacion {
         this.id = 0;
         this.idUsuario = 0;
         this.fechaPartida = new Date();
-        this.tiempoPartida = 0;
+        this.tiempoPartida = "";
         this.resultado = "";
     }
 
@@ -82,11 +82,11 @@ public class Puntuacion {
         this.fechaPartida = fechaPartida;
     }
 
-    public int getTiempoPartida() {
+    public String getTiempoPartida() {
         return tiempoPartida;
     }
 
-    public void setTiempoPartida(int tiempoPartida) {
+    public void setTiempoPartida(String tiempoPartida) {
         this.tiempoPartida = tiempoPartida;
     }
 
