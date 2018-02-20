@@ -10,11 +10,13 @@ import android.content.Context;
 
 import icastillo.pruebaexamen2trimestre.room.daos.CochesDAO;
 import icastillo.pruebaexamen2trimestre.room.daos.PersonasDAO;
+import icastillo.pruebaexamen2trimestre.room.entities.Coche;
+import icastillo.pruebaexamen2trimestre.room.entities.Persona;
 
 /**
  * Created by icastillo on 20/02/18.
  */
-@Database(entities = {/*Usuario.class, Puntuacion.class, Configuracion.class, DatosGameActivity.class*/}, version = 1/*, exportSchema = false*/)
+@Database(entities = {Persona.class, Coche.class}, version = 1/*, exportSchema = false*/)
 //@TypeConverters(value = Converters.class)
 public abstract class AppDataBase extends RoomDatabase{
 

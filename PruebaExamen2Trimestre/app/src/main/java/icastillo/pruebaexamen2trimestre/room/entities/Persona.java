@@ -8,7 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
  * Created by icastillo on 20/02/18.
  */
 @Entity(tableName = "Personas")
-public class Persona {
+public class  Persona {
 
     @ColumnInfo(name = "ID")
     @PrimaryKey(autoGenerate = true)
@@ -21,7 +21,7 @@ public class Persona {
     private String apellidos;
 
     public Persona(){
-        id=-1;
+        id=0;
         nombre="";
         apellidos="";
     }

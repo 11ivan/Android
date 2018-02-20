@@ -16,6 +16,9 @@ import icastillo.pruebaexamen2trimestre.room.entities.Coche;
 public interface CochesDAO {
 
     @Insert
+    public void insertCoches(Coche... coches);
+
+    @Insert
     public void insertCoche(Coche coche);
 
     @Update

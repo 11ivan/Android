@@ -25,8 +25,8 @@ public class Coche {
     private String modelo;
 
     public Coche(){
-        id=-1;
-        idPersona=-1;
+        id=0;
+        idPersona=0;
         marca="";
         modelo="";
     }

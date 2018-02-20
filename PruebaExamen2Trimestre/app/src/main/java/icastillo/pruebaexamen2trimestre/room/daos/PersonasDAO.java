@@ -16,6 +16,9 @@ import icastillo.pruebaexamen2trimestre.room.entities.Persona;
 public interface PersonasDAO{
 
     @Insert
+    public void insertPersonas(Persona... personas);
+
+    @Insert
     public void insertPersona(Persona persona);
 
     @Update
