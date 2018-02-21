@@ -30,7 +30,7 @@ public class RepositorioPosiciones {
     public String getNombrePosicion(int id){
         String nombre="";
         try {
-            nombre=new GetPosicion().execute(id).get();
+            nombre=new GetNombrePosicion().execute(id).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -52,12 +52,11 @@ public class RepositorioPosiciones {
         }
     }
 
-    private class GetPosicion extends AsyncTask<Integer, Void, String>{
-
+    private class GetNombrePosicion extends AsyncTask<Integer, Void, String>{
         @Override
         protected String doInBackground(Integer... ids) {
             String posicion=AppDataBase.getDatabase(application.getApplicationContext()).posicionesDAO().getNombrePosicion(ids[0]);
-            return null;
+            return posicion;
         }
     }
 

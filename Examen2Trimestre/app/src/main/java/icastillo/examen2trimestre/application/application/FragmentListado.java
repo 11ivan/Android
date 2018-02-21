@@ -107,14 +107,27 @@ public class FragmentListado extends Fragment implements View.OnClickListener {
 
         //ViewModel
         viewModel= ViewModelProviders.of(this).get(ViewModelListFragment.class);
-        viewModel.getLiveDataPosiciones().observe(this, new Observer<Posicion[]>() {
+        /*viewModel.getLiveDataPosiciones().observe(this, new Observer<Posicion[]>() {
             @Override
             public void onChanged(@Nullable Posicion[] posicions) {
                 if(posicions!=null){
                     arrayPosiciones=posicions;
                 }
             }
-        });
+        });*/
+        /*viewModel.getLiveDataFutbolistas().observe(this, new Observer<Futbolista[]>() {
+            @Override
+            public void onChanged(@Nullable Futbolista[] futbolistas) {
+                if(futbolistas!=null){
+                    arrayFutbolistas=futbolistas;
+                    //Obtener para cada futbolista el nombre de sus posiciones
+                    //obtenerNombrePosicionesFutbolista();
+                    obtenerPosicionesFutbolista();
+                    adapter=new MyAdapter( getActivity() , R.layout.stylelist, R.id.txtNombre, arrayFutbolistas);
+                    listView.setAdapter(adapter);
+                }
+            }
+        });*/
         viewModel.getLiveDataFutbolistas().observe(this, new Observer<Futbolista[]>() {
             @Override
             public void onChanged(@Nullable Futbolista[] futbolistas) {
@@ -128,7 +141,6 @@ public class FragmentListado extends Fragment implements View.OnClickListener {
                 }
             }
         });
-
 
                 //viewModel.cargaFutbolistas();
 
@@ -181,6 +193,21 @@ public class FragmentListado extends Fragment implements View.OnClickListener {
     public void obtenerPosicionesFutbolista(){
         nombrePosiciones=new ArrayList<String>(arrayFutbolistas.length);
         String nombresConcatenados="";
+        String name="";
+        for(int i=0;i<arrayFutbolistas.length;i++){
+
+            for(int j=0;j<arrayFutbolistas[i].getIdPosiciones().size();j++){
+                name=repositorioPosiciones.getNombrePosicion(arrayFutbolistas[i].getIdPosiciones().get(j));
+                nombresConcatenados=nombresConcatenados+"  "+name;
+            }
+            nombrePosiciones.add(nombresConcatenados);
+            nombresConcatenados="";
+        }
+    }
+
+    /*public void obtenerPosicionesFutbolista(){
+        nombrePosiciones=new ArrayList<String>(arrayFutbolistas.length);
+        String nombresConcatenados="";
         for(int i=0;i<arrayFutbolistas.length;i++){
 
             for(int j=0;j<arrayFutbolistas[i].getIdPosiciones().size();j++){
@@ -200,7 +227,7 @@ public class FragmentListado extends Fragment implements View.OnClickListener {
             nombrePosiciones.add(nombresConcatenados);
             nombresConcatenados="";
         }
-    }
+    }*/
 
     /**
      * This interface must be implemented by activities that contain this
