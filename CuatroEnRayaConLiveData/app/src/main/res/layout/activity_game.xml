@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.cuatroenraya.icastillo.cuatroenraya.application.GameActivity"
     android:id="@+id/relative"
+    android:background="@drawable/mesa"
     >
-
     <Button
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -99,6 +99,5 @@
         android:id="@+id/imageTablero"
 
         />
-
 
 </RelativeLayout>

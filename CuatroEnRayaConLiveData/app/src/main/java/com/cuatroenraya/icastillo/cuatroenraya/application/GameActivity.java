@@ -55,7 +55,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     Button btnSi;
     Button btnNo;
 
-    //Meter en un metodo para restablecer los valores al reiniciar la partida
     Integer[] idImagenesFichas={R.drawable.ficharoja, R.drawable.fichaamarilla};
     Maquina maquina=new Maquina();
 

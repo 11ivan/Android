@@ -24,7 +24,7 @@ public class Maquina {
         return columna;
     }
 
-    /*
+    /**
     * Proposito: Comprueba si una columna del tablero ya está llena
     * Precondiciones: No hay
     * Entradas: Un array de dos dimernsiones que es el array paralelo al tablero, y un entero que es la columna a comprobar
@@ -41,7 +41,7 @@ public class Maquina {
     }
 
 
-    public int ponFicha(int[][] arrayParaleloTablero, int[] ultimaFichaPuesta){
+    /*public int ponFicha(int[][] arrayParaleloTablero, int[] ultimaFichaPuesta){
         copiaTablero=arrayParaleloTablero.clone();
         copiaUltimaFichaPuesta=ultimaFichaPuesta.clone();
         int columna=-1;
@@ -51,39 +51,50 @@ public class Maquina {
 
         //Si la columna es -1 es que el usuario no ganaria
         if (columna==-1) {
-            /*columna=ponFichaAleatoria(arrayParaleloTablero);
-            //Simulamos la insercion en la columna generada aleatoriamente
-            insertaMiFicha(columna);
-            //Comprobamos que la que vamos a poner no favorece al usuario
-            columna=simulaJugadas();*/
 
             do{
                 columna=ponFichaAleatoria(arrayParaleloTablero);
             }while (simulaJugadas()!=-1);
         }
+        return columna;
+    }*/
 
-        /*if (columna==-1) {
-            columna=ponFichaAleatoria(arrayParaleloTablero);
-        }else{
-            //ANALIZAR JUGADA SI PUSIERA LA FICHA EN LA COLUMNA
-            //Ponemos la ficha
-            //copiaTablero[columna]
-            //Simulamos jugadas de nuevo a partir de la ficha que voy a poner
-        }*/
 
-        //Si poniendo una sola ficha el usuario gana, Bloqueamos
+    public int ponFicha(int[][] arrayParaleloTablero, int[] ultimaFichaPuesta){
+        copiaTablero=arrayParaleloTablero.clone();
+        copiaUltimaFichaPuesta=ultimaFichaPuesta.clone();
+        int columna=-1;
 
-        //Sino si
+        //Simular jugadas para la máquina a partir de la última ficha puesta
+        columna = simulaJugadas(2);
+
+        //Si la columna es -1 es que la máquina no ganaría
+        if (columna==-1) {
+
+            //Simulamos las jugadas para el usuario
+            columna = simulaJugadas(1);
+
+            //Si el usuario tampoco gana
+            if(columna==-1){
+                //columna=ponFichaAleatoria(arrayParaleloTablero);
+                //Comprobar que la puesta aleatoria no convenga al usuario para la proxima jugada
+                //do{
+                    columna=ponFichaAleatoria(copiaTablero);
+                //}while (simulaJugadas()!=-1);
+            }
+        }
 
         return columna;
     }
 
     /**
-     *
-     *
-     *
-     * */
-    public int simulaJugadas(){
+    * Proposito: Simula las jugadas posibles por el usuario a partir de la última ficha que puso
+    * Precondiciones: No hay
+    * Entradas: Un entero que será la ficha con la que se simulará la jugada, 1 si es el usuario y 2 si es la máquina
+    * Salidas: Un entero
+    * Postcondiciones: El entero será la columna que pondría para ganar, -1 si no tiene posibilidad de ganar
+    * */
+    public int simulaJugadas(int ficha){
         hayGanador=false;
         int jugada=-1;
         boolean sal=false;
@@ -92,7 +103,7 @@ public class Maquina {
             //Si la columna no está llena
             if (!columnaLlena(copiaTablero, i)) {
                 //Insertamos ficha en la copia del tablero
-                insertaFicha(i);
+                insertaFicha(i, ficha);//1 ficha del usuario
                 //Comprobamos si hay ganador
                 compruebaGanador();
                 //Si no hay ganador
@@ -108,29 +119,29 @@ public class Maquina {
         return jugada;
     }
 
-    public void insertaFicha(int columna){
+
+    /**
+     * Proposito: Inserta una ficha en el tablero
+     * Precondiciones: No hay
+     * Entradas: Un entero que será la columna en la que se insertará la ficha
+     *           Entero que será la ficha a insertar 1 si es el usuario y 2 si es la máquina
+     * Salidas: Un entero
+     * Postcondiciones: El entero será la columna que pondría para ganar, -1 si no tiene posibilidad de ganar
+     * */
+    public void insertaFicha(int columna, int ficha){
         boolean sal=false;
         for (int i=0;i<copiaTablero[0].length && !sal;i++){
             if(copiaTablero[columna][i]==0){
                 copiaUltimaFichaPuesta[0]=columna;
                 copiaUltimaFichaPuesta[1]=i;
-                copiaTablero[columna][i]=1;
+                copiaTablero[columna][i]=ficha;
                 sal=true;
             }
         }
     }
 
-    public void insertaMiFicha(int columna){
-        boolean sal=false;
-        for (int i=0;i<copiaTablero[0].length && !sal;i++){
-            if(copiaTablero[columna][i]==0){
-                copiaUltimaFichaPuesta[0]=columna;
-                copiaUltimaFichaPuesta[1]=i;
-                copiaTablero[columna][i]=2;
-                sal=true;
-            }
-        }
-    }
+
+
 
     public void removeUltimaFichaPuesta(){
         copiaTablero[copiaUltimaFichaPuesta[0]][copiaUltimaFichaPuesta[1]]=0;
