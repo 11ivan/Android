@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -179,17 +180,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         btnSi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reiniciaPartida();
-                dialogReinicio.dismiss();
+            reiniciaPartida();
+            dialogReinicio.dismiss();
             }
         });
 
         btnNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //Enviar a Menu Principal
-                goToMainActivity();
+            //Enviar a Menu Principal
+            goToMainActivity();
             }
         });
 
@@ -202,41 +202,54 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     //Cargamos los datos de la partida
                     juego.setDatosGameActivity(datosGameActivityAct);
 
-                    if (!juego.getDatosGameActivity().isHayGanador()) {
-                        //Colocar las fichas en el tablero
-                        cargaFichasEnTablero();
-                        //Dar valor al cronometro
-                        updateChronometer(1);//Hay datos cargados
+                    //Si la partida no se terminó en modo dos jugadores y el turno lo tenia el invitado
+                    //Despues iniciamos en modo un jugador, la maquina deberia tirar pero no tira **BUG
 
-                        //Comprobar si el turno lo tiene la maquina para insertar la ficha
-                        if (juego.getDatosGameActivity().getTurno() == 1) {
-                            //Si el turno lo tiene la maquina iniciamos el cronometro e insertamos la ficha
-                            //updateChronometer();
-                            if(modoDeJuego==2){
-                                dialog.show();
-                                textViewTurno.setText("Turno de Invitado");
-                            }else {
-                                chronometer.start();
-                                maquina.ponFicha(juego.getDatosGameActivity().getArrayParaleloTablero(), juego.getDatosGameActivity().getUltimaFichaPuesta());
-                            }
-                        } else {//Sino mostramos el dialog de pause porque el turno lo tenia el Usuario
-                            if (/*!juego.getDatosGameActivity().isHayGanador() && */juego.getDatosGameActivity().isHaEmpezado()) {
-                                dialog.show();
-                                if(modoDeJuego==2){
-                                    textViewTurno.setText("Turno de "+nombreUsuario);
-                                }
-                            } /*else {
-                                reiniciaPartida();
-                            }*/
-                        }
+                    //Si el modo de juego es un jugador y la ultima partida fue de dos jugadores Ó
+                    //el modo de juego es dos jugadores y la ultima partida fue de un jugador
+                    if(modoDeJuego==1 && juego.getDatosGameActivity().getRival()==2 ||
+                       modoDeJuego==2 && juego.getDatosGameActivity().getRival()==1){
 
-                        //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
-                        repositorioDatosGameActivity.deleteDatosGameActivity(juego.getDatosGameActivity());
-                    }else {
                         //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
                         repositorioDatosGameActivity.deleteDatosGameActivity(juego.getDatosGameActivity());
                         reiniciaPartida();
+
+                    }else {
+                        if (!juego.getDatosGameActivity().isHayGanador()) {
+                            //Colocar las fichas en el tablero
+                            cargaFichasEnTablero();
+                            //Dar valor al cronometro
+                            updateChronometer(1);//Hay datos cargados
+
+                            //Comprobar si el turno lo tiene la maquina para insertar la ficha
+                            if (juego.getDatosGameActivity().getTurno() == 1) {
+                                //updateChronometer();
+                                if (modoDeJuego == 2) {
+                                    dialog.show();
+                                    textViewTurno.setText("Turno de Invitado");
+                                } else {
+                                    //Si el turno lo tiene la maquina iniciamos el cronometro e insertamos la ficha
+                                    chronometer.start();
+                                    maquina.ponFicha(juego.getDatosGameActivity().getArrayParaleloTablero(), juego.getDatosGameActivity().getUltimaFichaPuesta());
+                                }
+                            } else {//Sino mostramos el dialog de pause porque el turno lo tenia el Usuario
+                                if (juego.getDatosGameActivity().isHaEmpezado()) {
+                                    dialog.show();
+                                    if (modoDeJuego == 2) {
+                                        textViewTurno.setText("Turno de " + nombreUsuario);
+                                    }
+                                }
+                            }
+
+                            //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
+                            repositorioDatosGameActivity.deleteDatosGameActivity(juego.getDatosGameActivity());
+                        } else {
+                            //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
+                            repositorioDatosGameActivity.deleteDatosGameActivity(juego.getDatosGameActivity());
+                            reiniciaPartida();
+                        }
                     }
+
                 }
             }
         });
@@ -244,11 +257,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         viewModelGameActivity.cargaDatosGameActivity();
 
         //Obtener ancho y alto el pixels para ajustar las imagenes
-        /*DisplayMetrics metrics = new DisplayMetrics();
+        DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels; // ancho absoluto en pixels
         int height = metrics.heightPixels; // alto absoluto en pixels
-        */
+
     }
 
     @Override
@@ -277,6 +290,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         chronometer.stop();
         //Obtenemos el tiempo de partida que lleva
         juego.getDatosGameActivity().setTiempoPartida(chronometer.getText().toString());
+        //Guardamos el rival contra el que juega
+        juego.getDatosGameActivity().setRival( ((modoDeJuego==2) ? 2:1) );
         //Guardamos los datos de la partida
         repositorioDatosGameActivity.insertDatosGameActivity(juego.getDatosGameActivity());
     }
@@ -308,7 +323,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     *
     *
     * */
-    public void updateChronometer(int typeUpdate){
+    public void updateChronometer(int typeUpdate){//Si el tipo es 0 es porque es una nueva partida
         int stoppedMilliseconds = 0;
         String chronoText="";
 
@@ -384,7 +399,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-     /*
+    /**
     * Proposito:
     * Precondiciones:
     * Entradas:

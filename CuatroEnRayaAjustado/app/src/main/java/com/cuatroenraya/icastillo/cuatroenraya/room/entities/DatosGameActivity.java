@@ -32,6 +32,8 @@ public class DatosGameActivity {
     private boolean haEmpezado;
     @ColumnInfo(name = "TiempoPartida")
     private String tiempoPartida;
+    @ColumnInfo(name = "Rival")
+    private int rival;//1 si es la máquina y 2 si es un invitado
 
     public DatosGameActivity(){
          id=0;
@@ -126,5 +128,13 @@ public class DatosGameActivity {
 
     public void setTiempoPartida(String tiempoPartida) {
         this.tiempoPartida = tiempoPartida;
+    }
+
+    public int getRival() {
+        return rival;
+    }
+
+    public void setRival(int rival) {
+        this.rival = rival;
     }
 }
