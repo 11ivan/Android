@@ -15,16 +15,31 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/buttonshape"
         android:id="@+id/btnPlay"
         android:text="Jugar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="250dp"/>
+        android:layout_above="@id/btnOptions"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/buttonshape"
         android:id="@+id/btnOptions"
         android:text="Opciones"
-        android:layout_below="@id/btnPlay"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/buttonshape"
+        android:id="@+id/btnPuntuaciones"
+        android:text="Puntuaciones"
+        android:layout_below="@id/btnOptions"
+        android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"/>
+
+
 
 </RelativeLayout>

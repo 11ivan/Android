@@ -48,8 +48,9 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
     EditText editTextNombreUsuario;
     RadioButton radioButtonAzul;
     RadioButton radioButtonAluminio;
+    Button btnUpdateConfiguracion;
 
-    Configuracion configuracion;
+    //Configuracion configuracion;
     RepositorioConfiguraciones repositorioConfiguraciones;
 
     public OptionsFragment() {
@@ -93,9 +94,29 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
         btnBack=(Button) view.findViewById(R.id.btnBackOpciones);
         btnBack.setOnClickListener(this);
 
+        //Boton update configuracion
+        btnUpdateConfiguracion=(Button) view.findViewById(R.id.btnActualizaConfiguracion);
+        btnUpdateConfiguracion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Actualizamos la configuración (si ha cambiado)
+                ((MainActivity)getActivity()).configuracionDeUsuario.setTipoTablero( (Integer) ((Object) imageTableroSeleccionado.getTag()) );
+                //Configuracion configuracion=((MainActivity)getActivity()).configuracionDeUsuario;
+                ((MainActivity)getActivity()).repositorioConfiguraciones.updateConfiguracion(((MainActivity)getActivity()).configuracionDeUsuario);
+
+                //Actualizamos nombre de usuario (si ha cambiado)       NO SE ESTÁ COMPROBANDO EL NOMBRE
+                ((MainActivity)getActivity()).usuarioDeViewModel.setNombre(editTextNombreUsuario.getText().toString());
+                ((MainActivity)getActivity()).repositorioUsuarios.updateUsuario( ((MainActivity)getActivity()).usuarioDeViewModel );//Actualizando entra en onChanged ??
+            }
+        });
+
         //RadioGroup Seleccion Tablero
         radioGroupSeleccionTablero=(RadioGroup)view.findViewById(R.id.radioGroupSeleccionTablero);
-        radioGroupSeleccionTablero.setOnCheckedChangeListener(this);
+        //radioGroupSeleccionTablero.setOnCheckedChangeListener(this);//Si la configuracion no es null
+
+        //RadioButtons
+        radioButtonAzul=(RadioButton) view.findViewById(R.id.radioButtonAzul);
+        radioButtonAluminio=(RadioButton) view.findViewById(R.id.radioButtonAluminio);
 
         //Imagen Tablero Seleccionado
         imageTableroSeleccionado=(ImageView)view.findViewById(R.id.imageSeleccionTablero);
@@ -103,14 +124,24 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
         //EditText del nombre del usuario
         editTextNombreUsuario=(EditText) view.findViewById(R.id.editTextNombreUsuarioFragmentOptions);
 
-
         //Cargar los datos de la configuracion del usuario
-        editTextNombreUsuario.setText(((MainActivity)getActivity()).usuarioDeViewModel.getNombre());
+        String nombreUsuario=((MainActivity)getActivity()).usuarioDeViewModel.getNombre();//¿Por qué carga el Fragment antes de entrar en onChanged?
+        editTextNombreUsuario.setText(nombreUsuario);
+//CARGA EL FRAGMENT DE FORMA AUTOMATICA, PASA POR ONCHANGED Y VUELVE A CARGAR EL FRAGMENT CON MI METODO
 
-        repositorioConfiguraciones=new RepositorioConfiguraciones(getActivity().getApplication());
-        configuracion=repositorioConfiguraciones.getConfiguracionUsuario( ((MainActivity)getActivity()).usuarioDeViewModel.getId() );
+        /*repositorioConfiguraciones=new RepositorioConfiguraciones(getActivity().getApplication());    //Y SI CARGAMOS LA CONFIGURACION EN ONCHANGED?
+        int id=((MainActivity)getActivity()).usuarioDeViewModel.getId();
+        configuracion=repositorioConfiguraciones.getConfiguracionUsuario( id );*/
 
-        imageTableroSeleccionado.setImageResource(configuracion.getTipoTablero());
+        if(((MainActivity)getActivity()).configuracionDeUsuario!=null) {
+            radioGroupSeleccionTablero.setOnCheckedChangeListener(this);
+            //Poner la imagen de la configuracion del usuario      << //No es necesario. Marcando el radioButton entra en onCheckedChanged y actualiza la imagen
+            //imageTableroSeleccionado.setImageResource(configuracion.getTipoTablero());
+
+            //Marcar radioButton que corresponda
+            checkRadioButton();
+        }
+
 
         return view;
     }
@@ -122,16 +153,11 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
         }
     }
 
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
+    //Este metodo es el que se encarga de la comunicacion de los botones con MainActivity
+    @Override
+    public void onClick(View view) {
+        mListener.ClickListener(view);
+    }
 
     @Override
     public void onAttach(Activity activity)
@@ -139,11 +165,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
         super.onAttach(activity);
         try{
             mListener=(OnFragmentInteractionListener) activity;
-            //((OnFragmentInteractionListener) mListener).ClickListener(view);
-        }catch (ClassCastException cce){
-
-        }
-        //this.activity = activity;
+        }catch (ClassCastException cce){}//La Activity debe Implementar OnFragmentInteractionListener
     }
 
     @Override
@@ -153,25 +175,35 @@ public class OptionsFragment extends Fragment implements View.OnClickListener, R
     }
 
     @Override
-    public void onClick(View view) {
-        mListener.ClickListener(view);
-    }
-
-    @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId){
-
             case R.id.radioButtonAzul:
                 imageTableroSeleccionado.setImageResource(R.drawable.tablero4enraya);
+                imageTableroSeleccionado.setTag(R.drawable.tablero4enraya);
+                //configuracion.setTipoTablero(R.drawable.tablero4enraya);
+                //((MainActivity)getActivity()).configuracionDeUsuario.setTipoTablero( (Integer) ((Object) imageTableroSeleccionado.getTag()) );
             break;
 
             case R.id.radioButtonAluminio:
                 imageTableroSeleccionado.setImageResource(R.drawable.tableroaluminio);
+                imageTableroSeleccionado.setTag(R.drawable.tableroaluminio);
+                //configuracion.setTipoTablero(R.drawable.tableroaluminio);
+                //((MainActivity)getActivity()).configuracionDeUsuario.setTipoTablero( (Integer) ((Object) imageTableroSeleccionado.getTag()) );
             break;
-
         }
     }
 
+    public void checkRadioButton(){
+        switch (((MainActivity)getActivity()).configuracionDeUsuario.getTipoTablero()){
+            case R.drawable.tablero4enraya:
+                radioButtonAzul.setChecked(true);
+            break;
+
+            case R.drawable.tableroaluminio:
+                radioButtonAluminio.setChecked(true);
+            break;
+        }
+    }
 
     /**
      * This interface must be implemented by activities that contain this

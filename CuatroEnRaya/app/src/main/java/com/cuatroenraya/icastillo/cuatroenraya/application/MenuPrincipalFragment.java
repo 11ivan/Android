@@ -35,6 +35,7 @@ public class MenuPrincipalFragment extends Fragment implements View.OnClickListe
     private OnFragmentInteractionListener mListener;
     Button btnPlay;
     Button btnOptions;
+    Button btnPuntuaciones;
     TextView txtNombre;
 
     public MenuPrincipalFragment() {
@@ -76,12 +77,14 @@ public class MenuPrincipalFragment extends Fragment implements View.OnClickListe
 
         btnPlay=(Button) view.findViewById(R.id.btnPlay);
         btnOptions=(Button) view.findViewById(R.id.btnOptions);
+        btnPuntuaciones=(Button) view.findViewById(R.id.btnPuntuaciones);
         txtNombre=(TextView) view.findViewById(R.id.txtNombre);
 
         txtNombre.setText( ((MainActivity)getActivity()).usuarioDeViewModel.getNombre() );
 
         btnPlay.setOnClickListener(this);
         btnOptions.setOnClickListener(this);
+        btnPuntuaciones.setOnClickListener(this);
 
         return view;
     }
@@ -111,7 +114,8 @@ public class MenuPrincipalFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        mListener.ClickListener(view);
+        /*switch (view.getId()){
             case R.id.btnPlay:
                 mListener.ClickListener(view);
             break;
@@ -119,7 +123,10 @@ public class MenuPrincipalFragment extends Fragment implements View.OnClickListe
             case R.id.btnOptions:
                 mListener.ClickListener(view);
             break;
-        }
+            case R.id.btnPuntuaciones:
+                mListener.ClickListener(view);
+                break;
+        }*/
     }
 
     /**

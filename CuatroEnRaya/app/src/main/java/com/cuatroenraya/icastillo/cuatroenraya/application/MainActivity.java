@@ -1,6 +1,7 @@
 package com.cuatroenraya.icastillo.cuatroenraya.application;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -24,24 +25,26 @@ import com.cuatroenraya.icastillo.cuatroenraya.room.repositories.RepositorioConf
 import com.cuatroenraya.icastillo.cuatroenraya.room.repositories.RepositorioUsuarios;
 import com.cuatroenraya.icastillo.cuatroenraya.viewmodels.ViewModelMainActivity;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 public class MainActivity extends AppCompatActivity implements OptionsFragment.OnFragmentInteractionListener, MenuPrincipalFragment.OnFragmentInteractionListener, IntroducirNombreUsuarioFragment.OnFragmentInteractionListener {
 
-    OptionsFragment optionsFragment=new OptionsFragment();
-    MenuPrincipalFragment menuPrincipalFragment=new MenuPrincipalFragment();
+    OptionsFragment optionsFragment;
+    MenuPrincipalFragment menuPrincipalFragment;
     IntroducirNombreUsuarioFragment introducirNombreUsuarioFragment=new IntroducirNombreUsuarioFragment();
     String fragmentCargado="principal";
     String KEYFRAGMENT="ultimoFragment";
     Usuario[] arrayUsuarios;
     ViewModelMainActivity viewModelMainActivity;
-    Usuario usuarioDeViewModel=new Usuario();
+    Usuario usuarioDeViewModel=new Usuario();//Dato Bindeado al ViewModel
     String nombreUsuario="";
     RepositorioUsuarios repositorioUsuarios;
-    Configuracion configuracion=new Configuracion();
+    Configuracion configuracionDeUsuario=new Configuracion();
     RepositorioConfiguraciones repositorioConfiguraciones;
 
+    //Dialog modo de juego
+    Dialog dialogModoJuego;
+    Button btnUnJugador;
+    Button btnDosJugadores;
+    int modoDeJuego=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,36 +53,52 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
 
         repositorioUsuarios=new RepositorioUsuarios(getApplication());
         repositorioConfiguraciones=new RepositorioConfiguraciones(getApplication());
-        //usuarioLiveData=new Usuario();
-        viewModelMainActivity= ViewModelProviders.of(this).get(ViewModelMainActivity.class);
-        viewModelMainActivity.cargaArrayUsuarios();
 
-        /*GregorianCalendar calendar=new GregorianCalendar();
-        Toast.makeText(this, String.valueOf(calendar.get(Calendar.YEAR)), Toast.LENGTH_LONG).show();*/
+        viewModelMainActivity = ViewModelProviders.of(this).get(ViewModelMainActivity.class);//Ya está inicializado usuarioLiveData
 
         viewModelMainActivity.getUsuarioLiveData().observe(this, new Observer<Usuario>() {
             @Override
             public void onChanged(@Nullable Usuario usuario) {
-                Toast.makeText(getApplicationContext(), "Ha entrado en onChanged", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Ha entrado en onChanged", Toast.LENGTH_LONG).show();
                 usuarioDeViewModel=usuario;
-                cargaFragmentCorrespondiente();//Cargamos el Fragment que corresponda
+                //configuracionDeUsuario=repositorioConfiguraciones.getConfiguracionUsuario(usuarioDeViewModel.getId());//Cargamos la configuaración  PUEDE SER NULL
+                //Si después de cargar el usuario es null pedimos el nombre
+                if(usuarioDeViewModel==null){
+                    cargaFragmentNombreUsuario();
+                }else {//Sino cargamos el Fragment que corresponda
+                    configuracionDeUsuario=repositorioConfiguraciones.getConfiguracionUsuario(usuarioDeViewModel.getId());//Cargamos la configuaración  PUEDE SER NULL >> YA NO DEBERIA
+                    cargaFragmentCorrespondiente();
+                }
             }
         });
 
-        try {//CACHO DE CUERNO CON PATAS!!
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        menuPrincipalFragment=new MenuPrincipalFragment();
+        optionsFragment=new OptionsFragment();
 
+        //Recuperamos el usuario
+        viewModelMainActivity.cargaUsuario();//De aquí tira para el metodo onChanged
 
-        //Si no hay usuario pedimos un nombre de usuario
-        if(viewModelMainActivity.arrayUsuarios.length==0){
-            cargaFragmentNombreUsuario();
-        }else {
-            //Recuperamos el usuario
-            viewModelMainActivity.cargaUsuario();
-        }
+        dialogModoJuego=new Dialog(this);
+        dialogModoJuego.setContentView(R.layout.customdialogmododejuego);
+        dialogModoJuego.setCanceledOnTouchOutside(false);
+        btnUnJugador=(Button)dialogModoJuego.findViewById(R.id.btnUnJugador);
+        btnDosJugadores=(Button) dialogModoJuego.findViewById(R.id.btnDosJugadores);
+
+        btnUnJugador.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                modoDeJuego=1;
+                startActivityGame();
+            }
+        });
+
+        btnDosJugadores.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                modoDeJuego=2;
+                startActivityGame();
+            }
+        });
 
         //Obtener ancho y alto el pixels para ajustar las imagenes
         /*DisplayMetrics metrics = new DisplayMetrics();
@@ -92,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEYFRAGMENT, fragmentCargado);
+        outState.putString(Keys.KEYFRAGMENT, fragmentCargado);
     }
 
     @Override
@@ -100,15 +119,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         super.onRestoreInstanceState(savedInstanceState);
         // Restore UI state from the savedInstanceState.
         // This bundle has also been passed to onCreate.
-        fragmentCargado = savedInstanceState.getString(KEYFRAGMENT);
-        switch (fragmentCargado){
-            case "opciones":
-                cargaFragmentOpciones();
-            break;
-            case "nombreusuario":
-                cargaFragmentNombreUsuario();
-                break;
-        }
+        fragmentCargado = savedInstanceState.getString(Keys.KEYFRAGMENT);
     }
 
     public void cargaFragmentCorrespondiente(){
@@ -125,7 +136,12 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
     //Inicia la actividad del juego
     public void startActivityGame(){
         Intent intent=new Intent(this, GameActivity.class);
+        intent.putExtra(Keys.ID_USUARIO, usuarioDeViewModel.getId());
+        intent.putExtra(Keys.NOMBRE_USUARIO, usuarioDeViewModel.getNombre());
+        intent.putExtra(Keys.TABLERO, configuracionDeUsuario.getTipoTablero());
+        intent.putExtra(Keys.MODOJUEGO, modoDeJuego);
         startActivity(intent);
+        dialogModoJuego.dismiss();
     }
 
     //Carga el fragment de las opciones
@@ -150,6 +166,11 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         fragmentTransaction.commit();
     }
 
+    public void goToPuntuacionesActivity(){
+        Intent intent = new Intent(this, PuntuacionesActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {}
 
@@ -162,52 +183,49 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                     cargaFragmentPrincipal();
             break;
 
+            /*case R.id.btnActualizaConfiguracion:  //Lo gestionamos desde el fragment
+                    repositorioConfiguraciones.updateConfiguracion();
+                break;*/
+
             //Casos del Fragment del menu principal
             case R.id.btnPlay:
-                    startActivityGame();
+                    dialogModoJuego.show();
+                    //startActivityGame();
+                    //dialogModoJuego.dismiss();
             break;
             case R.id.btnOptions:
                     cargaFragmentOpciones();
             break;
+            case R.id.btnPuntuaciones:
+                    goToPuntuacionesActivity();
+            break;
 
             //Casos Fragment Introducir Nombre Usuario
             case R.id.btnContinuarFragmentNombreUsuario:
-
+                usuarioDeViewModel=new Usuario();
                 usuarioDeViewModel.setNombre(nombreUsuario);
-                Usuario[] usuarios={usuarioDeViewModel};
-                viewModelMainActivity.insertUsuarios(usuarios);//Insertamos el usuario en la base de datos
+                viewModelMainActivity.insertUsuario(usuarioDeViewModel);//Insertamos el usuario en la base de datos
 
                 //El proximo fragment a cargar cuando entre en onchaged debe ser el principal
                 fragmentCargado="principal";
 
                 //Cargamos en el view model el usuario insertado
-                viewModelMainActivity.cargaUsuario();
-
-                /*try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
+                viewModelMainActivity.cargaUsuario();//Hay que cargarlo para obtener el id, es necesario para insertar la configuracion
 
                 Handler handler=new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //Insertamos una configuracion por defecto para el usuario
-                        configuracion.setIdUsuario(usuarioDeViewModel.getId());//El id del usuario debe ser 1
-                        configuracion.setTipoTablero(R.drawable.tableroaluminio);
-                        repositorioConfiguraciones.insertConfiguracion(configuracion);
-
+                        configuracionDeUsuario=new Configuracion();
+                        configuracionDeUsuario.setIdUsuario(usuarioDeViewModel.getId());
+                        configuracionDeUsuario.setTipoTablero(R.drawable.tableroaluminio);
+                        repositorioConfiguraciones.insertConfiguracion(configuracionDeUsuario);
                     }
-                }, 1500);
-
-                //Insertamos una configuracion por defecto para el usuario
+                }, 500);
+                //Insertamos una configuracion por defecto para el usuario          //¿INSERTA UNA CONFIGURACION POR DEFECTO?>>(NO)
                 /*configuracion.setIdUsuario(usuarioDeViewModel.getId());//El id del usuario debe ser 1
                 configuracion.setTipoTablero(R.drawable.tableroaluminio);
                 repositorioConfiguraciones.insertConfiguracion(configuracion);*/
-
-                //Cargamos el Fragment Principal
-                //cargaFragmentPrincipal(); //Ahora lo cargamos en el metodo onChange del ViewModel
             break;
         }
     }

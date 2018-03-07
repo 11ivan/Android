@@ -1,27 +1,34 @@
 package com.cuatroenraya.icastillo.cuatroenraya.application;
 
 import android.app.Dialog;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cuatroenraya.icastillo.cuatroenraya.R;
+import com.cuatroenraya.icastillo.cuatroenraya.clases.Juego;
+import com.cuatroenraya.icastillo.cuatroenraya.room.entities.DatosGameActivity;
 import com.cuatroenraya.icastillo.cuatroenraya.clases.Maquina;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Timer;
+import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Puntuacion;
+import com.cuatroenraya.icastillo.cuatroenraya.room.repositories.RepositorioDatosGameActivity;
+import com.cuatroenraya.icastillo.cuatroenraya.room.repositories.RepositorioPuntuaciones;
+import com.cuatroenraya.icastillo.cuatroenraya.viewmodels.ViewModelGameActivity;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -36,10 +43,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     RelativeLayout relativeLayout;
     Chronometer chronometer;
     ImageView imagenTablero;
-    //PopupMenu popupMenu;
 
     //Boton Pause
     Button btnPause;
+
+    //TextView Turno
+    TextView textViewTurno;
 
     //Dialog Pause
     Dialog dialog;
@@ -52,20 +61,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     Button btnSi;
     Button btnNo;
 
-    //Meter en un metodo para restablecer los valores al reiniciar la partida
-    int[] contadores=new int[7];
-    int[][] arrayParaleloTablero=new int[7][6];// 7 Columnas y 6 Filas
-    int turno=0;//turno será 0 cuando le toque al jugador y 1 cuando le toque a la máquina
     Integer[] idImagenesFichas={R.drawable.ficharoja, R.drawable.fichaamarilla};
     Maquina maquina=new Maquina();
-    int totalFichasPuestas=0;
-    int[] ultimaFichaPuesta=new int[2];
-    boolean hayGanador=false;
+
+    //Datos del usuario llegados desde mainactivity
+    String nombreUsuario="";
+    Integer idImagenTablero=0;
+    int idUsuario=0;
+    int modoDeJuego=0;//Modo 1 un jugador, modo 2 dos jugadores ...
+
+    Puntuacion puntuacion=new Puntuacion();
+    ViewModelGameActivity viewModelGameActivity;
+    //DatosGameActivity datosGameActivity=new DatosGameActivity();
+    RepositorioPuntuaciones repositorioPuntuaciones;
+    RepositorioDatosGameActivity repositorioDatosGameActivity;
+    Juego juego=new Juego();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        repositorioPuntuaciones=new RepositorioPuntuaciones(getApplication());
+        repositorioDatosGameActivity=new RepositorioDatosGameActivity(getApplication());
 
         relativeLayout=(RelativeLayout) findViewById(R.id.relative);
         chronometer=(Chronometer) findViewById(R.id.chronometer);
@@ -78,6 +96,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         col6=(RelativeLayout) findViewById(R.id.col6);
         btnPause=(Button) findViewById(R.id.btnPause);
         imagenTablero=(ImageView) findViewById(R.id.imageTablero);
+        textViewTurno=(TextView) findViewById(R.id.textViewTurno);
 
         col0.setOnClickListener(this);
         col1.setOnClickListener(this);
@@ -87,11 +106,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         col5.setOnClickListener(this);
         col6.setOnClickListener(this);
 
-        //No está en uso
-        /*popupMenu=new PopupMenu(this, btnPause);
-        popupMenu.setOnMenuItemClickListener(this);
-        popupMenu.getMenuInflater().inflate(R.menu.popupmenu, popupMenu.getMenu());*/
+        modoDeJuego=getIntent().getIntExtra(Keys.MODOJUEGO, 1);
+        nombreUsuario=getIntent().getStringExtra(Keys.NOMBRE_USUARIO);
+        idUsuario=getIntent().getIntExtra(Keys.ID_USUARIO, 0);
+        idImagenTablero=getIntent().getIntExtra(Keys.TABLERO, 0);
 
+        if(modoDeJuego==1){
+            textViewTurno.setVisibility(View.INVISIBLE);
+        }else {
+            textViewTurno.setText("Turno de "+nombreUsuario);
+        }
+
+        //Cargar el tablero del usuario
+        cargaTableroJugador();
+        //Mostrar nombre de Usuario**
+
+        //Boton Pause
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +131,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 dialog.show();
             }
         });
-
         //Dialog Pause. Se muestra al pulsar el boton pause o atras en el dispositivo
         dialog=new Dialog(this);
         dialog.setContentView(R.layout.customdialogpause);
@@ -112,19 +141,19 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         btnContinuar=(Button)dialog.findViewById(R.id.btnContinuar);
         btnReiniciar=(Button) dialog.findViewById(R.id.btnReiniciar);
         btnSalir=(Button) dialog.findViewById(R.id.btnSalir);
-
+        //Boton Continuar
         btnContinuar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Continuar partida
                 //Cerrar cuadro dialogo
                 dialog.dismiss();
-                //Devolver valor al cronometro e iniciar si el valor era mayor que 0
-                //chronometer.setBase(SystemClock.elapsedRealtime()-chronometer.getBase());
-                //chronometer.start();
-                updateChronometer();
+                if(juego.getDatosGameActivity().isHaEmpezado()) {
+                    updateChronometer(0);//NO Hay datos cargados
+                }
             }
         });
+        //Boton Reiniciar
         btnReiniciar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,14 +162,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 dialog.dismiss();
             }
         });
+        //Boton Salir
         btnSalir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Salir al Menu Principal
-
+                goToMainActivity();
             }
         });
-
         //Dialog Reinicio. Se muestra cuando gana o pierde partida
         dialogReinicio=new Dialog(this);
         dialogReinicio.setContentView(R.layout.dialogreiniciarpartida);
@@ -151,18 +180,81 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         btnSi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reiniciaPartida();
-                dialogReinicio.dismiss();
+            reiniciaPartida();
+            dialogReinicio.dismiss();
             }
         });
 
         btnNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Enviar a Menu Principal
+            //Enviar a Menu Principal
+            goToMainActivity();
             }
         });
 
+        //ViewModel
+        viewModelGameActivity= ViewModelProviders.of(this).get(ViewModelGameActivity.class);
+        viewModelGameActivity.getDatosGameActivityLiveData().observe(this, new Observer<DatosGameActivity>() {
+            @Override
+            public void onChanged(@Nullable DatosGameActivity datosGameActivityAct) {
+                if(datosGameActivityAct!=null) {
+                    //Cargamos los datos de la partida
+                    juego.setDatosGameActivity(datosGameActivityAct);
+
+                    //Si la partida no se terminó en modo dos jugadores y el turno lo tenia el invitado
+                    //Despues iniciamos en modo un jugador, la maquina deberia tirar pero no tira **BUG
+
+                    //Si el modo de juego es un jugador y la ultima partida fue de dos jugadores Ó
+                    //el modo de juego es dos jugadores y la ultima partida fue de un jugador
+                    if(modoDeJuego==1 && juego.getDatosGameActivity().getRival()==2 ||
+                       modoDeJuego==2 && juego.getDatosGameActivity().getRival()==1){
+
+                        //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
+                        repositorioDatosGameActivity.deleteDatosGameActivity(juego.getDatosGameActivity());
+                        reiniciaPartida();
+
+                    }else {
+                        if (!juego.getDatosGameActivity().isHayGanador()) {
+                            //Colocar las fichas en el tablero
+                            cargaFichasEnTablero();
+                            //Dar valor al cronometro
+                            updateChronometer(1);//Hay datos cargados
+
+                            //Comprobar si el turno lo tiene la maquina para insertar la ficha
+                            if (juego.getDatosGameActivity().getTurno() == 1) {
+                                //updateChronometer();
+                                if (modoDeJuego == 2) {
+                                    dialog.show();
+                                    textViewTurno.setText("Turno de Invitado");
+                                } else {
+                                    //Si el turno lo tiene la maquina iniciamos el cronometro e insertamos la ficha
+                                    chronometer.start();
+                                    maquina.ponFicha(juego.getDatosGameActivity().getArrayParaleloTablero(), juego.getDatosGameActivity().getUltimaFichaPuesta());
+                                }
+                            } else {//Sino mostramos el dialog de pause porque el turno lo tenia el Usuario
+                                if (juego.getDatosGameActivity().isHaEmpezado()) {
+                                    dialog.show();
+                                    if (modoDeJuego == 2) {
+                                        textViewTurno.setText("Turno de " + nombreUsuario);
+                                    }
+                                }
+                            }
+
+                            //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
+                            repositorioDatosGameActivity.deleteDatosGameActivity(juego.getDatosGameActivity());
+                        } else {
+                            //Eliminamos los datos que habia en la base de datos para cuando volvamos a guardar
+                            repositorioDatosGameActivity.deleteDatosGameActivity(juego.getDatosGameActivity());
+                            reiniciaPartida();
+                        }
+                    }
+
+                }
+            }
+        });
+
+        viewModelGameActivity.cargaDatosGameActivity();
 
         //Obtener ancho y alto el pixels para ajustar las imagenes
         DisplayMetrics metrics = new DisplayMetrics();
@@ -172,10 +264,75 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void updateChronometer(){
-        int stoppedMilliseconds = 0;
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Si ha empezado a jugar guardamos los datos de la partida
+        if(juego.getDatosGameActivity().isHaEmpezado()) {
+            guardarDatosDePartida();
+        }
+    }
 
-        String chronoText = chronometer.getText().toString();
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        //Restauramos los datos de la partida       //Entraria en onchanged
+        //viewModelGameActivity.cargaDatosGameActivity();
+    }
+
+    /**
+    *
+    *
+    *
+    * */
+    public void guardarDatosDePartida(){
+        //Paramos el Timer
+        chronometer.stop();
+        //Obtenemos el tiempo de partida que lleva
+        juego.getDatosGameActivity().setTiempoPartida(chronometer.getText().toString());
+        //Guardamos el rival contra el que juega
+        juego.getDatosGameActivity().setRival( ((modoDeJuego==2) ? 2:1) );
+        //Guardamos los datos de la partida
+        repositorioDatosGameActivity.insertDatosGameActivity(juego.getDatosGameActivity());
+    }
+
+    /**
+    *
+    * */
+    public void goToMainActivity(){
+        Intent intent=new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+    *
+    * */
+    public void cargaTableroJugador(){
+        switch (idImagenTablero){
+            case R.drawable.tablero4enraya:
+                imagenTablero.setImageResource(R.drawable.tablero4enraya);
+            break;
+
+            case R.drawable.tableroaluminio:
+                imagenTablero.setImageResource(R.drawable.tableroaluminio);
+            break;
+        }
+    }
+
+    /**
+    *
+    *
+    * */
+    public void updateChronometer(int typeUpdate){//Si el tipo es 0 es porque es una nueva partida
+        int stoppedMilliseconds = 0;
+        String chronoText="";
+
+        if(typeUpdate==0) {
+            chronoText = chronometer.getText().toString();
+        }else {
+            chronoText = juego.getDatosGameActivity().getTiempoPartida();
+        }
+
         String array[] = chronoText.split(":");
         if (array.length == 2) {
             stoppedMilliseconds = Integer.parseInt(array[0]) * 60 * 1000 + Integer.parseInt(array[1]) * 1000;
@@ -183,12 +340,31 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             stoppedMilliseconds = Integer.parseInt(array[0]) * 60 * 60 * 1000 + Integer.parseInt(array[1]) * 60 * 1000 + Integer.parseInt(array[2]) * 1000;
         }
         chronometer.setBase(SystemClock.elapsedRealtime() - stoppedMilliseconds);
-        chronometer.start();
+        if(typeUpdate==0) {
+            chronometer.start();
+        }
     }
+
+    /**
+    *
+    *
+    * */
+    /*public void updateChronometerLoadGame(){
+        int stoppedMilliseconds = 0;
+        String chronoText = juego.getDatosGameActivity().getTiempoPartida();
+        String array[] = chronoText.split(":");
+        if (array.length == 2) {
+            stoppedMilliseconds = Integer.parseInt(array[0]) * 60 * 1000 + Integer.parseInt(array[1]) * 1000;
+        } else if (array.length == 3) {
+            stoppedMilliseconds = Integer.parseInt(array[0]) * 60 * 60 * 1000 + Integer.parseInt(array[1]) * 60 * 1000 + Integer.parseInt(array[2]) * 1000;
+        }
+        chronometer.setBase(SystemClock.elapsedRealtime() - stoppedMilliseconds);
+        //chronometer.start();
+    }*/
 
     @Override
     public void onClick(View view) {
-        if(turno==0) {
+        if(modoDeJuego==2 || juego.getDatosGameActivity().getTurno()==0) {
             switch (view.getId()) {
 
                 case R.id.col0:
@@ -198,37 +374,144 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                 case R.id.col1:
                     insertarFicha(1);
-
                     break;
 
                 case R.id.col2:
                     insertarFicha(2);
-
                     break;
 
                 case R.id.col3:
                     insertarFicha(3);
-
                     break;
 
                 case R.id.col4:
                     insertarFicha(4);
-
                     break;
 
                 case R.id.col5:
                     insertarFicha(5);
-
                     break;
 
                 case R.id.col6:
                     insertarFicha(6);
-
                     break;
             }
         }
     }
 
+    /**
+    * Proposito:
+    * Precondiciones:
+    * Entradas:
+    * Salidas:
+    * Postcondiciones:
+    * */
+     public void cargaFichasEnTablero(){
+         boolean sal=false;
+         for(int i=0;i<juego.getDatosGameActivity().getArrayParaleloTablero().length;){
+
+             if(juego.getDatosGameActivity().getArrayParaleloTablero()[i][0]!=0){//Si no hay ficha en la primera posicion aumentamos la columna
+                sal=false;
+                for (int j=0;j<juego.getDatosGameActivity().getArrayParaleloTablero()[0].length && !sal;j++){
+                    if(juego.getDatosGameActivity().getArrayParaleloTablero()[i][j]==0){
+                        sal=true;
+                        i++;
+                    }else {
+                        insertarFichaCargaPartida(i, j, juego.getDatosGameActivity().getArrayParaleloTablero()[i][j]);
+                    }
+                }
+             }else {
+                 i++;
+             }
+         }
+     }
+
+    /*
+   * Proposito:
+   * Precondiciones:
+   * Entradas:
+   * Salidas:
+   * Postcondiciones:
+   * */
+    public void insertarFichaCargaPartida(int columna, int row, int ficha){
+        ImageView imageView = new ImageView(this);
+        int indexImagenFicha=0;
+        if(ficha==2){
+            indexImagenFicha=1;
+        }/*else if(ficha==2){
+            indexImagenFicha=1;
+        }*/
+        imageView.setImageResource(idImagenesFichas[indexImagenFicha]);
+        imageView.setScaleX(15);
+        imageView.setScaleY(15);
+
+        //Comprobamos la cantidad de fichas que tiene la columna para definir la animacion
+        TranslateAnimation translateAnimation=getCurrentAnimationCargaPartida(row);
+        //TranslateAnimation translateAnimation=getCurrentAnimation(row);
+        switch (columna) {
+            case 0:
+                col0.addView(imageView);
+                break;
+            case 1:
+                col1.addView(imageView);
+                break;
+            case 2:
+                col2.addView(imageView);
+                break;
+            case 3:
+                col3.addView(imageView);
+                break;
+            case 4:
+                col4.addView(imageView);
+                break;
+            case 5:
+                col5.addView(imageView);
+                break;
+            case 6:
+                col6.addView(imageView);
+                break;
+        }
+        imageView.startAnimation(translateAnimation);
+        //Gestionamos la jugada
+        //gestionaJugada(columna);
+    }
+
+    /*
+    * Proposito: Recibe el indice de la columna y devuelve la animacion con los parametros
+    *            apropiados para esa columna.
+    * Precondiciones: La columna no está llena
+    * Entradas: Un entero que es el indice de la columna
+    * Salidas: Un objeto TranslateAnimation
+    * Postcondiciones: EL objeto TranslateAnimation está construido con los parámetros adecuados para la columna
+    * */
+    private TranslateAnimation getCurrentAnimationCargaPartida(int row){
+        TranslateAnimation translateAnimation=null;
+        //Según la cantidad de fichas que tenga la columna
+        switch (row){
+
+            case 0:
+                translateAnimation=new TranslateAnimation(0, 0, -350, 275);
+                break;
+            case 1:
+                translateAnimation=new TranslateAnimation(0, 0, -350, 178);
+                break;
+            case 2:
+                translateAnimation=new TranslateAnimation(0, 0, -350, 80);
+                break;
+            case 3:
+                translateAnimation=new TranslateAnimation(0, 0, -350, -17);
+                break;
+            case 4:
+                translateAnimation=new TranslateAnimation(0, 0, -350, -113);
+                break;
+            case 5:
+                translateAnimation=new TranslateAnimation(0, 0, -350, -209);
+                break;
+        }
+        translateAnimation.setDuration(800);
+        translateAnimation.setFillAfter(true);
+        return translateAnimation;
+    }
 
     /*
     * Proposito:
@@ -239,12 +522,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     * */
     public void insertarFicha(int columna){
         //Si la columna no está llena y no hay ganador
-        if(contadores[columna]<6 && !hayGanador) {
+        if(juego.getDatosGameActivity().getContadoresColumnas()[columna]<6 && !juego.getDatosGameActivity().isHayGanador()) {
 
             ImageView imageView = new ImageView(this);
-            imageView.setImageResource(idImagenesFichas[turno]);
+            imageView.setImageResource(idImagenesFichas[juego.getDatosGameActivity().getTurno()]);
             imageView.setScaleX(15);
-            imageView.setScaleY(14);
+            imageView.setScaleY(15);
 
             //Comprobamos la cantidad de fichas que tiene la columna para definir la animacion
             TranslateAnimation translateAnimation=getCurrentAnimation(columna);
@@ -254,27 +537,21 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 case 0:
                     col0.addView(imageView);
                     break;
-
                 case 1:
                     col1.addView(imageView);
                     break;
-
                 case 2:
                     col2.addView(imageView);
                     break;
-
                 case 3:
                     col3.addView(imageView);
                     break;
-
                 case 4:
                     col4.addView(imageView);
                     break;
-
                 case 5:
                     col5.addView(imageView);
                     break;
-
                 case 6:
                     col6.addView(imageView);
                     break;
@@ -315,27 +592,35 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         marcaArrayParaleloTablero(columna);
 
         //Aumentamos el contador de la columna
-        contadores[columna]+=1;
+        juego.getDatosGameActivity().incrementarContadorColumna(columna);
 
         //Aumentamos el total de fichas puestas
-        totalFichasPuestas++;
+        juego.getDatosGameActivity().setTotalFichasPuestas(juego.getDatosGameActivity().getTotalFichasPuestas()+1);
 
         //Si es la primera ficha iniciamos el cronometro
-        if(totalFichasPuestas==1){
+        if(juego.getDatosGameActivity().getTotalFichasPuestas()==1){
+            juego.getDatosGameActivity().setHaEmpezado(true);
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.start();
         }
 
         //Si la cantidad de fichas puestas es mayor o igual que 7
-        if(totalFichasPuestas>=7) {
-            //Comprobar si hay
-            // ganador
-            compruebaGanador();
+        if(juego.getDatosGameActivity().getTotalFichasPuestas()>=7) {
+            //Comprobar si hay ganador
+            juego.compruebaGanador();
         }
         //Si hay ganador
-        if(hayGanador) {
+        if(juego.getDatosGameActivity().isHayGanador()) {
             //Paramos el cronometro
             chronometer.stop();
+
+            //Guardamos la puntuacion en la base de datos
+            puntuacion.setIdUsuario(idUsuario);
+            //puntuacion.setFechaPartida();Cuando empiece la partida
+            puntuacion.setTiempoPartida(chronometer.getText().toString());
+            String resultado=juego.getDatosGameActivity().getTurno()==0 ? "Victoria" : "Derrota";
+            puntuacion.setResultado(resultado);
+            repositorioPuntuaciones.insertPuntuacion(puntuacion);
 
             //Mostramos mensaje de ganador/Perdedor
             mostrarMensajeVictoriaDerrota();
@@ -357,15 +642,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     * Postcondiciones:
     * */
     private void cambiaTurno(){
-        if(turno==1){
-            turno=0;
+        //juego.getDatosGameActivity().setTurno(juego.getDatosGameActivity().getTurno()==1 ? 0 : 1);
+        if(juego.getDatosGameActivity().getTurno()==1){
+            juego.getDatosGameActivity().setTurno(0);
+            if(modoDeJuego==2) {
+                textViewTurno.setText("Turno de " + nombreUsuario);
+            }
         }else {
-            turno = 1;
-            //Poner la ficha de la Máquina
-            ponerFichaMaquina();
+            juego.getDatosGameActivity().setTurno(1);
+            //Poner la ficha de la Máquina si está en modo un jugador
+            if(modoDeJuego==1) {
+                ponerFichaMaquina();
+            }else {
+                textViewTurno.setText("Turno de Invitado");
+            }
         }
     }
-
 
     /*
     * Proposito:
@@ -379,13 +671,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                insertarFicha(maquina.ponFicha(arrayParaleloTablero));
+                insertarFicha(maquina.ponFicha(juego.getDatosGameActivity().getArrayParaleloTablero(), juego.getDatosGameActivity().getUltimaFichaPuesta()));
             }
         },1500);
     }
 
-
-    /*
+    /**
     * Proposito:
     * Precondiciones:
     * Entradas:
@@ -393,456 +684,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     * Postcondiciones:
     * */
     private void marcaArrayParaleloTablero(int columna){
-        if(turno==0) {
-            arrayParaleloTablero[columna][contadores[columna]]=1;
+        if(juego.getDatosGameActivity().getTurno()==0) {//Si es el turno del usuario
+            juego.getDatosGameActivity().getArrayParaleloTablero()[columna][juego.getDatosGameActivity().getContadoresColumnas()[columna]]=1;
         }else {
-            arrayParaleloTablero[columna][contadores[columna]] = 2;
+            juego.getDatosGameActivity().getArrayParaleloTablero()[columna][juego.getDatosGameActivity().getContadoresColumnas()[columna]] = 2;
         }
-        ultimaFichaPuesta[0]=columna;//Columna de la ficha puesta
-        ultimaFichaPuesta[1]=contadores[columna];//Fila de la ficha puesta
+        juego.getDatosGameActivity().setUltimaFichaPuesta(0, columna);//Columna de la ficha puesta
+        juego.getDatosGameActivity().setUltimaFichaPuesta(1, juego.getDatosGameActivity().getContadoresColumnas()[columna]);//Fila de la ficha puesta
     }
 
-    /*
-    * Proposito: Cuando se pone una ficha en el tablero comprueba si ha ganado
-    * Precondiciones: Se ha puesto una ficha en el tablero y el total de fichas puestas debe ser mayor o igual que 7
-    * Entradas: No hay
-    * Salidas: No hay
-    * Postcondiciones: Habrá un ganador o no.
-    * */
-    private void compruebaGanador(){
-        //La comprobacion Horizontal siempre se va a hacer  (Por ahora)
-        comprobacionHorizontal();
-
-        //Las diagonales también se comprobarán
-        if(!hayGanador && sePuedeComprobarDiagonaIzquierdaDerecha()){
-            //Comprobar diagonal de izquierda a derecha desde abajo hacia arriba
-            compruebaDiagonaIzquierdaDerecha();
-        }
-
-        if(!hayGanador && sePuedeComprobarDiagonaDerechaIzquierda()){
-            //Comprobar diagonal de derecha a izquierda desde abajo hacia arriba
-            compruebaDiagonaDerechaIzquierda();
-        }
-
-        //Si en la comprobacion horizontal no hubo ganador
-        if(!hayGanador) {
-            //Segun la fila que se ha colocado la ultima ficha
-            switch (ultimaFichaPuesta[1]) {
-                case 3://Si la fila es cualquiera de éstas se comprobará vertical desde la columna y fila en que se puso la ficha hasta abajo
-                case 4:comprobacionVertical();
-                case 5:
-                    break;
-            }
-        }
-    }
-
-    /*
-    * Proposito: Metodo para comprobar si es necesario realizar la comprobacion de la diagonal de izquierda a derecha, desde abajo hacia arriba /
-    * Precondiciones:
-    * Entradas:
-    * Salidas: Un entero con la longitud en esa diagonal
-    * Postcondiciones:
-    *
-    * Solo se hara esta comprobacion cuando la ficha no este en
-    * */
-    public boolean sePuedeComprobarDiagonaIzquierdaDerecha(){
-        boolean sePuede=true;
-        int columna=ultimaFichaPuesta[0];
-        int fila=ultimaFichaPuesta[1];
-
-        if(columna==0 && fila==5 || columna==0 && fila==4 || columna==0 && fila==3 || columna==1 && fila==4 || columna==2 && fila==5 || columna==1 && fila==5
-                || columna==4 && fila==0 || columna==5 && fila==0 || columna==6 && fila==0 || columna==5 && fila==1 || columna==6 && fila==1 || columna==6 && fila==2){
-            sePuede=false;
-        }
-
-        return sePuede;
-    }
-
-    /*
-    * Proposito: Metodo para comprobar acierto en la diagonal de izquierda a derecha, desde abajo hacia arriba /
-    * Precondiciones:
-    * Entradas:
-    * Salidas: Un entero con la longitud en esa diagonal
-    * Postcondiciones:
-    * */
-    public void compruebaDiagonaIzquierdaDerecha(){
-        int aciertos=0;
-        int columna=0;
-        int fila=2;
-        int iteraciones=2;
-        int fichaActual=0;
-        int siguienteFicha=0;
-        boolean sal=false;
-
-        //Primera diagonal
-        for (int i=0;i<=iteraciones && !sal;i++){
-            fichaActual=arrayParaleloTablero[i][fila];
-            siguienteFicha=arrayParaleloTablero[i+1][fila+1];
-            if(fichaActual!=0 && fichaActual==siguienteFicha){
-                aciertos++;
-            }else{
-                sal=true;//Si en alguna comprobacion de esta diagonal falla no habra que comprobar mas (solo caben 4 fichas)
-            }
-            fila++;
-        }
-        if (aciertos==3){
-            Toast.makeText(this, "Alguien ha ganado DIAGONAL1", Toast.LENGTH_SHORT).show();
-            hayGanador=true;
-        }
-
-        if (!hayGanador){ //Segunda diagonal (5 Fichas)
-            aciertos=0;
-            iteraciones++;//3 iteraciones
-            fila=1;
-            for (int i=0;i<=iteraciones && aciertos<3;i++){
-                fichaActual=arrayParaleloTablero[i][fila];
-                siguienteFicha=arrayParaleloTablero[i+1][fila+1];
-                if(fichaActual!=0 && fichaActual==siguienteFicha){
-                    aciertos++;
-                }else if(aciertos>0){
-                    aciertos=0;
-                }
-                fila++;
-            }
-            if (aciertos==3){
-                Toast.makeText(this, "Alguien ha ganado DIAGONAL2", Toast.LENGTH_SHORT).show();
-                hayGanador=true;
-            }
-        }
-
-
-        if (!hayGanador){ //Tercera diagonal
-            aciertos=0;
-            iteraciones++;//4 iteraciones
-            fila=0;
-            for (int i=0;i<=iteraciones && aciertos<3;i++){
-                fichaActual=arrayParaleloTablero[i][fila];
-                siguienteFicha=arrayParaleloTablero[i+1][fila+1];
-                if(fichaActual!=0 && fichaActual==siguienteFicha){
-                    aciertos++;
-                }else if(aciertos>0){
-                    aciertos=0;
-                }
-                fila++;
-            }
-            if (aciertos==3){
-                Toast.makeText(this, "Alguien ha ganado DIAGONAL3", Toast.LENGTH_SHORT).show();
-                hayGanador=true;
-            }
-        }
-
-
-        if (!hayGanador){ //Cuarta diagonal//Aqui cambia la cosa
-            //4 iteraciones
-            aciertos=0;
-            fila=0;
-            columna=1;
-            for (int i=0;i<=iteraciones && aciertos<3;i++){
-                fichaActual=arrayParaleloTablero[columna][fila];
-                siguienteFicha=arrayParaleloTablero[columna+1][fila+1];
-                if(fichaActual!=0 && fichaActual==siguienteFicha){
-                    aciertos++;
-                }else if(aciertos>0){
-                    aciertos=0;
-                }
-                columna++;
-                fila++;
-            }
-            if (aciertos==3){
-                Toast.makeText(this, "Alguien ha ganado DIAGONAL4", Toast.LENGTH_SHORT).show();
-                hayGanador=true;
-            }
-        }
-
-
-        if (!hayGanador){ //Quinta diagonal  //ESTA NO DETECTA GANADOR
-            //3 iteraciones
-            iteraciones=3;
-            aciertos=0;
-            fila=0;
-            columna=2;
-            for (int i=0;i<=iteraciones && aciertos<3;i++){
-                fichaActual=arrayParaleloTablero[columna][fila];
-                siguienteFicha=arrayParaleloTablero[columna+1][fila+1];
-                if(fichaActual!=0 && fichaActual==siguienteFicha){
-                    aciertos++;
-                }else if(aciertos>0){
-                    aciertos=0;
-                }
-                columna++;
-                fila++;
-            }
-            if (aciertos==3){
-                Toast.makeText(this, "Alguien ha ganado DIAGONAL5", Toast.LENGTH_SHORT).show();
-
-                hayGanador=true;
-            }
-        }
-
-
-        if (!hayGanador){ //Sexta diagonal  //ESTA TAMPOCO NO DETECTA GANADOR
-            //2 iteraciones
-            sal=false;
-            iteraciones=2;
-            aciertos=0;
-            fila=0;
-            columna=3;
-            for (int i=0;i<=iteraciones && !sal;i++){
-                fichaActual=arrayParaleloTablero[columna][fila];
-                siguienteFicha=arrayParaleloTablero[columna+1][fila+1];
-                if(fichaActual!=0 && fichaActual==siguienteFicha){
-                    aciertos++;
-                }else {
-                    sal=true;
-                }
-                columna++;
-                fila++;
-            }
-            if (aciertos==3){
-                Toast.makeText(this, "Alguien ha ganado DIAGONAL6", Toast.LENGTH_SHORT).show();
-                hayGanador=true;
-            }
-        }
-
-    }
-
-
-    /*
-    * Proposito: Metodo para comprobar si es necesario realizar la comprobacion de la diagonal de derecha a izquierda, desde abajo hacia arriba \
-    * Precondiciones:
-    * Entradas:
-    * Salidas: Un entero con la longitud en esa diagonal
-    * Postcondiciones:
-    * */
-    public boolean sePuedeComprobarDiagonaDerechaIzquierda(){
-        boolean sePuede=true;
-        int columna=ultimaFichaPuesta[0];
-        int fila=ultimaFichaPuesta[1];
-
-        if(columna==0 && fila==0 || columna==0 && fila==1 || columna==0 && fila==2 || columna==1 && fila==0 || columna==1 && fila==1 || columna==2 && fila==0
-                || columna==4 && fila==5 || columna==5 && fila==5 || columna==5 && fila==4 || columna==6 && fila==5 || columna==6 && fila==4 || columna==6 && fila==3){
-            sePuede=false;
-        }
-
-        return sePuede;
-    }
-
-    /*
-    * Proposito: Metodo para acierto en la diagonal de derecha a izquierda, desde abajo hacia arriba \
-    * Precondiciones:
-    * Entradas:
-    * Salidas: Un entero con la longitud en esa diagonal
-    * Postcondiciones:
-    * */
-    public void compruebaDiagonaDerechaIzquierda(){
-        int aciertos=0;
-        int columna=6;
-        int fila=2;
-        int iteraciones=2;
-        int fichaActual=0;
-        int siguienteFicha=0;
-        boolean sal=false;
-
-        //Primera diagonal
-        for (int i=0;i<=iteraciones && !sal;i++){
-            fichaActual=arrayParaleloTablero[columna][fila];
-            siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
-            if(fichaActual!=0 && fichaActual==siguienteFicha){
-                aciertos++;
-            }else{
-                sal=true;//Si en alguna comprobacion de esta diagonal falla no habra que comprobar mas (solo caben 4 fichas)
-            }
-            columna--;
-            fila++;
-        }
-        if (aciertos==3){
-            Toast.makeText(this, "Alguien ha ganado DIAGONAL1 dchaIzq", Toast.LENGTH_SHORT).show();
-            hayGanador=true;
-        }
-
-        if (!hayGanador){ //Segunda diagonal (5 Fichas)
-            aciertos=0;
-            iteraciones++;//3 iteraciones
-            fila=1;
-            columna=6;
-            for (int i=0;i<=iteraciones && aciertos<3;i++){
-                fichaActual=arrayParaleloTablero[columna][fila];
-                siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
-                if(fichaActual!=0 && fichaActual==siguienteFicha){
-                    aciertos++;
-                }else if(aciertos>0){
-                    aciertos=0;
-                }
-                columna--;
-                fila++;
-            }
-            if (aciertos==3){
-                Toast.makeText(this, "Alguien ha ganado DIAGONAL2 dchaIzq", Toast.LENGTH_SHORT).show();
-                hayGanador=true;
-            }
-        }
-
-        if (!hayGanador){ //Tercera diagonal
-            aciertos=0;
-            iteraciones++;//4 iteraciones
-            fila=0;
-            columna=6;
-            for (int i=0;i<=iteraciones && aciertos<3;i++){
-                fichaActual=arrayParaleloTablero[columna][fila];
-                siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
-                if(fichaActual!=0 && fichaActual==siguienteFicha){
-                    aciertos++;
-                }else if(aciertos>0){
-                    aciertos=0;
-                }
-                columna--;
-                fila++;
-            }
-            if (aciertos==3){
-                Toast.makeText(this, "Alguien ha ganado DIAGONAL3 dchaIzq", Toast.LENGTH_SHORT).show();
-                hayGanador=true;
-            }
-        }
-
-        if (!hayGanador){ //Cuarta diagonal//Aqui cambia la cosa
-            //4 iteraciones
-            aciertos=0;
-            fila=0;
-            columna=5;
-            for (int i=0;i<=iteraciones && aciertos<3;i++){
-                fichaActual=arrayParaleloTablero[columna][fila];
-                siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
-                if(fichaActual!=0 && fichaActual==siguienteFicha){
-                    aciertos++;
-                }else if(aciertos>0){
-                    aciertos=0;
-                }
-                columna--;
-                fila++;
-            }
-            if (aciertos==3){
-                Toast.makeText(this, "Alguien ha ganado DIAGONAL4 dchaIzq", Toast.LENGTH_SHORT).show();
-                hayGanador=true;
-            }
-        }
-
-        if (!hayGanador){ //Quinta diagonal
-            //3 iteraciones
-            iteraciones=3;
-            aciertos=0;
-            fila=0;
-            columna=4;
-            for (int i=0;i<=iteraciones && aciertos<3;i++){
-                fichaActual=arrayParaleloTablero[columna][fila];
-                siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
-                if(fichaActual!=0 && fichaActual==siguienteFicha){
-                    aciertos++;
-                }else if(aciertos>0){
-                    aciertos=0;
-                }
-                columna--;
-                fila++;
-            }
-            if (aciertos==3){
-                Toast.makeText(this, "Alguien ha ganado DIAGONAL5 dchaIzq", Toast.LENGTH_SHORT).show();
-
-                hayGanador=true;
-            }
-        }
-
-        if (!hayGanador){ //Sexta diagonal
-            //2 iteraciones
-            sal=false;
-            iteraciones=2;
-            aciertos=0;
-            fila=0;
-            columna=3;
-            for (int i=0;i<=iteraciones && !sal;i++){
-                fichaActual=arrayParaleloTablero[columna][fila];
-                siguienteFicha=arrayParaleloTablero[columna-1][fila+1];
-                if(fichaActual!=0 && fichaActual==siguienteFicha){
-                    aciertos++;
-                }else {
-                    sal=true;
-                }
-                columna--;
-                fila++;
-            }
-            if (aciertos==3){
-                Toast.makeText(this, "Alguien ha ganado DIAGONAL6 dchaIzq", Toast.LENGTH_SHORT).show();
-                hayGanador=true;
-            }
-        }
-    }
-
-    /*
-    * Proposito:
-    * Precondiciones:
-    * Entradas:
-    * Salidas:
-    * Postcondiciones:
-    * */
-    private void comprobacionVertical(){
-        int aciertos=0;
-        int columna=ultimaFichaPuesta[0];
-        int fila=ultimaFichaPuesta[1];
-        int fichaActual=0;
-        int fichaSiguiente=0;
-        int iteraciones=fila-3;//-3 porque solo necesitamos 3 iteraciones a partir de la fila de la ficha puesta
-        boolean sigue=true;
-
-        //Esteblecemos el indice an la fila de la ultima ficha puesta
-        for(int i=fila;i>iteraciones && sigue;i--){
-            fichaActual=arrayParaleloTablero[columna][i];
-            fichaSiguiente=arrayParaleloTablero[columna][i-1];
-
-            //Si la ficha es distinta de la siguiente no hay más que comprobar
-            if(fichaActual!=fichaSiguiente){
-                sigue=false;
-            }else {
-                aciertos++;
-            }
-        }
-        if(aciertos==3){
-            hayGanador=true;
-            Toast.makeText(this, "Alguien ha ganado VERTICAL", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /*
-    * Proposito:
-    * Precondiciones:
-    * Entradas:
-    * Salidas:
-    * Postcondiciones:
-    * */
-    private void comprobacionHorizontal(){
-        int aciertos=0;
-        int fila=ultimaFichaPuesta[1];
-        boolean sal=false;
-        int fichaActual=0;
-        int siguienteFicha=0;
-
-        //Si la ultima ficha puesta no tiene una igual a su izquierda o su derecha no hay mas que comprobar
-        /*if(ultimaFichaPuesta[1]==arrayParaleloTablero[0][1]){
-
-        }*/
-        for(int i=0;i<arrayParaleloTablero.length-1 && aciertos<3;i++){
-            fichaActual=arrayParaleloTablero[i][fila];
-            siguienteFicha=arrayParaleloTablero[i+1][fila];
-            if(fichaActual!=0 && fichaActual==siguienteFicha){
-                aciertos++;
-            }else if(aciertos>0){
-                aciertos=0;
-            }
-        }
-        if(aciertos==3){
-            Toast.makeText(this, "Alguien ha ganado HORIZONTAL", Toast.LENGTH_SHORT).show();
-            hayGanador=true;
-        }
-    }
-
-    /*
+    /**
     * Proposito: Recibe el indice de la columna y devuelve la animacion con los parametros
     *            apropiados para esa columna.
     * Precondiciones: La columna no está llena
@@ -852,37 +703,43 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     * */
     private TranslateAnimation getCurrentAnimation(int column){
         TranslateAnimation translateAnimation=null;
-        int toXDelta=0;
-        /*if(column==0){
-            toXDelta=9;
-        }*/
         //Según la cantidad de fichas que tenga la columna
-        switch (contadores[column]){
+        switch (juego.getDatosGameActivity().getContadoresColumnas()[column]){
+
             case 0:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -350, 275);
+                translateAnimation=new TranslateAnimation(0, 0, -350, 275);
                 break;
             case 1:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -350, 179);
+                translateAnimation=new TranslateAnimation(0, 0, -350, 178);
                 break;
             case 2:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -350, 80);
+                translateAnimation=new TranslateAnimation(0, 0, -350, 80);
                 break;
             case 3:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -350, -17);
+                translateAnimation=new TranslateAnimation(0, 0, -350, -17);
                 break;
             case 4:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -350, -113);
+                translateAnimation=new TranslateAnimation(0, 0, -350, -113);
                 break;
             case 5:
-                translateAnimation=new TranslateAnimation(0, toXDelta, -350, -209);
+                translateAnimation=new TranslateAnimation(0, 0, -350, -209);
                 break;
         }
-        translateAnimation.setDuration(1000);
+        translateAnimation.setDuration(800);
+        translateAnimation.setRepeatMode(Animation.REVERSE);
         translateAnimation.setFillAfter(true);
         //translateAnimation.setRepeatMode(Animation.REVERSE);
         return translateAnimation;
     }
 
+
+     /**
+     * Proposito:
+     * Precondiciones:
+     * Entradas:
+     * Salidas:
+     * Postcondiciones:
+     * */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
@@ -901,15 +758,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     public void mostrarMensajeVictoriaDerrota(){
         String mensaje="";
-        switch (turno){
+        switch (juego.getDatosGameActivity().getTurno()){
             case 0:
                 //Gana el Usuario
-                mensaje="Bien hecho";
+                mensaje="Ha ganado "+ nombreUsuario;
             break;
 
             case 1:
-                //Gana la Maquina
-                mensaje="Paquete!";
+                //Gana la Maquina/Invitado
+                mensaje= (modoDeJuego==2) ? "Ha ganado el Invitado" : "Ha ganado la máquina!";
             break;
         }
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
@@ -918,7 +775,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         //reiniciaPartida();
     }
 
-    /*
+    /**
     * Proposito: Reinicia los valores de la partida
     * Precondiciones:
     * Entradas:
@@ -926,14 +783,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     * Postcondiciones:
     * */
     public void reiniciaPartida(){
-        contadores=new int[7];
-        arrayParaleloTablero=new int[7][6];// 7 Columnas y 6 Filas
-        turno=0;//turno será 0 cuando le toque al jugador y 1 cuando le toque a la máquina      //Segun quien ganó la última partida iniciará un jugador u otro
-        //Integer[] idImagenesFichas={R.drawable.ficha, R.drawable.fichaamarillabuena};
-        //Maquina maquina=new Maquina();
-        totalFichasPuestas=0;
-        ultimaFichaPuesta=new int[2];
-        hayGanador=false;
+        juego=new Juego();
+        textViewTurno.setText("Turno de "+nombreUsuario);
         col0.removeAllViews();
         col1.removeAllViews();
         col2.removeAllViews();
@@ -941,27 +792,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         col4.removeAllViews();
         col5.removeAllViews();
         col6.removeAllViews();
-        //chronometer=(Chronometer) findViewById(R.id.chronometer);
+
         chronometer.stop();
         chronometer.setBase(SystemClock.elapsedRealtime());//Poner cronometro a 0
     }
 
 
-    //Esto es para el PopUpMenu
-    /*@Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.continuar:
-                popupMenu.dismiss();
-            break;
 
-            case R.id.salir:
-                finish();//Finalizamos la actividad
-                Intent intent=new Intent(this, MainActivity.class);
-                startActivity(intent);
-            break;
-        }
-        return false;
-    }*/
 
 }

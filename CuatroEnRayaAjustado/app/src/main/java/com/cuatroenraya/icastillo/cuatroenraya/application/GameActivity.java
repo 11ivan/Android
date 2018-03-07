@@ -761,12 +761,12 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         switch (juego.getDatosGameActivity().getTurno()){
             case 0:
                 //Gana el Usuario
-                mensaje="Bien hecho";
+                mensaje="Ha ganado "+ nombreUsuario;
             break;
 
             case 1:
-                //Gana la Maquina
-                mensaje="Paquete!";
+                //Gana la Maquina/Invitado
+                mensaje= (modoDeJuego==2) ? "Ha ganado el Invitado" : "Ha ganado la máquina!";
             break;
         }
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();

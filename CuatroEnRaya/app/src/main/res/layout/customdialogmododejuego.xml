@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="#99000000">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#99000000">
+
     <RelativeLayout
         android:layout_width="300dp"
         android:layout_height="200dp"
@@ -18,7 +19,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Aviso"
+                android:text="Modo de juego"
                 android:textAlignment="center"
                 android:id="@+id/textPause"
                 android:textColor="@android:color/white"
@@ -29,58 +30,41 @@
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="¿Quiere reiniciar la partida?"
-            android:textAlignment="center"
-            android:id="@+id/textPregunta"
-            android:textColor="@android:color/white"
-            android:textSize="17dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"
+        <Button
+            android:id="@+id/btnUnJugador"
+            android:text="Un jugador"
+            android:textColor="#FFFFFF"
+            android:textSize="12dp"
+            android:layout_width="160dp"
+            android:layout_height="35dp"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
             android:layout_below="@id/linearLayout"
+            android:layout_marginTop="35dp"
+            android:layout_centerHorizontal="true"
             />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/relativeBotones"
-            android:layout_below="@id/textPregunta"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="35dp">
         <Button
-            android:id="@+id/btnSi"
-            android:text="Si"
+            android:id="@+id/btnDosJugadores"
+            android:text="Dos jugadores"
             android:textColor="#FFFFFF"
             android:textSize="12dp"
-            android:layout_width="70dp"
+            android:layout_width="160dp"
             android:layout_height="35dp"
             android:background="@drawable/buttonshape"
             android:shadowColor="#A8A8A8"
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="5"
+            android:layout_below="@id/btnUnJugador"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
             />
 
-        <Button
-            android:id="@+id/btnNo"
-            android:text="No"
-            android:textColor="#FFFFFF"
-            android:textSize="12dp"
-            android:layout_width="70dp"
-            android:layout_height="35dp"
-            android:background="@drawable/buttonshape"
-            android:shadowColor="#A8A8A8"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="5"
-            android:layout_toRightOf="@id/btnSi"
-            android:layout_marginLeft="20dp"
-            />
-        </RelativeLayout><!--Relative Botones-->
-
-    </RelativeLayout><!--Relative Cuadro Dialogo-->
+    </RelativeLayout>
 
 
 </RelativeLayout>

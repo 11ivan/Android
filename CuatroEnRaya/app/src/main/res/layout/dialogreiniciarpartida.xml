@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="¿Volver a jugar?"
+            android:text="¿Quiere reiniciar la partida?"
             android:textAlignment="center"
             android:id="@+id/textPregunta"
             android:textColor="@android:color/white"

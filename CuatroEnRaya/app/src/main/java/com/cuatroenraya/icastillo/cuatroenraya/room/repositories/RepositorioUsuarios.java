@@ -1,7 +1,9 @@
 package com.cuatroenraya.icastillo.cuatroenraya.room.repositories;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.os.AsyncTask;
 
 import com.cuatroenraya.icastillo.cuatroenraya.room.AppDatabase;
 import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Usuario;
@@ -12,38 +14,55 @@ import com.cuatroenraya.icastillo.cuatroenraya.room.entities.Usuario;
 
 public class RepositorioUsuarios {
 
-    //Equipo[] equipos=AppDataBase.getDataBase(this.application.getApplicationContext()).equipoDAO().getEquiposArray();
     private Application application;
 
     public RepositorioUsuarios(Application application){
         this.application=application;
     }
 
-    public LiveData<Usuario[]> getUsuariosLiveData(){
-        LiveData<Usuario[]> liveData;
-        liveData= AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().getUsuariosLiveData();
-        return liveData;
-    }
-    public Usuario[] getUsuarios(){
-        Usuario[] usuarios;
-        usuarios= AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().getUsuarios();
-        return usuarios;
-    }
     public void insertUsuario(Usuario usuario){
-        AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().insertUsuario(usuario);
+        new InsertUsuarioAsyncTask(this.application).execute(usuario);
     }
 
-    public void insertUsuarios(Usuario[] usuarios){
-        AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().insertUsuarios(usuarios);
-    }
     public LiveData<Usuario> getUsuarioLiveData(){
         LiveData<Usuario> liveData=AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().getUsuarioLiveData();
         return liveData;
     }
 
-    public Usuario getUsuario(){
-        Usuario usuario=AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().getUsuario();
-        return usuario;
+    public void updateUsuario(Usuario usuario){
+        new UpdateUsuarioAsync(this.application).execute(usuario);
+    }
+
+    //Clase para tarea asincrona de insertar persona
+    private static class InsertUsuarioAsyncTask extends AsyncTask<Usuario, Void, Void> {
+        @SuppressLint("StaticFieldLeak")
+        private Application application;
+
+        InsertUsuarioAsyncTask(Application application) {
+            this.application = application;
+        }
+
+        @Override
+        protected Void doInBackground(Usuario... usuarios) {
+            AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().insertUsuario(usuarios[0]);
+            return null;
+        }
+    }
+
+    //Clase asincrona para actualizar un Usuario
+    private static class UpdateUsuarioAsync extends AsyncTask<Usuario, Void, Void>{
+
+        private Application application;
+
+        UpdateUsuarioAsync(Application application){
+            this.application=application;
+        }
+
+        @Override
+        protected Void doInBackground(Usuario... usuarios) {
+            AppDatabase.getDatabase(this.application.getApplicationContext()).usuariosDAO().updateUsuario(usuarios[0]);
+            return null;
+        }
     }
 
 }
