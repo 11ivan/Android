@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="@android:color/holo_blue_dark">
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/txtFechaPartida"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/resultado"
+        android:text="Resultado: "
+        android:layout_toLeftOf="@id/txtResultado"
+        android:layout_below="@id/txtFechaPartida"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtResultado"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/txtFechaPartida"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtFechaPartida"
+        android:layout_alignLeft="@id/txtFechaPartida"
+        android:id="@+id/TiempoPartida"
+        android:text="Tiempo de partida: "/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtFechaPartida"
+        android:layout_toRightOf="@id/TiempoPartida"
+        android:id="@+id/txtTiempoPartida"/>
+
+
+</RelativeLayout>

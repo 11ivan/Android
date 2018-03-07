@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.icastillo.pirdrapapeltijeras.RegistroActivity">
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textUserRegistro"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:hint="User"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/errorNombre"
+        android:visibility="invisible"
+        android:layout_below="@id/textUserRegistro"
+
+        android:textColor="@android:color/holo_red_light"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textPasswordRegistro"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:layout_below="@id/textUserRegistro"
+        android:hint="Password"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/errorPassword"
+        android:visibility="invisible"
+        android:layout_below="@id/textPasswordRegistro"
+
+        android:textColor="@android:color/holo_red_light"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textConfirmPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:layout_below="@id/textPasswordRegistro"
+        android:hint="Confirm Password"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/errorConfirmPassword"
+        android:visibility="invisible"
+        android:layout_below="@id/textConfirmPassword"
+
+        android:textColor="@android:color/holo_red_light"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="115dp"
+        android:layout_height="35dp"
+        android:id="@+id/btnRegistro"
+        android:layout_below="@id/textConfirmPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/holo_blue_dark"
+        android:text="Registrarse"/>
+
+
+</RelativeLayout>
