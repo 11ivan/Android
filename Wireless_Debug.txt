@@ -1,8 +1,0 @@
-With device connected usb.
-EXECUTE COMMANDS IN FOLDER platform-tools.
-
-adp tcpip 5555
-adb shell [ifconfig or netcfg]
-adb connect [IPDEVICE]:5555
-
-If all it´s OK disconnect usb.
